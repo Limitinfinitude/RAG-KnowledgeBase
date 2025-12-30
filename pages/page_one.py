@@ -54,7 +54,7 @@ with st.sidebar:
     st.markdown("### 对话管理")
 
     # 新建对话按钮
-    if st.button("➕ 新建对话", use_container_width=True, key="new_conversation_btn", type="secondary"):
+    if st.button("➕ 新建对话", width="stretch", key="new_conversation_btn", type="secondary"):
         new_name = f"新对话 {len(st.session_state.conversations) + 1}"
         st.session_state.conversations[new_name] = {"messages": [], "chat_history": []}
         st.session_state.current_conversation = new_name
@@ -75,7 +75,7 @@ with st.sidebar:
                     if st.button(
                         conv_name,
                         key=f"switch_{conv_name}",
-                        use_container_width=True,
+                        width="stretch",
                         type="primary" if is_active else "secondary"
                     ):
                         if not is_active:
@@ -86,7 +86,7 @@ with st.sidebar:
                             st.rerun()
 
                 with col_right:
-                    with st.popover("⋮", use_container_width=True):
+                    with st.popover("⋮", width="stretch"):
                         st.markdown(f"**{conv_name}**")
 
                         new_name = st.text_input("重命名", value=conv_name, key=f"rename_{conv_name}")

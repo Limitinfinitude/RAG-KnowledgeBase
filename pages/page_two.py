@@ -67,7 +67,7 @@ try:
             }
             for name, info in stats.items()
         ]
-        st.dataframe(data, use_container_width=True)
+        st.dataframe(data, width='stretch')
     else:
         st.info("知识库中暂无文档")
 except Exception as e:
