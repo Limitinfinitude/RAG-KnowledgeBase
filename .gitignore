@@ -1,0 +1,16 @@
+# 忽略所有大模型权重文件
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# 忽略整个模型文件夹（推荐，最干净）
+models/
+knowledge_db/
+
+# 其他常见忽略
+__pycache__/
+*.pyc
+.env
+.venv
+streamlit/
