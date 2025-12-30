@@ -1,7 +1,7 @@
 # config.py
 import os
 
-API_KEY = "sk-8CTeK3bUcqjWqfW9WmAtXXkqCeq0UJjNV5V4GdHO601nUR6z"
+API_KEY = "sk-8C......O601nUR6z"
 BASE_URL = "https://api.openai-proxy.org/v1"
 DB_DIR = os.path.join(os.path.dirname(__file__), "knowledge_db")
 
