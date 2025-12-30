@@ -1,0 +1,13 @@
+streamlit>=1.30.0
+langchain>=0.1.0
+langchain-community
+langchain-openai
+langchain-ollama
+langchain-huggingface
+faiss-cpu
+sentence-transformers
+pdf2image
+pytesseract
+pillow
+python-docx  
+requests
