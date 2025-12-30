@@ -22,13 +22,10 @@
 <div align="center">
 
 **智能问答页面（多对话 + 检索范围切换）**  
-<img src="screenshots/chat_page.png" alt="智能问答页面" width="800"/>
+<img src="screenshots/1.png" alt="智能问答页面" width="800"/>
 
 **知识库管理页面**  
-<img src="screenshots/kb_page.png" alt="知识库管理页面" width="800"/>
-
-**对话管理侧边栏（类 Grok 风格）**  
-<img src="screenshots/sidebar.png" alt="对话管理" width="300"/>
+<img src="screenshots/2.png" alt="知识库管理页面" width="800"/>
 
 </div>
 
