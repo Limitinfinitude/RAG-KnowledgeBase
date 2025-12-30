@@ -17,142 +17,124 @@ def setup_page_config():
 
 
 def load_custom_css():
-    """加载自定义CSS样式 - 白色底色 + 黑色文字 + 灰色高亮"""
+    """加载自定义CSS样式 - 修复侧边栏按钮消失问题"""
+
     st.markdown("""
         <style>
+        /* --- 基础布局修复 --- */
+
+        /* 关键：不要隐藏整个 Header，否则展开按钮会消失 */
+        [data-testid="stHeader"] {
+            background-color: rgba(255, 255, 255, 0) !important; /* 透明背景 */
+            color: #1a1a1a !important;
+            height: 3rem !important;
+        }
+
+        /* 主内容区顶格，但预留按钮位 */
+        .block-container {
+            padding-top: 2rem !important;
+            padding-bottom: 1rem !important;
+            max-width: 95% !important;
+        }
+
         /* 全局背景 */
         .stApp { 
             background-color: #ffffff;
         }
 
-        /* 主标题 */
+        /* --- 侧边栏样式 --- */
+        .stSidebar {
+            background-color: #ffffff !important;
+            border-right: 1px solid #e5e7eb;
+            z-index: 100;
+        }
+
+        /* --- 标题与文字 --- */
         h1, h2, h3 {
             color: #1a1a1a !important;
             font-weight: 600;
+            margin-top: 0.5rem !important;
         }
 
-        /* 所有按钮：白色底 + 黑色文字 + 简洁边框 */
+        /* --- 按钮样式优化 --- */
         .stButton > button {
             background-color: white !important;
-            color: #262730 !important;           /* 深灰黑文字 */
+            color: #262730 !important;
             border: 1px solid #e2e8f0 !important;
             border-radius: 8px !important;
             padding: 8px 16px !important;
             font-weight: 500 !important;
-            box-shadow: none !important;
             transition: all 0.2s ease !important;
             width: 100%;
             text-align: left;
         }
 
-        /* 按钮悬停：浅灰背景 */
+        /* 按钮悬停 */
         .stButton > button:hover {
             background-color: #f5f7fa !important;
             border-color: #cbd5e1 !important;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
         }
 
-        /* 当前选中对话按钮高亮：更明显的浅灰底 + 深蓝文字 */
+        /* 高亮按钮（如当前选中状态） */
         .stButton > button[kind="primary"] {
             background-color: #f0f4f8 !important;
             color: #2563eb !important;
             border-color: #2563eb !important;
             font-weight: 600 !important;
         }
-        .stButton > button[kind="primary"]:hover {
-            background-color: #e0eaff !important;
+
+        /* --- 聊天组件 --- */
+        .stChatMessage {
+            margin-bottom: 0.5rem !important;
+            border-radius: 10px !important;
         }
 
-        /* 次要按钮（如菜单内按钮） */
-        .stButton > button[kind="secondary"] {
-            background-color: white !important;
-            color: #4b5563 !important;
-            border-color: #d1d5db !important;
-        }
-        .stButton > button[kind="secondary"]:hover {
-            background-color: #f9fafb !important;
-        }
-
-        /* 侧边栏整体白色 */
-        .stSidebar {
-            background-color: #ffffff !important;
-            border-right: 1px solid #e5e7eb;
-        }
-
-        /* 聊天消息 */
         .stChatMessage[data-testid="stChatMessage/user"] {
-            background-color: #f0f9ff;
+            background-color: #f0f9ff !important;
         }
+
         .stChatMessage[data-testid="stChatMessage/assistant"] {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
+            background-color: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
         }
 
-        /* 扩展面板 */
+        /* --- 装饰性组件 --- */
         .stExpander {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
+            background-color: white !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 10px !important;
         }
 
-        /* 文件上传器 */
         .stFileUploader {
-            background-color: #f8fafc;
-            border: 2px dashed #cbd5e1;
-            border-radius: 10px;
+            background-color: #f8fafc !important;
+            border: 2px dashed #cbd5e1 !important;
+            border-radius: 10px !important;
         }
 
-        /* 自定义提示框（保持原有风格） */
+        /* 自定义提示框盒模型 */
         .info-box {
+            padding: 15px;
             background-color: #f0f9ff;
             border-left: 4px solid #3b82f6;
-        }
-        .success-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #22c55e;
-        }
-        .warning-box {
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
+            border-radius: 4px;
+            margin: 10px 0;
         }
 
-        /* 调试信息 */
+        .success-box {
+            padding: 15px;
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            border-radius: 4px;
+        }
+
         .debug-info {
             background-color: #f8fafc;
             color: #64748b;
+            padding: 10px;
             border-radius: 8px;
             font-size: 0.85rem;
-        }
-                /* 去除页面顶部空白，让内容顶格 */
-        .block-container {
-            padding-top: 1rem !important;   /* 原默认是 4rem+，缩小 */
-            max-width: none !important;
-        }
-
-        /* 主内容区顶格 */
-        section[data-testid="stSidebar"] + div > div:first-child {
-            padding-top: 0 !important;
-        }
-
-        /* 去除主标题下方的多余 margin */
-        .main h1 {
-            margin-top: 0 !important;
-            padding-top: 1rem !important;
-        }
-
-        /* 整体内容上移 */
-        .main > div:first-child {
-            padding-top: 0 !important;
-        }
-
-        /* 如果还有标题空白，进一步强制 */
-        [data-testid="stHeader"] {
-            display: none !important;  /* 可选：隐藏 Streamlit 默认顶部栏（如果有） */
-        }
-
-        /* 让聊天区域更紧凑 */
-        .stChatMessage {
-            margin-bottom: 0.5rem !important;
+            font-family: monospace;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -283,14 +265,14 @@ def model_settings_dialog():
 
     col_save, col_cancel = st.columns(2)
     with col_save:
-        if st.button("💾 保存并应用", type="primary", use_container_width=True):
+        if st.button("💾 保存并应用", type="primary", width="stretch"):
             st.session_state.model_mode = mode
             st.session_state.ollama_base_url = base_url
             st.session_state.ollama_model = model_name
             st.success("✅ 配置保存成功！")
             st.rerun()
     with col_cancel:
-        if st.button("❌ 取消", use_container_width=True):
+        if st.button("❌ 取消", width="stretch"):
             st.rerun()
 
     # 配置预览
