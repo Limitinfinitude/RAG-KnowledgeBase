@@ -26,19 +26,37 @@ if _PROJECT_ROOT not in sys.path:
 
 # 评测集：query -> 相关文档文件名（按相关度降序，越靠前越相关）
 # 空列表 = 负样本
+# 语料：AI Agent 书（chapter1-5），主题同域、词汇大量重叠，考验细粒度区分
 EVAL_SET: List[Tuple[str, List[str]]] = [
-    # —— 细粒度区分：治安管理处罚法 vs 刑法（都涉及盗窃，但一行政一刑事）——
-    ("盗窃公私财物如何行政处罚", ["治安管理处罚法节选_20260815.txt"]),
-    ("盗窃数额较大构成什么罪", ["治安管理处罚法节选_20260815.txt"]),
-    # —— 同领域近似：劳动法 vs 劳动合同法（都涉及试用期/劳动合同）——
-    ("试用期最长不得超过多少", ["劳动法节选_20260815.txt"]),
-    ("解除劳动合同的程序", ["劳动法节选_20260815.txt"]),
-    # —— 跨领域：编程（应命中 Python 文档）——
-    ("Python 如何定义函数", ["Python编程入门_20260815.md"]),
-    ("什么是面向对象编程", ["Python编程入门_20260815.md"]),
-    # —— 负样本（知识库中无对应内容，期望召回失败/低相关）——
-    ("量子力学薛定谔方程", []),
+    # —— 各章独有内容（每 query 唯一归属）——
+    ("ReAct 循环是什么", ["chapter1_Agent入门_20260815.md"]),
+    ("Harness 工程五个功能的核心原则", ["chapter1_Agent入门_20260815.md"]),
+    ("工作流模式与自主 Agent 模式如何选择", ["chapter1_Agent入门_20260815.md"]),
+    ("KV Cache 的原理与约束", ["chapter2_上下文工程_20260815.md"]),
+    ("消息的四种角色", ["chapter2_上下文工程_20260815.md"]),
+    ("系统提示词的组织方式", ["chapter2_上下文工程_20260815.md"]),
+    ("用户记忆的四种存储格式", ["chapter3_用户记忆与知识库_20260815.md"]),
+    ("记忆的层次结构", ["chapter3_用户记忆与知识库_20260815.md"]),
+    ("RAPTOR 与 GraphRAG 的区别", ["chapter3_用户记忆与知识库_20260815.md"]),
+    ("MCP 协议如何统一工具生态", ["chapter4_工具_20260815.md"]),
+    ("工具的分类有哪几类", ["chapter4_工具_20260815.md"]),
+    ("事件驱动的异步 Agent 架构", ["chapter4_工具_20260815.md"]),
+    ("Coding Agent 的整体流程", ["chapter5_CodingAgent与通用Agent_20260815.md"]),
+    ("代码作为通用 Agent 元能力的六个方向", ["chapter5_CodingAgent与通用Agent_20260815.md"]),
+    # —— 词汇陷阱：关键词跨章出现，考察能否定位到正确章节 ——
+    ("为什么说上下文是 Agent 的眼睛", ["chapter1_Agent入门_20260815.md"]),
+    ("什么是上下文工程", ["chapter2_上下文工程_20260815.md"]),
+    ("用户记忆和知识库有什么区别", ["chapter3_用户记忆与知识库_20260815.md"]),
+    ("工具粒度如何权衡", ["chapter4_工具_20260815.md"]),
+    # —— 多相关样本：主题跨章 ——
+    ("如何防止 Agent 陷入无限循环", [
+        "chapter1_Agent入门_20260815.md",
+        "chapter2_上下文工程_20260815.md",
+    ]),
+    # —— 负样本（书中无对应内容，期望不召回）——
     ("红烧肉怎么做", []),
+    ("世界杯决赛的比赛规则", []),
+    ("如何办理房产过户手续", []),
 ]
 
 
@@ -111,7 +129,7 @@ def _load_vector_db(user_id: int):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="检索质量离线评测（Recall@k / nDCG@k / MRR）")
-    parser.add_argument("--user", type=int, default=99, help="知识库用户 id（默认 99 评测集）")
+    parser.add_argument("--user", type=int, default=98, help="知识库用户 id（默认 98 书本章节评测集）")
     parser.add_argument("--k", type=int, default=5, help="k 值（默认 5）")
     parser.add_argument("--mode", choices=["vector", "hybrid", "both"], default="both")
     args = parser.parse_args()

@@ -21,7 +21,7 @@ CORPUS_DIR = os.path.join(_PROJECT_ROOT, "eval_corpus")
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="构建检索评测知识库")
-    parser.add_argument("--user", type=int, default=99, help="目标知识库用户 id（默认 99）")
+    parser.add_argument("--user", type=int, default=98, help="目标知识库用户 id（默认 98）")
     args = parser.parse_args()
 
     from utils.path_context import set_user_kb_context
