@@ -4,6 +4,7 @@
 记录系统操作、错误和统计信息
 """
 import os
+import sys
 import json
 import logging
 from datetime import datetime
@@ -18,13 +19,28 @@ STATS_FILE = os.path.join(STREAMLIT_KB_DIR, "statistics.json")
 # 确保日志目录存在
 os.makedirs(LOG_DIR, exist_ok=True)
 
+
+def _utf8_stream_handler() -> logging.Handler:
+    """返回一个 UTF-8 编码的控制台 handler，避免 Windows 下中文日志乱码。"""
+    try:
+        # 优先使用显式 encoding 的 StreamHandler（Python 3.7+）
+        handler = logging.StreamHandler(stream=sys.stdout)
+        try:
+            handler.stream.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+        except (AttributeError, ValueError):
+            pass
+        return handler
+    except Exception:
+        return logging.StreamHandler()
+
+
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler(LOG_FILE, encoding='utf-8'),
-        logging.StreamHandler()
+        _utf8_stream_handler(),
     ]
 )
 

@@ -8,6 +8,7 @@
 
 两套分类器上下位关系：先由 intent 决定是否检索，再（若检索）由本模块细化检索策略。
 """
+import logging
 import re
 from typing import Dict, List, Tuple, Optional
 from langchain_core.prompts import ChatPromptTemplate
@@ -15,6 +16,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from services.llm_factory import build_chat_llm
 from utils.prompt_runtime import get_query_classifier_system
 from utils.rag_prompt_hardening import prepend_to_text_prompt
+
+logger = logging.getLogger(__name__)
 
 
 # 查询类型定义
@@ -148,7 +151,7 @@ def classify_query_type_llm(query: str, chat_history: List = None) -> Tuple[str,
             # 如果LLM返回无效类型，回退到规则分类
             return classify_query_type_rule_based(query), 0.7
     except Exception as e:
-        print(f"[QueryClassifier] LLM分类失败: {e}，使用规则分类")
+        logger.warning("[QueryClassifier] LLM分类失败: %s，使用规则分类", e)
         return classify_query_type_rule_based(query), 0.5
 
 

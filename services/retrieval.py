@@ -8,8 +8,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from utils.metadata_manager import get_all_documents, get_documents_by_category
 from utils.reranker import rerank_documents
 from services.ui_sink import RetrievalUISink
-
-SIMILARITY_THRESHOLD = 0.3
+from config import (
+    SIMILARITY_THRESHOLD,
+    MAX_CONTEXT_LENGTH,
+    CONTEXT_TOP_K,
+    LOW_QUALITY_FALLBACK_K,
+)
 
 
 @dataclass
@@ -45,7 +49,7 @@ def finalize_retrieval_from_scored(
 
     high_quality_docs = [(doc, score) for doc, score in scored_docs if score >= SIMILARITY_THRESHOLD]
     if not high_quality_docs and scored_docs:
-        high_quality_docs = scored_docs[: min(3, len(scored_docs))]
+        high_quality_docs = scored_docs[: min(LOW_QUALITY_FALLBACK_K, len(scored_docs))]
 
     out.last_search_results = high_quality_docs
 
@@ -65,14 +69,14 @@ def finalize_retrieval_from_scored(
             expanded_docs.append((doc, score))
 
     if expanded_docs:
-        high_quality_docs = expanded_docs[:5]
+        high_quality_docs = expanded_docs[:CONTEXT_TOP_K]
         sink.caption("📖 已扩展上下文（Parent-Document Retrieval）")
 
-    context_docs = high_quality_docs[:5]
+    context_docs = high_quality_docs[:CONTEXT_TOP_K]
     context_parts: List[str] = []
     numbered_context_parts: List[Dict] = []
     total_length = 0
-    max_context_length = 4000
+    max_context_length = MAX_CONTEXT_LENGTH
 
     for idx, (doc, score) in enumerate(context_docs, 1):
         doc_text = doc.page_content

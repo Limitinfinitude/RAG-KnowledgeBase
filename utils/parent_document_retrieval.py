@@ -3,8 +3,11 @@
 Parent-Document Retrieval（检索与读取分离）
 解决颗粒度悖论：检索时用精确的小chunk，读取时扩展为完整的上下文
 """
+import logging
 from typing import List, Tuple, Optional
 from langchain_core.documents import Document
+
+logger = logging.getLogger(__name__)
 
 
 def expand_chunk_to_parent(
@@ -53,7 +56,7 @@ def expand_chunk_to_parent(
         
         return None
     except Exception as e:
-        print(f"[ParentDoc] 扩展chunk失败: {e}")
+        logger.warning("[ParentDoc] 扩展chunk失败: %s", e)
         return None
 
 
@@ -124,7 +127,7 @@ def expand_chunk_with_neighbors(
         return result if result else [chunk]
         
     except Exception as e:
-        print(f"[ParentDoc] 扩展相邻chunk失败: {e}")
+        logger.warning("[ParentDoc] 扩展相邻chunk失败: %s", e)
         return [chunk]
 
 

@@ -3,9 +3,12 @@
 分数归一化模块：解决多知识库下的"分数膨胀"问题
 使用Min-Max Scaling将不同知识库的分数映射到同一区间
 """
+import logging
 from typing import List, Tuple, Dict, Optional
 from langchain_core.documents import Document
 from utils.metadata_manager import get_documents_by_category
+
+logger = logging.getLogger(__name__)
 
 
 def min_max_normalize(
@@ -87,7 +90,7 @@ def group_docs_by_knowledge_base(
                     kb_groups[found_kb] = []
                 kb_groups[found_kb].append((doc, score))
         except Exception as e:
-            print(f"[ScoreNorm] 分组失败: {e}，使用单一分组")
+            logger.warning("[ScoreNorm] 分组失败: %s，使用单一分组", e)
             # 失败时，所有文档归为一组
             kb_groups["全部"] = docs_with_scores
     else:

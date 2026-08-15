@@ -1,8 +1,11 @@
 # utils/db.py
+import logging
 import os
 from langchain_community.vectorstores import FAISS
 
 from utils.path_context import get_kb_dir
+
+logger = logging.getLogger(__name__)
 
 
 def get_vector_db(embeddings=None):
@@ -19,7 +22,7 @@ def get_vector_db(embeddings=None):
 
     # 如果已有索引，正常加载
     if os.path.exists(index_file):
-        print(f"[DB] 加载已有 FAISS 索引：{index_dir}")
+        logger.info("[DB] 加载已有 FAISS 索引：%s", index_dir)
         return FAISS.load_local(
             folder_path=index_dir,
             embeddings=embeddings,
@@ -27,7 +30,7 @@ def get_vector_db(embeddings=None):
         )
 
     # 如果不存在，创建一个空的 FAISS 实例，并自动保存（为后续入库做准备）
-    print(f"[DB] 未找到索引，创建空的 FAISS 向量库：{index_dir}")
+    logger.info("[DB] 未找到索引，创建空的 FAISS 向量库：%s", index_dir)
     empty_db = FAISS.from_texts(
         texts=["初始空文档"],  # 必须至少有一个文本，否则 FAISS 会报错
         embedding=embeddings,
