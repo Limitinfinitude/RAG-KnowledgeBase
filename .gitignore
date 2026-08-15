@@ -4,16 +4,24 @@
 *.pt
 *.pth
 
-# 忽略整个模型文件夹（推荐，最干净）
+# 忽略整个模型文件夹
 models/
 knowledge_db/
 
 # 其他常见忽略
 __pycache__/
 *.pyc
-.env
-.venv
-streamlit/
+.venv/
+venv/
 
-# Web 用户 SQLite（本地注册信息）
+# 敏感配置（密钥走环境变量，勿提交 .env）
+.env
+.env.*
+!.env.example
+
+# Web 用户数据与运行时数据
 data/
+
+# IDE
+.idea/
+.vscode/
