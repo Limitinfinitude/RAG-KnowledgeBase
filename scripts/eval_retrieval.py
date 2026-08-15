@@ -26,34 +26,52 @@ if _PROJECT_ROOT not in sys.path:
 
 # 评测集：query -> 相关文档文件名（按相关度降序，越靠前越相关）
 # 空列表 = 负样本
-# 语料：AI Agent 书（chapter1-5），主题同域、词汇大量重叠，考验细粒度区分
+# 语料：AI Agent 书 5 章 + RAG 教程 + 提示工程指南 + 论文/白皮书/表格/小说（多格式同域）
 EVAL_SET: List[Tuple[str, List[str]]] = [
-    # —— 各章独有内容（每 query 唯一归属）——
+    # —— AI Agent 书各章独有内容 ——
     ("ReAct 循环是什么", ["chapter1_Agent入门_20260815.md"]),
     ("Harness 工程五个功能的核心原则", ["chapter1_Agent入门_20260815.md"]),
-    ("工作流模式与自主 Agent 模式如何选择", ["chapter1_Agent入门_20260815.md"]),
     ("KV Cache 的原理与约束", ["chapter2_上下文工程_20260815.md"]),
     ("消息的四种角色", ["chapter2_上下文工程_20260815.md"]),
-    ("系统提示词的组织方式", ["chapter2_上下文工程_20260815.md"]),
     ("用户记忆的四种存储格式", ["chapter3_用户记忆与知识库_20260815.md"]),
-    ("记忆的层次结构", ["chapter3_用户记忆与知识库_20260815.md"]),
     ("RAPTOR 与 GraphRAG 的区别", ["chapter3_用户记忆与知识库_20260815.md"]),
     ("MCP 协议如何统一工具生态", ["chapter4_工具_20260815.md"]),
-    ("工具的分类有哪几类", ["chapter4_工具_20260815.md"]),
     ("事件驱动的异步 Agent 架构", ["chapter4_工具_20260815.md"]),
     ("Coding Agent 的整体流程", ["chapter5_CodingAgent与通用Agent_20260815.md"]),
     ("代码作为通用 Agent 元能力的六个方向", ["chapter5_CodingAgent与通用Agent_20260815.md"]),
-    # —— 词汇陷阱：关键词跨章出现，考察能否定位到正确章节 ——
+    # —— RAG 教程（all-in-rag）——
+    ("什么是 RAG 技术", ["RAG技术简介_allinrag_20260815.md"]),
+    ("RAG 和微调如何选型", ["RAG技术简介_allinrag_20260815.md"]),
+    ("固定大小分块与递归字符分块", ["文本分块技术_allinrag_20260815.md"]),
+    ("为什么文本块不是越大越好", ["文本分块技术_allinrag_20260815.md"]),
+    # —— 提示工程指南 ——
+    ("零样本提示和少样本提示", ["提示词高级用法_20260815.md"]),
+    ("链式思考提示 CoT", ["提示词高级用法_20260815.md"]),
+    ("文本摘要和信息提取的提示词", ["提示词基础用法_20260815.md"]),
+    ("代码生成的提示词怎么写", ["提示词基础用法_20260815.md"]),
+    # —— 论文（英文 PDF）——
+    ("multi-head attention mechanism in Transformer", ["AttentionIsAllYouNeed论文_20260815.pdf"]),
+    # —— 政府白皮书（docx）——
+    ("中国能源转型的目标", ["中国能源转型白皮书_20260815.docx"]),
+    ("非化石能源消费占比目标", ["中国能源转型白皮书_20260815.docx"]),
+    # —— 表格（xlsx，英文数据）——
+    ("Coffee and Cake sales transactions", ["咖啡馆销售数据表节选200行_20260815.xlsx"]),
+    # —— 古典小说（txt）——
+    ("鲁智深拳打镇关西", ["水浒传节选前二十回_20260815.txt"]),
+    ("洪太尉误走妖魔", ["水浒传节选前二十回_20260815.txt"]),
+    # —— 词汇陷阱：关键词跨文档出现，考察定位 ——
     ("为什么说上下文是 Agent 的眼睛", ["chapter1_Agent入门_20260815.md"]),
     ("什么是上下文工程", ["chapter2_上下文工程_20260815.md"]),
     ("用户记忆和知识库有什么区别", ["chapter3_用户记忆与知识库_20260815.md"]),
     ("工具粒度如何权衡", ["chapter4_工具_20260815.md"]),
-    # —— 多相关样本：主题跨章 ——
+    ("什么是提示工程", ["提示词基础用法_20260815.md", "chapter2_上下文工程_20260815.md"]),
+    ("什么是文本分块", ["文本分块技术_allinrag_20260815.md", "chapter3_用户记忆与知识库_20260815.md"]),
+    # —— 多相关样本 ——
     ("如何防止 Agent 陷入无限循环", [
         "chapter1_Agent入门_20260815.md",
         "chapter2_上下文工程_20260815.md",
     ]),
-    # —— 负样本（书中无对应内容，期望不召回）——
+    # —— 负样本（语料中无对应内容，期望不召回）——
     ("红烧肉怎么做", []),
     ("世界杯决赛的比赛规则", []),
     ("如何办理房产过户手续", []),
@@ -114,6 +132,14 @@ def _run_search(vector_db, query: str, k: int, search_mode: str):
     else:
         results = vector_db.similarity_search_with_score(query, k=k)
         results = [(doc, 1 / (1 + score)) for doc, score in results]
+
+    # 向量模式应用「绝对下限」防线（与管线 vector 分支一致）；
+    # 混合模式由 hybrid_search 内部对向量部分应用防线，RRF 分数不做此过滤
+    if search_mode == "vector":
+        from config import ABSOLUTE_MIN_SCORE
+
+        if results and max(s for _, s in results) < ABSOLUTE_MIN_SCORE:
+            return []
 
     files = [doc.metadata.get("source_file", "") for doc, _ in results]
     return files

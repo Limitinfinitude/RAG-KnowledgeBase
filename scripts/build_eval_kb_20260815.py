@@ -2,9 +2,9 @@
 
 用法（项目根目录）::
 
-    python scripts/build_eval_kb_20260815.py --user 99
+    python scripts/build_eval_kb_20260815.py --user 98
 
-默认将 eval_corpus/ 下所有 .txt/.md 入库到 --user 用户的知识库。
+支持格式：txt / md / pdf / docx / xlsx（二进制格式按原始字节读取，走项目内置解析）。
 """
 from __future__ import annotations
 
@@ -17,6 +17,20 @@ if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
 CORPUS_DIR = os.path.join(_PROJECT_ROOT, "eval_corpus")
+
+_TEXT_EXTS = {".txt", ".md"}
+_SUPPORTED_EXTS = _TEXT_EXTS | {".pdf", ".docx", ".xlsx", ".xls"}
+
+
+class _BytesUploadFile:
+    """最小文件包装：满足 ingest_file 的 .name/.getbuffer 接口。"""
+
+    def __init__(self, name: str, raw: bytes):
+        self.name = name
+        self._raw = raw
+
+    def getbuffer(self):
+        return self._raw
 
 
 def main() -> None:
@@ -37,32 +51,31 @@ def main() -> None:
         print(f"[ERROR] 语料目录不存在: {CORPUS_DIR}")
         sys.exit(1)
 
-    files = [f for f in os.listdir(CORPUS_DIR) if f.lower().endswith((".txt", ".md"))]
+    files = [f for f in os.listdir(CORPUS_DIR)
+             if os.path.splitext(f)[1].lower() in _SUPPORTED_EXTS
+             and not f.startswith("语料来源说明")]
     if not files:
         print("[ERROR] 语料目录为空")
         sys.exit(1)
 
-    from io import BytesIO
-
     total = 0
     for fname in sorted(files):
         path = os.path.join(CORPUS_DIR, fname)
-        with open(path, "r", encoding="utf-8") as f:
-            data = f.read()
-        buf = BytesIO(data.encode("utf-8"))
-        # 用一个简单的文件对象包装，满足 ingest_file 的 .name/.getbuffer 接口
-        class _F:
-            def __init__(self, name, raw):
-                self.name = name
-                self._raw = raw
-
-            def getbuffer(self):
-                return self._raw
-
-        wrapped = _F(fname, data.encode("utf-8"))
-        n = ingest_file(wrapped, vdb, category="评测语料", description="检索评测语料")
-        total += n
-        print(f"入库 {fname}: {n} 块")
+        ext = os.path.splitext(fname)[1].lower()
+        # 文本格式按 UTF-8 读；二进制格式（pdf/docx/xlsx）按原始字节读
+        if ext in _TEXT_EXTS:
+            with open(path, "rb") as f:
+                raw = f.read()
+        else:
+            with open(path, "rb") as f:
+                raw = f.read()
+        wrapped = _BytesUploadFile(fname, raw)
+        try:
+            n = ingest_file(wrapped, vdb, category="评测语料", description="检索评测语料")
+            total += n
+            print(f"入库 {fname}: {n} 块")
+        except Exception as e:
+            print(f"[WARN] 入库 {fname} 失败: {e}")
 
     print(f"\n完成，共入库 {total} 块到用户 {args.user} 知识库。")
 
