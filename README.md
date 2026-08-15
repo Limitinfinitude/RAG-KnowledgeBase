@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 RAG-KnowledgeBase
+#  RAG-KnowledgeBase
 
 **基于 LangChain + FAISS 的智能检索与问答知识库系统**
 
