@@ -29,8 +29,7 @@
 
 </div>
 
-## 因添加了OCR所以需要安装Tesseract-OCR
-https://sourceforge.net/projects/tesseract-ocr.mirror/files/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe/download
+> （截图待上传，运行项目后替换这里）
 
 ## 🚀 快速开始
 

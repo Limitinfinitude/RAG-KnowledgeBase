@@ -10,5 +10,16 @@ pdf2image
 pytesseract
 pillow
 python-docx
+matplotlib>=3.7.0
+docx2txt
 requests
 numpy
+pandas>=1.5.0
+openpyxl>=3.0.0
+pypdf>=4.0.0
+fastapi>=0.104.0
+python-multipart>=0.0.6
+uvicorn[standard]>=0.24.0
+pymysql>=1.1.0
+rank-bm25>=0.2.2
+jieba>=0.42.1

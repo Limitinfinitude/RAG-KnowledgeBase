@@ -14,3 +14,6 @@ __pycache__/
 .env
 .venv
 streamlit/
+
+# Web 用户 SQLite（本地注册信息）
+data/
