@@ -7,43 +7,141 @@ import pytesseract
 from pdf2image import convert_from_path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from config import TESSERACT_CMD, DB_DIR
+from docx import Document as DocxDocument
+from config import TESSERACT_CMD
+from utils.path_context import get_kb_dir
+from utils.document_preview import persist_original_from_temp
+from utils.metadata_manager import MAX_FILE_SIZE_BYTES, add_document_metadata, update_chunks_count
+from utils.logger import log_file_upload, log_error
 
-# 设置Tesseract路径
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
+__all__ = ["ingest_file", "MAX_FILE_SIZE_BYTES"]
 
-def ingest_file(uploaded_file, vector_db):
+
+def _finalize_ingest_metadata(
+    uploaded_file,
+    file_ext: str,
+    category: str,
+    description: str,
+    chunks_count: int,
+) -> None:
+    if chunks_count <= 0:
+        return
+    file_size = len(uploaded_file.getbuffer())
+    add_document_metadata(
+        file_name=uploaded_file.name,
+        file_size=file_size,
+        file_type=file_ext.lstrip("."),
+        category=category,
+        description=description,
+    )
+    update_chunks_count(uploaded_file.name, chunks_count)
+    try:
+        log_file_upload(
+            file_name=uploaded_file.name,
+            file_size=file_size,
+            chunks=chunks_count,
+            category=category,
+        )
+    except Exception as e:
+        print(f"记录上传日志失败: {e}")
+
+
+def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", description: str = ""):
     """
-    处理上传的文件并入库
-    :param uploaded_file: Streamlit上传的文件对象
-    :param vector_db: 向量数据库实例
-    :return: 处理后的文本块数量
+    处理上传的文件并入库。
+    大文件走流式：分段读入、单层 medium 切分、分批写入向量库，降低内存峰值。
     """
+    from utils import ingest_streaming as ins
+
     temp_path = None
     try:
-        # 1. 创建临时文件（修复：确保文件扩展名正确）
+        file_size = len(uploaded_file.getbuffer())
+        if file_size > MAX_FILE_SIZE_BYTES:
+            raise ValueError(
+                f"文件大小 {file_size / (1024*1024):.2f}MB 超过限制 {MAX_FILE_SIZE_BYTES / (1024*1024)}MB"
+            )
+
         file_ext = os.path.splitext(uploaded_file.name)[1].lower()
-        with tempfile.NamedTemporaryFile(
-                delete=False,
-                suffix=file_ext,
-                mode='wb'
-        ) as tmp:
-            tmp.write(uploaded_file.getbuffer())  # 修复：使用getbuffer()替代read()
+        with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext, mode="wb") as tmp:
+            tmp.write(uploaded_file.getbuffer())
             temp_path = tmp.name
 
-        # 2. 根据文件类型处理
+        persist_original_from_temp(temp_path, uploaded_file.name)
+
+        on_disk = os.path.getsize(temp_path)
+        use_stream = ins.should_use_streaming_ingest(on_disk)
+        cat = category.strip() or "默认知识库"
+        desc = description or ""
+
+        # ---------- 流式入库（大文件）----------
+        if use_stream and file_ext in (".txt", ".md"):
+            enc = ins.detect_text_file_encoding(temp_path)
+            sample = ins.read_text_head(temp_path, enc, 18000)
+            summary = ins.make_rule_summary_from_sample(
+                sample, uploaded_file.name, file_ext.lstrip(".")
+            )
+            n = ins.run_streaming_ingest(
+                ins.iter_segments_text_file(temp_path, enc),
+                uploaded_file.name,
+                file_ext.lstrip("."),
+                vector_db,
+                on_disk,
+                summary,
+            )
+            print(f"[Ingest/stream] txt/md 入库 {n} 块，文件：{uploaded_file.name}")
+            _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
+            return n
+
+        if use_stream and file_ext == ".pdf":
+            if ins.pdf_has_extractable_text(temp_path):
+                sample = ins.read_pdf_text_sample(temp_path)
+                summary = ins.make_rule_summary_from_sample(sample, uploaded_file.name, "pdf")
+                n = ins.run_streaming_ingest(
+                    ins.iter_segments_pdf_text(temp_path),
+                    uploaded_file.name,
+                    "pdf",
+                    vector_db,
+                    on_disk,
+                    summary,
+                )
+            else:
+                n = ins.run_streaming_ingest(
+                    ins.iter_segments_pdf_ocr(temp_path),
+                    uploaded_file.name,
+                    "pdf",
+                    vector_db,
+                    on_disk,
+                    None,
+                )
+            print(f"[Ingest/stream] PDF 入库 {n} 块，文件：{uploaded_file.name}")
+            _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
+            return n
+
+        if use_stream and file_ext in (".docx", ".doc"):
+            sample = ins.read_docx_sample(temp_path)
+            summary = ins.make_rule_summary_from_sample(sample, uploaded_file.name, "docx")
+            n = ins.run_streaming_ingest(
+                ins.iter_segments_docx(temp_path),
+                uploaded_file.name,
+                "docx",
+                vector_db,
+                on_disk,
+                summary,
+            )
+            print(f"[Ingest/stream] DOCX 入库 {n} 块，文件：{uploaded_file.name}")
+            _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
+            return n
+
+        # ---------- 原有路径（较小文件）：全文进内存 + 多层级 smart chunk ----------
         docs = []
-        if file_ext == '.txt':
-            # 处理TXT文件
-            with open(temp_path, 'rb') as f:
+        if file_ext == ".txt":
+            with open(temp_path, "rb") as f:
                 raw_data = f.read()
 
-            # 多编码尝试解码
             decoded_text = None
-            encodings = ['utf-8', 'gb18030', 'gbk', 'latin-1']
-            for enc in encodings:
+            for enc in ["utf-8", "gb18030", "gbk", "latin-1"]:
                 try:
                     decoded_text = raw_data.decode(enc)
                     break
@@ -53,96 +151,189 @@ def ingest_file(uploaded_file, vector_db):
             if decoded_text is None:
                 raise ValueError(f"无法解码文件 {uploaded_file.name}，不支持的编码格式")
 
-            docs = [Document(
-                page_content=decoded_text.strip(),
-                metadata={"source_file": uploaded_file.name}
-            )]
+            docs = [
+                Document(
+                    page_content=decoded_text.strip(),
+                    metadata={"source_file": uploaded_file.name},
+                )
+            ]
 
-        elif file_ext == '.pdf':
-            # 处理PDF文件
+        elif file_ext == ".pdf":
             try:
-                # 首先尝试直接读取文本
                 loader = PyPDFLoader(temp_path)
                 pdf_docs = loader.load()
 
-                # 检查是否提取到有效文本
                 has_text = any(doc.page_content.strip() for doc in pdf_docs)
 
                 if not has_text:
-                    # OCR处理图片型PDF
                     st_images = convert_from_path(
                         temp_path,
-                        poppler_path=None,  # 根据需要设置poppler路径
-                        fmt='png',
-                        dpi=300
+                        poppler_path=None,
+                        fmt="png",
+                        dpi=300,
                     )
 
-                    # 逐页OCR
                     ocr_text = []
                     for i, img in enumerate(st_images):
                         try:
-                            page_text = pytesseract.image_to_string(img, lang='chi_sim')
+                            page_text = pytesseract.image_to_string(img, lang="chi_sim")
                             ocr_text.append(f"第{i + 1}页：\n{page_text}")
                         except Exception as e:
                             print(f"第{i + 1}页OCR失败: {e}")
                             ocr_text.append(f"第{i + 1}页：OCR识别失败")
 
                     full_text = "\n\n".join(ocr_text)
-                    docs = [Document(
-                        page_content=full_text,
-                        metadata={"source_file": uploaded_file.name}
-                    )]
+                    docs = [
+                        Document(
+                            page_content=full_text,
+                            metadata={"source_file": uploaded_file.name},
+                        )
+                    ]
                 else:
-                    # 文本型PDF，更新metadata
                     docs = []
                     for i, doc in enumerate(pdf_docs):
-                        doc.metadata.update({
-                            "source_file": uploaded_file.name,
-                            "page": i + 1
-                        })
+                        doc.metadata.update({"source_file": uploaded_file.name, "page": i + 1})
                         docs.append(doc)
 
             except Exception as e:
                 raise RuntimeError(f"PDF处理失败: {str(e)}\n{traceback.format_exc()}")
 
+        elif file_ext in [".docx", ".doc"]:
+            try:
+                docx_file = DocxDocument(temp_path)
+                paragraphs = []
+                for para in docx_file.paragraphs:
+                    if para.text.strip():
+                        paragraphs.append(para.text.strip())
+
+                full_text = "\n\n".join(paragraphs)
+
+                for table in docx_file.tables:
+                    table_text = []
+                    for row in table.rows:
+                        row_text = [cell.text.strip() for cell in row.cells]
+                        table_text.append(" | ".join(row_text))
+                    if table_text:
+                        full_text += "\n\n" + "\n".join(table_text)
+
+                if not full_text.strip():
+                    raise ValueError("DOCX文件中未提取到文本内容")
+
+                docs = [
+                    Document(
+                        page_content=full_text,
+                        metadata={"source_file": uploaded_file.name, "file_type": "docx"},
+                    )
+                ]
+            except Exception as e:
+                raise RuntimeError(f"DOCX处理失败: {str(e)}\n{traceback.format_exc()}")
+
+        elif file_ext == ".md":
+            try:
+                with open(temp_path, "r", encoding="utf-8") as f:
+                    md_text = f.read()
+
+                if not md_text.strip():
+                    raise ValueError("Markdown文件中未提取到文本内容")
+
+                docs = [
+                    Document(
+                        page_content=md_text,
+                        metadata={"source_file": uploaded_file.name, "file_type": "md"},
+                    )
+                ]
+            except UnicodeDecodeError:
+                with open(temp_path, "r", encoding="gb18030") as f:
+                    md_text = f.read()
+                docs = [
+                    Document(
+                        page_content=md_text,
+                        metadata={"source_file": uploaded_file.name, "file_type": "md"},
+                    )
+                ]
+            except Exception as e:
+                raise RuntimeError(f"Markdown处理失败: {str(e)}\n{traceback.format_exc()}")
+
+        elif file_ext in [".xlsx", ".xls"]:
+            try:
+                import pandas as pd
+
+                excel_file = pd.ExcelFile(temp_path)
+                sheets_text = []
+
+                for sheet_name in excel_file.sheet_names:
+                    df = pd.read_excel(excel_file, sheet_name=sheet_name)
+                    sheet_text = f"工作表: {sheet_name}\n\n"
+                    sheet_text += df.to_string(index=False)
+                    sheets_text.append(sheet_text)
+
+                full_text = "\n\n" + "=" * 50 + "\n\n".join(sheets_text)
+
+                if not full_text.strip():
+                    raise ValueError("Excel文件中未提取到文本内容")
+
+                docs = [
+                    Document(
+                        page_content=full_text,
+                        metadata={"source_file": uploaded_file.name, "file_type": "excel"},
+                    )
+                ]
+            except ImportError:
+                raise RuntimeError("处理Excel文件需要安装pandas和openpyxl库，请运行: pip install pandas openpyxl")
+            except Exception as e:
+                raise RuntimeError(f"Excel处理失败: {str(e)}\n{traceback.format_exc()}")
+
         else:
             print(f"不支持的文件类型: {file_ext}")
             return 0
 
-        # 3. 文本分块（修复：优化分块参数）
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=800,
-            chunk_overlap=80,  # 修复：降低重叠率，避免冗余
-            separators=["\n\n", "\n", "。", "！", "？", "；", "，", " ", ""],
-            length_function=len
+        from utils.smart_chunker import smart_chunk_document
+
+        full_text = "\n\n".join([doc.page_content for doc in docs])
+        text_length = len(full_text)
+        if text_length < 5000:
+            length_factor = 0.8
+        elif text_length > 50000:
+            length_factor = 1.2
+        else:
+            length_factor = 1.0
+
+        chunks, chunk_stats = smart_chunk_document(
+            text=full_text,
+            source_file=uploaded_file.name,
+            file_type=file_ext.lstrip("."),
+            use_llm_summary=False,
+            doc_length_factor=length_factor,
         )
 
-        chunks = splitter.split_documents(docs)
+        print(f"[SmartChunker] 分块统计: {chunk_stats}")
 
-        # 4. 确保每个chunk都有正确的metadata
         for chunk in chunks:
-            chunk.metadata["source_file"] = uploaded_file.name
-            chunk.metadata["file_type"] = file_ext.lstrip('.')
+            if "source_file" not in chunk.metadata:
+                chunk.metadata["source_file"] = uploaded_file.name
+            if "file_type" not in chunk.metadata:
+                chunk.metadata["file_type"] = file_ext.lstrip(".")
 
-        # 5. 批量添加到向量库（修复：使用批量添加）
         if chunks:
-            # FAISS 支持 add_documents，和 Chroma 接口完全兼容
-            vector_db.add_documents(chunks)
-            print(f"成功入库 {len(chunks)} 个文本块，文件：{uploaded_file.name}")
-            # 显式保存 FAISS 索引
-            index_dir = os.path.join(DB_DIR, "faiss_index")
+            index_dir = os.path.join(get_kb_dir(), "faiss_index")
             os.makedirs(index_dir, exist_ok=True)
+            bs = ins.EMBED_ADD_BATCH_SIZE
+            for i in range(0, len(chunks), bs):
+                vector_db.add_documents(chunks[i : i + bs])
             vector_db.save_local(index_dir)
-            print(f"FAISS 索引已保存到: {index_dir}")
+            print(f"成功入库 {len(chunks)} 个文本块，文件：{uploaded_file.name}")
+            _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, len(chunks))
+
         return len(chunks)
 
     except Exception as e:
-        print(f"文件处理失败 {uploaded_file.name}: {str(e)}")
+        error_msg = f"文件处理失败 {uploaded_file.name}: {str(e)}"
+        print(error_msg)
         print(traceback.format_exc())
-        raise  # 抛出异常让上层处理
+        log_error("file_processing", error_msg, {"file_name": uploaded_file.name})
+        raise
 
     finally:
-        # 清理临时文件（修复：确保文件关闭后删除）
         if temp_path and os.path.exists(temp_path):
             try:
                 os.unlink(temp_path)

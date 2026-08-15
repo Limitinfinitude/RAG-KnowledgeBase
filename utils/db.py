@@ -1,7 +1,9 @@
 # utils/db.py
 import os
 from langchain_community.vectorstores import FAISS
-from config import DB_DIR
+
+from utils.path_context import get_kb_dir
+
 
 def get_vector_db(embeddings=None):
     """
@@ -12,7 +14,7 @@ def get_vector_db(embeddings=None):
         from utils.embedding import get_embeddings
         embeddings = get_embeddings()
 
-    index_dir = os.path.join(DB_DIR, "faiss_index")
+    index_dir = os.path.join(get_kb_dir(), "faiss_index")
     index_file = os.path.join(index_dir, "index.faiss")
 
     # 如果已有索引，正常加载
