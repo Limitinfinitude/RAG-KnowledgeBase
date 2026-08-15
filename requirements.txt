@@ -1,25 +1,46 @@
-streamlit>=1.30.0
-langchain>=0.1.0
-langchain-community
-langchain-huggingface
-langchain-openai
-langchain-ollama
-faiss-cpu
-sentence-transformers
-pdf2image
-pytesseract
-pillow
-python-docx
-matplotlib>=3.7.0
-docx2txt
-requests
-numpy
-pandas>=1.5.0
-openpyxl>=3.0.0
-pypdf>=4.0.0
-fastapi>=0.104.0
-python-multipart>=0.0.6
-uvicorn[standard]>=0.24.0
-pymysql>=1.1.0
-rank-bm25>=0.2.2
-jieba>=0.42.1
+# ===== RAG-KnowledgeBase 直接依赖（精确版本，可复现）=====
+# 完整传递依赖快照见 requirements.lock.txt；conda 环境见 environment.yml
+# 推荐环境：Python 3.11 + conda（rag_demo）
+
+# --- Web 框架 ---
+fastapi==0.128.0
+uvicorn[standard]==0.38.0
+python-multipart==0.0.21
+
+# --- LLM 编排 ---
+langchain==1.2.0
+langchain-community==0.4.1
+langchain-huggingface==1.2.2
+langchain-openai==1.1.6
+langchain-ollama==1.0.1
+
+# --- 向量库与模型 ---
+faiss-cpu==1.13.2
+sentence-transformers==5.2.0
+torch==2.9.1
+
+# --- 单机 UI ---
+streamlit==1.52.2
+
+# --- 文档解析 ---
+pdf2image==1.17.0
+pytesseract==0.3.13
+pillow==12.0.0
+python-docx==1.2.0
+docx2txt==0.9
+pypdf==3.17.4
+openpyxl==3.1.5
+
+# --- 检索 / 数据处理 ---
+rank-bm25==0.2.2
+jieba==0.42.1
+numpy==2.2.6
+pandas==2.3.3
+matplotlib==3.10.8
+
+# --- 认证与配置 ---
+pymysql==1.1.2
+python-dotenv==1.2.1
+
+# --- 其他 ---
+requests==2.32.5
