@@ -10,6 +10,7 @@ from utils.reranker import rerank_documents
 from services.ui_sink import RetrievalUISink
 from config import (
     SIMILARITY_THRESHOLD,
+    ABSOLUTE_MIN_SCORE,
     MAX_CONTEXT_LENGTH,
     CONTEXT_TOP_K,
     LOW_QUALITY_FALLBACK_K,
@@ -30,6 +31,23 @@ def _merge_doc_key(doc: Any) -> str:
     body = (getattr(doc, "page_content", None) or "")[:320]
     digest = hashlib.md5(body.encode("utf-8", errors="ignore")).hexdigest()[:16]
     return f"{src}\x1f{digest}"
+
+
+def filter_by_absolute_floor(
+    scored_docs: List[Tuple[Any, float]],
+) -> List[Tuple[Any, float]]:
+    """负样本防线：仅适用于「相似度尺度」的分数（向量检索的 1/(1+L2) 转换分）。
+
+    当最高分都低于 ABSOLUTE_MIN_SCORE 时返回空列表，避免对无关查询硬凑低分结果。
+    注意：RRF 融合分数（量级 ~0.01-0.1）与重排 sigmoid 分数（0-1）不适用此防线，
+    故只在向量检索分支调用本函数。
+    """
+    if not scored_docs:
+        return scored_docs
+    best_score = max(score for _, score in scored_docs)
+    if best_score < ABSOLUTE_MIN_SCORE:
+        return []
+    return scored_docs
 
 
 def finalize_retrieval_from_scored(
@@ -209,6 +227,14 @@ def retrieve_for_rag(
             docs_with_scores = vector_db.similarity_search_with_score(query, k=fetch_k)
             docs_with_scores = [(doc, 1 / (1 + score)) for doc, score in docs_with_scores]
             sink.caption("🔍 使用向量检索")
+
+        if search_mode == "vector":
+            # 负样本防线：向量相似度最高分低于绝对下限 → 无相关内容
+            docs_with_scores = filter_by_absolute_floor(docs_with_scores)
+            if not docs_with_scores:
+                elapsed = time.perf_counter() - start_time
+                sink.caption(f"检索耗时: {elapsed:.2f} 秒（未找到相关内容）")
+                return out
 
         from utils.score_normalization import normalize_scores_by_kb
 

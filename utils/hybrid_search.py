@@ -223,6 +223,13 @@ def hybrid_search(
         vector_results = [
             (doc, 1 / (1 + score)) for doc, score in vector_results
         ]
+        # 负样本防线：向量相似度最高分低于绝对下限 → 无相关内容，混合检索直接返回空
+        if vector_results:
+            from config import ABSOLUTE_MIN_SCORE
+
+            if max(s for _, s in vector_results) < ABSOLUTE_MIN_SCORE:
+                logger.info("[Hybrid] 向量相似度过低（<%.2f），视为无相关内容", ABSOLUTE_MIN_SCORE)
+                return []
     except Exception as e:
         logger.warning("[Hybrid] 向量检索失败: %s", e)
         vector_results = []

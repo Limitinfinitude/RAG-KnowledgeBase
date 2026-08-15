@@ -75,6 +75,9 @@ TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # —— 检索管线的可调超参（集中管理，便于调参；部分可被 Web 管理端 rag_defaults 覆盖）——
 # 相似度阈值：低于该分值的检索结果视为低质量，回退取前若干条
 SIMILARITY_THRESHOLD = 0.3
+# 绝对下限：最高分低于此值视为「无相关内容」，返回空而非硬凑低分结果
+# （依据 2026-08-15 评测：正样本最高分 0.62~0.68，负样本 0.41~0.47，取 0.5 可区分）
+ABSOLUTE_MIN_SCORE = 0.5
 # 送入 LLM 的上下文最大字符数（超出则截断）
 MAX_CONTEXT_LENGTH = 4000
 # 最终进入上下文的召回片段数量

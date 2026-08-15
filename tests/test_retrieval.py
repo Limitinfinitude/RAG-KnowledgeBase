@@ -55,17 +55,31 @@ class TestFinalizeRetrieval:
         assert out.evidence_sources == []
         assert out.scored_docs == []
 
-    def test_low_score_docs_still_returned(self):
-        # 低于阈值但非空时，回退取前 3
+    def test_all_below_absolute_floor_returns_empty(self):
+        # 全部分数低于 ABSOLUTE_MIN_SCORE（0.5）→ 视为无相关内容
+        from services.retrieval import filter_by_absolute_floor
+
         docs = [(_make_doc(f"t{i}", score=0.1), 0.1) for i in range(5)]
-        out = finalize_retrieval_from_scored(
-            vector_db=None,
-            scored_docs=docs,
-            k=5,
-            sink=self._sink(),
-            start_time=__import__("time").perf_counter(),
-        )
-        assert out.scored_docs  # 非空
+        assert filter_by_absolute_floor(docs) == []
+
+    def test_negative_like_scores_return_empty(self):
+        # 负样本实测分数区间（0.41~0.47）：高于 SIMILARITY_THRESHOLD 但低于绝对下限
+        from services.retrieval import filter_by_absolute_floor
+
+        docs = [(_make_doc(f"t{i}", score=0.45), 0.45) for i in range(3)]
+        assert filter_by_absolute_floor(docs) == []
+
+    def test_positive_like_scores_pass_floor(self):
+        # 正样本实测分数区间（0.62~0.68）：高于绝对下限，正常放行
+        from services.retrieval import filter_by_absolute_floor
+
+        docs = [(_make_doc(f"内容{i}", source=f"f{i}.txt", score=0.65), 0.65) for i in range(3)]
+        assert filter_by_absolute_floor(docs) == docs
+
+    def test_empty_input_passes_floor(self):
+        from services.retrieval import filter_by_absolute_floor
+
+        assert filter_by_absolute_floor([]) == []
 
     def test_high_score_docs_generate_numbered_context(self):
         docs = [(_make_doc(f"内容{i}", source=f"f{i}.txt", score=0.9), 0.9) for i in range(3)]
