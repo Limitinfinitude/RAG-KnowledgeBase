@@ -3,6 +3,7 @@
 混合检索模块：BM25关键词检索 + 向量检索 + RRF融合
 解决向量检索在专有名词、产品型号等场景下的局限性
 """
+import logging
 import os
 import pickle
 from typing import List, Tuple, Dict, Optional
@@ -11,6 +12,8 @@ from rank_bm25 import BM25Okapi
 import jieba
 from utils.path_context import get_kb_dir
 
+logger = logging.getLogger(__name__)
+
 
 def _bm25_index_file() -> str:
     return os.path.join(get_kb_dir(), "bm25_index.pkl")
@@ -18,6 +21,20 @@ def _bm25_index_file() -> str:
 
 def _bm25_docs_file() -> str:
     return os.path.join(get_kb_dir(), "bm25_docs.pkl")
+
+
+def invalidate_bm25_index() -> None:
+    """标记当前知识库的 BM25 索引为失效（入库/删除后调用）。
+
+    删除已持久化的 bm25_index.pkl / bm25_docs.pkl，使下次混合检索时自动重建，
+    避免「旧索引 + 新文档」导致的一致性偏移问题。
+    """
+    for p in (_bm25_index_file(), _bm25_docs_file()):
+        try:
+            if os.path.isfile(p):
+                os.remove(p)
+        except OSError:
+            logger.warning("失效 BM25 索引失败: %s", p)
 
 
 def tokenize_chinese(text: str) -> List[str]:
@@ -65,9 +82,9 @@ def save_bm25_index(bm25_index: BM25Okapi, documents: List[Document]):
             pickle.dump(bm25_index, f)
         with open(docs_f, "wb") as f:
             pickle.dump(documents, f)
-        print(f"[BM25] 索引已保存到: {idx_f}")
+        logger.info("[BM25] 索引已保存到: %s", idx_f)
     except Exception as e:
-        print(f"[BM25] 保存索引失败: {e}")
+        logger.warning("[BM25] 保存索引失败: %s", e)
 
 
 def load_bm25_index() -> Tuple[Optional[BM25Okapi], Optional[List[Document]]]:
@@ -81,10 +98,10 @@ def load_bm25_index() -> Tuple[Optional[BM25Okapi], Optional[List[Document]]]:
                 bm25_index = pickle.load(f)
             with open(docs_f, "rb") as f:
                 documents = pickle.load(f)
-            print(f"[BM25] 索引已加载: {len(documents)} 个文档")
+            logger.info("[BM25] 索引已加载: %d 个文档", len(documents))
             return bm25_index, documents
     except Exception as e:
-        print(f"[BM25] 加载索引失败: {e}")
+        logger.warning("[BM25] 加载索引失败: %s", e)
     return None, None
 
 
@@ -207,7 +224,7 @@ def hybrid_search(
             (doc, 1 / (1 + score)) for doc, score in vector_results
         ]
     except Exception as e:
-        print(f"[Hybrid] 向量检索失败: {e}")
+        logger.warning("[Hybrid] 向量检索失败: %s", e)
         vector_results = []
     
     # 2. BM25检索
@@ -223,7 +240,7 @@ def hybrid_search(
                         (doc, score / max_score) for doc, score in bm25_results
                     ]
         except Exception as e:
-            print(f"[Hybrid] BM25检索失败: {e}")
+            logger.warning("[Hybrid] BM25检索失败: %s", e)
     
     # 3. 分数归一化（按知识库分组归一化，解决分数膨胀问题）
     if selected_kb == "全部知识库" and (vector_results or bm25_results):
@@ -233,7 +250,7 @@ def hybrid_search(
                 vector_results, bm25_results, selected_kb
             )
         except Exception as e:
-            print(f"[Hybrid] 分数归一化失败: {e}，使用原始分数")
+            logger.warning("[Hybrid] 分数归一化失败: %s，使用原始分数", e)
     
     # 4. RRF融合
     if vector_results and bm25_results:
@@ -266,21 +283,21 @@ def rebuild_bm25_index(vector_db) -> Tuple[Optional[BM25Okapi], Optional[List[Do
         ]
         
         if not valid_docs:
-            print("[BM25] 没有有效文档，无法构建索引")
+            logger.warning("[BM25] 没有有效文档，无法构建索引")
             return None, None
         
-        print(f"[BM25] 开始构建索引，文档数: {len(valid_docs)}")
+        logger.info("[BM25] 开始构建索引，文档数: %d", len(valid_docs))
         bm25_index = build_bm25_index(valid_docs)
         
         if bm25_index:
             save_bm25_index(bm25_index, valid_docs)
-            print(f"[BM25] 索引构建完成")
+            logger.info("[BM25] 索引构建完成")
             return bm25_index, valid_docs
         else:
-            print("[BM25] 索引构建失败")
+            logger.warning("[BM25] 索引构建失败")
             return None, None
             
     except Exception as e:
-        print(f"[BM25] 重建索引失败: {e}")
+        logger.warning("[BM25] 重建索引失败: %s", e)
         return None, None
 

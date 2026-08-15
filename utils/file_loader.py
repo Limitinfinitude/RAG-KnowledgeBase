@@ -1,4 +1,5 @@
 # utils/file_loader.py
+import logging
 import os
 import tempfile
 import traceback
@@ -13,6 +14,8 @@ from utils.path_context import get_kb_dir
 from utils.document_preview import persist_original_from_temp
 from utils.metadata_manager import MAX_FILE_SIZE_BYTES, add_document_metadata, update_chunks_count
 from utils.logger import log_file_upload, log_error
+
+logger = logging.getLogger(__name__)
 
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
@@ -45,7 +48,7 @@ def _finalize_ingest_metadata(
             category=category,
         )
     except Exception as e:
-        print(f"记录上传日志失败: {e}")
+        logger.warning("记录上传日志失败: %s", e)
 
 
 def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", description: str = ""):
@@ -90,7 +93,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
                 on_disk,
                 summary,
             )
-            print(f"[Ingest/stream] txt/md 入库 {n} 块，文件：{uploaded_file.name}")
+            logger.info("[Ingest/stream] txt/md 入库 %d 块，文件：%s", n, uploaded_file.name)
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
             return n
 
@@ -115,7 +118,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
                     on_disk,
                     None,
                 )
-            print(f"[Ingest/stream] PDF 入库 {n} 块，文件：{uploaded_file.name}")
+            logger.info("[Ingest/stream] PDF 入库 %d 块，文件：%s", n, uploaded_file.name)
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
             return n
 
@@ -130,7 +133,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
                 on_disk,
                 summary,
             )
-            print(f"[Ingest/stream] DOCX 入库 {n} 块，文件：{uploaded_file.name}")
+            logger.info("[Ingest/stream] DOCX 入库 %d 块，文件：%s", n, uploaded_file.name)
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
             return n
 
@@ -179,7 +182,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
                             page_text = pytesseract.image_to_string(img, lang="chi_sim")
                             ocr_text.append(f"第{i + 1}页：\n{page_text}")
                         except Exception as e:
-                            print(f"第{i + 1}页OCR失败: {e}")
+                            logger.warning("第%d页OCR失败: %s", i + 1, e)
                             ocr_text.append(f"第{i + 1}页：OCR识别失败")
 
                     full_text = "\n\n".join(ocr_text)
@@ -284,7 +287,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
                 raise RuntimeError(f"Excel处理失败: {str(e)}\n{traceback.format_exc()}")
 
         else:
-            print(f"不支持的文件类型: {file_ext}")
+            logger.warning("不支持的文件类型: %s", file_ext)
             return 0
 
         from utils.smart_chunker import smart_chunk_document
@@ -306,7 +309,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             doc_length_factor=length_factor,
         )
 
-        print(f"[SmartChunker] 分块统计: {chunk_stats}")
+        logger.info("[SmartChunker] 分块统计: %s", chunk_stats)
 
         for chunk in chunks:
             if "source_file" not in chunk.metadata:
@@ -321,15 +324,14 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             for i in range(0, len(chunks), bs):
                 vector_db.add_documents(chunks[i : i + bs])
             vector_db.save_local(index_dir)
-            print(f"成功入库 {len(chunks)} 个文本块，文件：{uploaded_file.name}")
+            logger.info("成功入库 %d 个文本块，文件：%s", len(chunks), uploaded_file.name)
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, len(chunks))
 
         return len(chunks)
 
     except Exception as e:
         error_msg = f"文件处理失败 {uploaded_file.name}: {str(e)}"
-        print(error_msg)
-        print(traceback.format_exc())
+        logger.exception(error_msg)
         log_error("file_processing", error_msg, {"file_name": uploaded_file.name})
         raise
 
@@ -338,4 +340,4 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             try:
                 os.unlink(temp_path)
             except Exception as e:
-                print(f"删除临时文件失败 {temp_path}: {e}")
+                logger.warning("删除临时文件失败 %s: %s", temp_path, e)

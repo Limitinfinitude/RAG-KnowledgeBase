@@ -3,12 +3,15 @@
 重排序器模块
 支持本地 CrossEncoder 和 Ollama 重排序模型
 """
+import logging
 import os
 import requests
 import time
 from typing import List, Tuple
 from sentence_transformers import CrossEncoder
 from utils.logger import log_retrieval, log_error
+
+logger = logging.getLogger(__name__)
 
 # Ollama 配置
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
@@ -171,16 +174,16 @@ def get_reranker(use_ollama: bool = False, ollama_base_url: str = None, ollama_m
         device = 'cuda' if os.environ.get('CUDA_VISIBLE_DEVICES') is not None else 'cpu'
         
         if os.path.exists(local_reranker_path):
-            print(f"[Reranker] 使用本地 reranker: {local_reranker_path}")
+            logger.info("[Reranker] 使用本地 reranker: %s", local_reranker_path)
             return CrossEncoder(local_reranker_path, device=device)
         else:
-            print("[Reranker] 本地 reranker 不存在，正在从 Hugging Face 下载 BAAI/bge-reranker-base ...")
-            print("（约 1GB，第一次运行较慢，后续离线使用）")
+            logger.info("[Reranker] 本地 reranker 不存在，正在从 Hugging Face 下载 BAAI/bge-reranker-base ...")
+            logger.info("（约 1GB，第一次运行较慢，后续离线使用）")
             
             model = CrossEncoder("BAAI/bge-reranker-base")
             os.makedirs(local_reranker_path, exist_ok=True)
             model.save(local_reranker_path)
-            print(f"[Reranker] 下载完成，已保存到: {local_reranker_path}")
+            logger.info("[Reranker] 下载完成，已保存到: %s", local_reranker_path)
             
             return CrossEncoder(local_reranker_path, device=device)
 
@@ -210,9 +213,9 @@ def rerank_documents(query: str, documents: List, reranker,
         scores = reranker.predict(pairs)
         
         # 调试信息：原始分数
-        print(f"[Reranker] 类型: {reranker_type}, 文档数: {len(documents)}")
-        print(f"[Reranker] 原始分数范围: min={min(scores):.4f}, max={max(scores):.4f}, avg={sum(scores)/len(scores):.4f}")
-        print(f"[Reranker] 前5个原始分数: {[round(s, 4) for s in scores[:5]]}")
+        logger.debug("[Reranker] 类型: %s, 文档数: %d", reranker_type, len(documents))
+        logger.debug("[Reranker] 原始分数范围: min=%.4f, max=%.4f, avg=%.4f", min(scores), max(scores), sum(scores)/len(scores))
+        logger.debug("[Reranker] 前5个原始分数: %s", [round(s, 4) for s in scores[:5]])
         
         # 【关键修复】：将 CrossEncoder 的 logits 转换为 0-1 概率
         # 方法1：使用 sigmoid 函数
@@ -220,8 +223,8 @@ def rerank_documents(query: str, documents: List, reranker,
         normalized_scores = [1 / (1 + math.exp(-score)) for score in scores]
         
         # 调试信息：归一化后的分数
-        print(f"[Reranker] 归一化后分数范围: min={min(normalized_scores):.4f}, max={max(normalized_scores):.4f}, avg={sum(normalized_scores)/len(normalized_scores):.4f}")
-        print(f"[Reranker] 前5个归一化分数: {[round(s, 4) for s in normalized_scores[:5]]}")
+        logger.debug("[Reranker] 归一化后分数范围: min=%.4f, max=%.4f, avg=%.4f", min(normalized_scores), max(normalized_scores), sum(normalized_scores)/len(normalized_scores))
+        logger.debug("[Reranker] 前5个归一化分数: %s", [round(s, 4) for s in normalized_scores[:5]])
         
         # 排序
         scored_docs = sorted(zip(documents, normalized_scores), key=lambda x: x[1], reverse=True)
@@ -240,9 +243,7 @@ def rerank_documents(query: str, documents: List, reranker,
         return scored_docs[:top_k]
     except Exception as e:
         log_error("reranker_error", str(e), {"query": query[:50], "doc_count": len(documents)})
-        print(f"[Reranker] 错误: {str(e)}")
-        import traceback
-        print(f"[Reranker] 错误详情: {traceback.format_exc()}")
+        logger.exception("[Reranker] 错误: %s", e)
         # 返回原始顺序，使用降序分数（而非固定0.5）
         fallback_scores = [1.0 - (i / len(documents)) * 0.5 for i in range(min(top_k, len(documents)))]
         return [(documents[i], fallback_scores[i]) for i in range(min(top_k, len(documents)))]

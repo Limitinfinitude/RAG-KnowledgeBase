@@ -3,12 +3,15 @@
 文档元数据管理系统
 用于存储和管理文档的分类、信息、上传时间等元数据
 """
+import logging
 import os
 import json
 from datetime import datetime
 from typing import Dict, List, Optional
 from utils.path_context import get_current_web_user_id, get_kb_dir
 from utils.web_system_settings import is_kb_disabled_for_user
+
+logger = logging.getLogger(__name__)
 
 MAX_FILE_SIZE_MB = 50
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024  # 50MB
@@ -26,7 +29,7 @@ def load_metadata() -> Dict:
             with open(path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"加载元数据失败: {e}")
+            logger.warning("加载元数据失败: %s", e)
             return {"documents": {}, "categories": ["默认知识库"]}
     return {"documents": {}, "categories": ["默认知识库"]}
 

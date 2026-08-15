@@ -3,10 +3,13 @@
 Token使用追踪工具
 从LangChain的response中提取token使用信息
 """
+import logging
 from typing import Dict, Optional
 from langchain_core.messages import BaseMessage
 from utils.logger import log_token_usage
 from utils.api_config import get_current_config
+
+logger = logging.getLogger(__name__)
 
 
 def extract_token_usage(response) -> Optional[Dict[str, int]]:
@@ -48,7 +51,7 @@ def extract_token_usage(response) -> Optional[Dict[str, int]]:
                     "total_tokens": getattr(usage, 'total_tokens', 0)
                 }
     except Exception as e:
-        print(f"提取token使用信息失败: {e}")
+        logger.warning("提取token使用信息失败: %s", e)
     
     return None
 

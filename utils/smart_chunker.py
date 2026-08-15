@@ -214,7 +214,7 @@ class SmartChunker:
                     }
                 )
             except Exception as e:
-                print(f"[Summary] LLM生成摘要失败: {e}，使用规则提取")
+                logger.warning("[Summary] LLM生成摘要失败: %s，使用规则提取", e)
                 # 回退到规则提取
         
         # 规则提取摘要（改进版）

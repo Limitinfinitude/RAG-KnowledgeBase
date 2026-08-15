@@ -175,6 +175,32 @@ def _update_job(job_id: str, **kwargs: Any) -> None:
             setattr(rec, k, v)
 
 
+def _invalidate_and_prewarm_bm25(user_id: int, vdb: Any) -> None:
+    """入库/删除后：使 BM25 索引失效，并在后台线程预重建，消除首个用户的冷启动卡顿。
+
+    说明：BM25 全量重建较慢（大库可达数十秒），故放在 daemon 线程后台执行；
+    重建完成前，混合检索仍可走「懒加载 rebuild」路径，功能不受影响。
+    """
+    try:
+        from utils.hybrid_search import invalidate_bm25_index, rebuild_bm25_index
+
+        invalidate_bm25_index()
+
+        def _prewarm() -> None:
+            try:
+                rebuild_bm25_index(vdb)
+            except Exception as e:  # noqa: BLE001 — 后台预热失败不应影响主流程
+                import logging
+
+                logging.getLogger(__name__).warning("BM25 后台预热失败: %s", e)
+
+        threading.Thread(target=_prewarm, name=f"bm25-prewarm-{user_id}", daemon=True).start()
+    except Exception as e:  # noqa: BLE001
+        import logging
+
+        logging.getLogger(__name__).warning("BM25 失效/预热调度失败: %s", e)
+
+
 def _process_one_task(task: IngestTask) -> None:
     _update_job(task.job_id, status="running")
     t_kb, t_api = set_user_kb_context(task.user_id)
@@ -194,6 +220,7 @@ def _process_one_task(task: IngestTask) -> None:
             )
             apply_compliance_after_staged_ingest(task.user_id, task.file_name, data)
             vdb_cache.bump_user_cache(task.user_id)
+            _invalidate_and_prewarm_bm25(task.user_id, vdb)
         _update_job(
             task.job_id,
             status="done",

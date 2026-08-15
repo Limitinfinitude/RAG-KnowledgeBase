@@ -6,9 +6,12 @@
 且 k=30000 会漏删。现优先用 LangChain FAISS.delete（faiss remove_ids），失败时再回退为「仅 reconstruct +
 from_embeddings」，避免调用 embedding API。
 """
+import logging
 import os
 import shutil
 from typing import List, Tuple
+
+logger = logging.getLogger(__name__)
 
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
@@ -114,7 +117,7 @@ def delete_document_from_vector_db(file_name: str, vector_db, embeddings=None):
             vector_db.save_local(index_dir)
     except Exception as e:
         err = f"FAISS.delete 失败，回退无重嵌入重建: {e}"
-        print(err)
+        logger.warning("%s", err)
         try:
             from utils.db import get_vector_db
 
@@ -138,7 +141,7 @@ def delete_document_from_vector_db(file_name: str, vector_db, embeddings=None):
     try:
         delete_document_metadata(file_name)
     except Exception as e:
-        print(f"删除元数据失败: {e}")
+        logger.warning("删除元数据失败: %s", e)
 
     try:
         obase = os.path.basename((file_name or "").replace("\\", "/"))
@@ -151,6 +154,6 @@ def delete_document_from_vector_db(file_name: str, vector_db, embeddings=None):
     try:
         log_file_delete(file_name=file_name, chunks_deleted=deleted_count)
     except Exception as e:
-        print(f"记录删除日志失败: {e}")
+        logger.warning("记录删除日志失败: %s", e)
 
     return True, deleted_count

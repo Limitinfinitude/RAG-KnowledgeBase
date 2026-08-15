@@ -2,10 +2,13 @@
 """
 文档预览 / 全文查看：优先从入库时保存的原文副本解析；若无副本则从向量块按顺序拼接。
 """
+import logging
 import os
 import shutil
 import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
+
+logger = logging.getLogger(__name__)
 
 from langchain_community.document_loaders import PyPDFLoader
 from docx import Document as DocxDocument
@@ -36,7 +39,7 @@ def persist_original_from_temp(temp_path: str, logical_name: str) -> None:
         # 同名校验后覆盖，与元数据「按文件名索引」一致
         shutil.copy2(temp_path, dest)
     except OSError as e:
-        print(f"[Ingest] 保存原文副本失败 {logical_name}: {e}")
+        logger.warning("[Ingest] 保存原文副本失败 %s: %s", logical_name, e)
 
 
 def _sort_docs_for_reconstruct(file_name: str, file_docs: List[Any]) -> List[Any]:
