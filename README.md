@@ -142,20 +142,33 @@ cd RAG-KnowledgeBase
 ### 2. 安装依赖
 
 ```bash
+# 推荐：conda 环境（可复现）
+conda env create -f environment.yml
+conda activate rag_demo
+
+# 或 pip（直接依赖，精确版本）
 pip install -r requirements.txt
 ```
 
-### 3. 配置密钥（环境变量）
+### 3. 配置密钥（.env）
 
-> 出于安全考虑，所有密钥均通过环境变量配置，不再硬编码。
+> 出于安全考虑，所有密钥均通过 `.env` 环境变量配置，不再硬编码。
 
-```powershell
-# PowerShell 示例（仅按需设置）
-$env:API_KEY = "sk-你的OpenAI兼容密钥"
-$env:BASE_URL = "https://你的API代理地址/v1"
-$env:MYSQL_PASSWORD = "你的数据库密码"    # 仅 Web 版 MySQL 模式需要
-$env:BRAVE_SEARCH_API_KEY = "你的Brave密钥"  # 可选，联网检索
+```bash
+# 复制模板并填写真实值（.env 已被 .gitignore 忽略）
+cp .env.example .env
 ```
+
+`.env` 关键项：
+
+```dotenv
+MYSQL_PASSWORD=你的数据库密码       # Web 版 MySQL 模式需要
+API_KEY=sk-你的OpenAI兼容密钥
+BASE_URL=https://api.openai.com/v1
+BRAVE_SEARCH_API_KEY=               # 可选，联网检索
+```
+
+> **配置优先级**：运行时业务配置（LLM 预设、检索参数、分块层级、联网密钥、配额、开关、限流）主存 MySQL `app_settings` 表，管理端可**动态修改、免重启**；详见 `docs/DEPLOY.md`。
 
 ### 4. 启动
 
@@ -245,11 +258,38 @@ RAG-KnowledgeBase/
   → 来源溯源与展示
 ```
 
+### 检索质量评测
+
+提供离线评测脚本，量化验证 Recall@k：
+
+```bash
+python scripts/eval_retrieval.py --user 1 --k 5 --mode both
+```
+
+评测报告见 [`docs/eval_report.md`](docs/eval_report.md)，当前基准集 Recall@5 = 1.0。
+
+---
+
+## 🛠️ 工程化
+
+| 能力 | 说明 |
+|------|------|
+| 密钥治理 | 密钥走 `.env`（`.gitignore` 忽略），`.env.example` 提供模板 |
+| 依赖锁定 | `requirements.lock.txt` + `environment.yml` 可复现 |
+| 单元测试 | 34 个用例（归一化/查询分类/检索），`pytest` 运行 |
+| CI | GitHub Actions 自动跑测试 |
+
+```bash
+pytest -q          # 运行全部测试
+```
+
 ---
 
 ## 📄 开源与贡献
 
 欢迎 Star ⭐、Fork 与 PR，一起完善这个项目！如有问题或建议，请提交 [Issue](https://github.com/Limitinfinitude/RAG-KnowledgeBase/issues)。
+
+> 部署细节见 [`docs/DEPLOY.md`](docs/DEPLOY.md)。
 
 ---
 
