@@ -1,0 +1,25 @@
+登录 / 注册页背景图放置说明
+================================
+
+【磁盘路径】（仓库内）
+  web_app/frontend/shared/assets/auth-bg.jpg
+  （与本文档同目录；部署后通过静态站访问，见下）
+
+【浏览器 URL】（与文件名一致）
+  /static/assets/auth-bg.jpg
+  （FastAPI 将 frontend/shared 挂到 /static/，故 assets 下文件即 /static/assets/…）
+
+用户端（浅色主题，默认无整页大图）：
+  1. 将图片放到上述目录，命名为：auth-bg.jpg（或 .png / .webp，需与 CSS 中扩展名一致）
+  2. 编辑 web_app/frontend/shared/auth-pages.css 顶部 :root，启用：
+     --auth-bg-image: url("/static/assets/auth-bg.jpg");
+     （默认 --auth-bg-image: none 为白/浅灰渐变底）
+
+管理端（浅色 + 金色点缀，默认无整页大图）：
+  将图片放到本目录，命名为：auth-admin-bg.jpg
+  在 auth-admin.css 的 :root 中把 --auth-admin-bg-image 改为：
+    --auth-admin-bg-image: url("/static/assets/auth-admin-bg.jpg");
+  （默认 none 为暖白/浅米色渐变底）
+
+支持常见格式时可改用 .png / .webp，路径与文件名需与 CSS 中一致。
+若未放置图片或未取消注释，页面使用默认渐变背景。

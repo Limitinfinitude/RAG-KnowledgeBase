@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+  <title>功能开关· 管理端</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260471" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+</head>
+<body data-portal="admin" data-page="admin-flags" class="gpt-subpage" data-admin-nav="flags">
+  <div class="gpt-layout">
+    <aside class="gpt-sidebar gpt-sidebar-admin" id="gptSidebar">
+      <div class="gpt-sidebar-head gpt-sidebar-head-bar">
+        <div class="gpt-sidebar-head-primary">
+          <a href="/admin/hub.html" class="gpt-btn-newchat" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:0.35rem;"><span class="gpt-icon">⌂</span><span class="gpt-sidebar-btn-text">管理首页</span></a>
+          <button type="button" class="gpt-btn-newchat gpt-sidebar-expand-btn" id="btnSidebarExpand" aria-label="展开侧栏">
+            <span class="gpt-icon" aria-hidden="true">⟩</span><span class="gpt-sidebar-btn-text">展开侧栏</span>
+          </button>
+        </div>
+        <button type="button" class="gpt-sidebar-rail-corner" id="btnSidebarRailToggle" aria-label="收起侧栏文字" title="收起文字仅保留图标">⟨</button>
+      </div>
+            <nav class="gpt-sidebar-nav" id="adminNavMount" aria-label="管理功能"></nav>
+<div class="gpt-sidebar-foot gpt-sidebar-foot-stack"><div class="gpt-sidebar-user-row"><div class="gpt-user-menu gpt-user-menu-sidebar" id="userMenu"><button type="button" class="gpt-avatar-btn gpt-avatar-btn-sidebar" id="avatarBtn"><img id="avatarImg" alt="" width="32" height="32" hidden /><span id="avatarFallback">管</span></button><div class="gpt-user-dropdown" id="userDropdown" role="menu"><button type="button" class="gpt-dropdown-item" data-menu="account" role="menuitem"><span class="gpt-dropdown-ico">◎</span>账户</button><button type="button" class="gpt-dropdown-item" data-menu="appearance" role="menuitem"><span class="gpt-dropdown-ico">◐</span>外观</button><button type="button" class="gpt-dropdown-item" data-menu="help" role="menuitem"><span class="gpt-dropdown-ico">?</span>帮助</button><button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-menu="logout" role="menuitem"><span class="gpt-dropdown-ico">→</span>退出登录</button></div></div></div><div class="gpt-sidebar-foot-links"><a class="gpt-foot-link" href="/" rel="noopener">用户前台</a><a class="gpt-foot-link" href="/admin/api-docs.html">API 规范（Swagger）</a></div></div>
+    </aside>
+    <div class="gpt-backdrop" id="gptBackdrop" hidden aria-hidden="true"></div>
+    <div class="gpt-main gpt-main-subpage">
+      <header class="gpt-topbar"><button type="button" class="gpt-menu-mobile" id="btnSidebarToggle" aria-label="打开菜单">☰</button><div class="gpt-topbar-title"><span id="topbarTitle">系统开关与限制</span><span class="gpt-topbar-sub" id="topbarSub"></span></div><div class="gpt-topbar-actions"><a href="/admin/hub.html" class="gpt-btn-text" style="text-decoration:none;">返回调控中心</a></div></header>
+      <div class="gpt-subpage-inner"><div class="gpt-subpage-card"><div class="gpt-dlg-body">
+        <label class="gpt-check"><input type="checkbox" id="admRegEnabled" /> 允许新用户注册</label>
+        <label class="gpt-check"><input type="checkbox" id="admGuestEnabled" /> 开启游客模式（未登录可体验）</label>
+        <label class="gpt-check"><input type="checkbox" id="admMaintenanceEnabled" /> 维护模式（仅管理员可用）</label>
+        <label>单用户每分钟提问次数</label><input type="number" id="admRateLimitQpm" class="gpt-input" min="1" max="6000" />
+        <label>单用户最大文档数</label><input type="number" id="admMaxDocs" class="gpt-input" min="1" max="100000" />
+        <label>单文件最大（MB）</label><input type="number" id="admMaxMb" class="gpt-input" min="1" max="2048" />
+        <label>单用户总存储上限（MB，0 不限制）</label><input type="number" id="admStorageCapMb" class="gpt-input" min="0" max="500000" />
+        <label>单用户单文件上限（MB，0 仅用全局）</label><input type="number" id="admPerUserMaxMb" class="gpt-input" min="0" max="2048" />
+        <label>允许扩展名（逗号分隔）</label><input type="text" id="admExts" class="gpt-input" placeholder="pdf,txt,docx" />
+        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">用户前台 · 联网开关</h3>
+        <p class="gpt-muted" style="margin-top:0">关闭后对应页面隐藏「联网」勾选，且接口忽略 <code>enable_web_search</code>（仍可在管理端配置搜索密钥）。公开接口 <code>GET /api/public/settings</code> 返回 <code>rag_show_web_search_ui</code>、<code>instant_show_web_search_ui</code>。</p>
+        <label class="gpt-check"><input type="checkbox" id="admRagWebSearchUi" checked /> 智能问答页显示「联网」</label>
+        <label class="gpt-check"><input type="checkbox" id="admInstantWebSearchUi" checked /> 即时文档页显示「联网」</label>
+        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">内容与安全</h3>
+        <label>敏感词列表（每行一词，入库后扫描正文样本；命中可自动移入回收站）</label>
+        <textarea id="admSensitiveWords" class="gpt-input" rows="6" placeholder="每行一个关键词"></textarea>
+        <label class="gpt-check"><input type="checkbox" id="admComplianceAuto" checked /> 命中敏感词时自动将文档移入回收站</label>
+        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">登录防暴力破解</h3>
+        <p class="gpt-muted" style="margin-top:0">失败计数写入 <code>login_failure</code> 表；与「操作日志」中登录审计互补。</p>
+        <label class="gpt-check"><input type="checkbox" id="admBruteforceEnabled" checked /> 启用 IP / 用户名窗口内失败次数限制</label>
+        <label>统计窗口（分钟）</label><input type="number" id="admBruteforceWindowMin" class="gpt-input" min="1" max="1440" />
+        <label>同一 IP 窗口内最大失败次数</label><input type="number" id="admBruteforceMaxIp" class="gpt-input" min="1" max="10000" />
+        <label>同一用户名窗口内最大失败次数</label><input type="number" id="admBruteforceMaxUser" class="gpt-input" min="1" max="1000" />
+        <button type="button" class="gpt-btn-primary" id="btnAdminSaveSettings">保存系统策略</button>
+        <pre class="gpt-log" id="adminSysMsg" hidden></pre>
+      </div></div></div>
+    </div>
+  </div>
+  <div id="toastHost" class="gpt-toast-host" aria-live="polite"></div>
+  <dialog class="gpt-dialog" id="dlgProfile"><div class="gpt-dlg-head"><h2>账户</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button></div><div class="gpt-dlg-body"><p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p><label>昵称</label><input type="text" id="profileNickname" class="gpt-input" maxlength="32" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button></div><p class="gpt-log" id="profileMsg" hidden></p></div></dialog>
+  <dialog class="gpt-dialog" id="dlgHelp"><div class="gpt-dlg-head"><h2>帮助</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button></div><div class="gpt-dlg-body gpt-help-body"><p>可集中配置注册、游客、维护模式与上传/文档限制。</p><p>联网开关：与「高级参数」里的搜索供应商/API 密钥配合；关闭后用户看不到勾选且无法通过请求绕过。</p></div></dialog>
+  <dialog class="gpt-dialog" id="dlgRename"><form method="dialog" class="gpt-rename-form" id="formRename"><h3>重命名对话</h3><input type="text" id="renameInput" class="gpt-input" required maxlength="64" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-text" id="renameCancel">取消</button><button type="submit" class="gpt-btn-primary" id="renameOk">保存</button></div></form></dialog>
+    <script src="/static/admin-nav.js?v=20260402"></script>
+  <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
+  <script src="/static/app.js?v=20260471"></script>
+</body>
+</html>

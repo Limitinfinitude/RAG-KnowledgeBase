@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <title>即时文档问答 · 用户</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260470" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+</head>
+<body data-portal="user" data-page="instant" class="gpt-root-chat">
+  <div class="gpt-layout">
+    <aside class="gpt-sidebar" id="gptSidebar">
+      <div class="gpt-sidebar-head gpt-sidebar-head-bar">
+        <div class="gpt-sidebar-head-primary">
+          <button type="button" class="gpt-btn-newchat" id="btnNewConv">
+            <span class="gpt-icon">＋</span><span class="gpt-sidebar-btn-text">新建对话</span>
+          </button>
+          <button type="button" class="gpt-btn-newchat gpt-sidebar-expand-btn" id="btnSidebarExpand" aria-label="展开侧栏">
+            <span class="gpt-icon" aria-hidden="true">⟩</span><span class="gpt-sidebar-btn-text">展开侧栏</span>
+          </button>
+        </div>
+        <button type="button" class="gpt-sidebar-rail-corner" id="btnSidebarRailToggle" aria-label="收起侧栏文字" title="收起文字仅保留图标">⟨</button>
+      </div>
+      <nav class="gpt-sidebar-nav" aria-label="功能菜单">
+        <a href="/" class="gpt-nav-item">
+          <span class="gpt-nav-ico" aria-hidden="true"><svg class="gpt-nav-svg" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 3V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="gpt-nav-label">智能问答</span>
+        </a>
+        <a href="/instant.html" class="gpt-nav-item" aria-current="page">
+          <span class="gpt-nav-ico" aria-hidden="true"><svg class="gpt-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span class="gpt-nav-label">即时文档</span>
+        </a>
+        <a href="/kb.html" class="gpt-nav-item">
+          <span class="gpt-nav-ico" aria-hidden="true"><svg class="gpt-nav-svg" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="gpt-nav-label">知识库管理</span>
+        </a>
+        <a href="/settings.html" class="gpt-nav-item">
+          <span class="gpt-nav-ico" aria-hidden="true"><svg class="gpt-nav-svg" viewBox="0 0 24 24" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span><span class="gpt-nav-label">个性化设置</span>
+        </a>
+      </nav>
+      <section class="gpt-sidebar-history" id="sidebarHistory" aria-label="历史记录">
+        <button type="button" class="gpt-sidebar-history-toggle" id="btnHistoryToggle" aria-expanded="true" aria-controls="convListWrap">
+          <span class="gpt-sidebar-history-toggle-label">历史记录</span>
+          <span class="gpt-sidebar-history-chevron" aria-hidden="true">▼</span>
+        </button>
+        <div class="gpt-conv-scroll-wrap" id="convListWrap">
+          <div class="gpt-conv-scroll" id="convList"></div>
+        </div>
+      </section>
+      <div class="gpt-sidebar-foot gpt-sidebar-foot-stack">
+        <div class="gpt-sidebar-user-row">
+          <div class="gpt-user-menu gpt-user-menu-sidebar" id="userMenu">
+            <button type="button" class="gpt-avatar-btn gpt-avatar-btn-sidebar" id="avatarBtn" aria-haspopup="true" aria-label="账户菜单">
+              <img id="avatarImg" alt="" width="32" height="32" hidden />
+              <span id="avatarFallback">用户</span>
+            </button>
+            <div class="gpt-user-dropdown" id="userDropdown" role="menu">
+              <button type="button" class="gpt-dropdown-item" data-menu="account" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◎</span>账户</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="appearance" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◐</span>外观</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="help" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">?</span>帮助</button>
+              <button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-menu="logout" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">→</span>退出登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="gpt-backdrop" id="gptBackdrop" hidden aria-hidden="true"></div>
+
+    <div class="gpt-main">
+      <header class="gpt-topbar gpt-topbar--chat">
+        <button type="button" class="gpt-menu-mobile gpt-sidebar-toggle-chat" id="btnSidebarToggle" aria-label="打开侧栏菜单">☰</button>
+        <div class="gpt-topbar-title gpt-topbar-title--chat">
+          <span id="topbarTitle">即时文档问答</span>
+          <span class="gpt-topbar-sub" id="topbarSub"></span>
+        </div>
+        <div class="gpt-topbar-actions">
+          <div class="gpt-conv-menu" id="convMenu">
+            <button type="button" class="gpt-btn-more" id="convMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="当前对话操作">⋮</button>
+            <div class="gpt-conv-dropdown" id="convDropdown" role="menu" hidden>
+              <button type="button" class="gpt-dropdown-item" data-conv-action="pin" role="menuitem">置顶</button>
+              <button type="button" class="gpt-dropdown-item" data-conv-action="rename" role="menuitem">重命名</button>
+              <button type="button" class="gpt-dropdown-item" data-conv-action="export" role="menuitem">导出</button>
+              <button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-conv-action="delete" role="menuitem">删除</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="gpt-thread-wrap">
+        <div class="gpt-empty" id="emptyState">
+          <div class="gpt-empty-orb" aria-hidden="true"></div>
+          <h2>上传一份文档，即时提问</h2>
+          <p class="gpt-empty-lead">点击输入框左侧加号上传 PDF / Word / 文本（≤5MB，正文≤10 万字符）。回答依据文档全文（超长会截断至系统上限），不入知识库、不做向量检索。开启「联网」时会在回复下方展示网页摘要条目（可点开看片段、标题链可打开原网页）；仅文档、未联网时不展示知识库式溯源块。</p>
+          <div class="gpt-empty-actions">
+            <a href="/" class="gpt-chip">智能问答（知识库）</a>
+            <a href="/kb.html" class="gpt-chip">📚 知识库管理</a>
+            <a href="/settings.html" class="gpt-chip">⚙ 个性化设置</a>
+          </div>
+          <p class="gpt-empty-note">文档内容仅保存在浏览器当前会话记录中，换设备或清除站点数据后需重新上传。</p>
+        </div>
+        <div class="gpt-thread" id="thread" hidden></div>
+      </div>
+
+      <footer class="gpt-composer-area" id="composerArea">
+        <div class="gpt-instant-strip" id="instantStrip">
+          <div class="gpt-instant-attached" id="instantAttached" hidden>
+            <span class="gpt-instant-doc-name" id="instantDocName"></span>
+            <button type="button" class="gpt-instant-doc-clear" id="instantDocClear" title="移除文档" aria-label="移除文档">×</button>
+          </div>
+          <span id="instantWebSearchWrap" class="gpt-rag-websearch-wrap" style="margin-top:0.35rem;display:inline-flex;">
+            <label class="gpt-rag-switch gpt-rag-switch-chat" title="管理员在后台「高级参数」配置博查 / Brave / 千帆 并填写密钥；可由管理员关闭此开关">
+              <span class="gpt-rag-switch-text">联网</span>
+              <input type="checkbox" id="webSearchToggle" />
+              <span class="gpt-rag-switch-ui" aria-hidden="true"></span>
+            </label>
+          </span>
+        </div>
+        <form class="gpt-composer gpt-composer--attach" id="form">
+          <input type="file" id="instantFileInput" accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden />
+          <button type="button" class="gpt-attach-btn" id="btnInstantAttach" aria-label="上传文档"><span class="gpt-attach-btn-plus" aria-hidden="true">＋</span></button>
+          <textarea id="input" rows="1" placeholder="针对上传的文档提问…" required autocomplete="off"></textarea>
+          <button type="submit" class="gpt-send" id="send" aria-label="发送">→</button>
+        </form>
+        <p class="gpt-hint" id="instantComposerHint">本页为即时通道，侧栏历史与智能问答分页相互独立。未上传时可闲聊；问文档请先点加号。开启「联网」后可在有文档时补充网页摘要，或无文档时依据公开检索摘要回答。Enter 发送 · Shift+Enter 换行 · 助手回复可点「朗读」（浏览器语音）。</p>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toastHost" class="gpt-toast-host" aria-live="polite"></div>
+
+  <dialog class="gpt-dialog gpt-dialog-wide" id="dlgPreview">
+    <div class="gpt-dlg-head">
+      <h2 id="previewTitle">查看内容</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgPreview">×</button>
+    </div>
+    <div class="gpt-dlg-body gpt-preview-body" id="previewBody"></div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgEditDoc">
+    <div class="gpt-dlg-head">
+      <h2>编辑文档信息</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgEditDoc">×</button>
+    </div>
+    <div class="gpt-dlg-body">
+      <input type="hidden" id="editDocName" />
+      <label>知识库</label>
+      <select id="editDocCat" class="gpt-input"></select>
+      <label>描述</label>
+      <textarea id="editDocDesc" class="gpt-input" rows="3"></textarea>
+      <button type="button" class="gpt-btn-primary" id="btnEditDocSave">保存</button>
+    </div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgProfile">
+    <div class="gpt-dlg-head">
+      <h2>账户</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button>
+    </div>
+    <div class="gpt-dlg-body">
+      <div class="gpt-profile-avatar-row">
+        <div class="gpt-profile-avatar-preview" id="profileAvatarPreview">
+          <img id="profileAvatarImg" alt="" hidden />
+          <span id="profileAvatarPh">头像</span>
+        </div>
+        <div class="gpt-profile-avatar-actions">
+          <label class="gpt-btn-sm gpt-btn-file">
+            上传头像
+            <input type="file" id="profileAvatarFile" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+          </label>
+          <button type="button" class="gpt-btn-sm" id="btnProfileClearAvatar">移除头像</button>
+        </div>
+      </div>
+      <p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p>
+      <p class="gpt-muted">角色：<span id="profileRole">—</span></p>
+      <label>昵称</label>
+      <input type="text" id="profileNickname" class="gpt-input" maxlength="32" />
+      <p class="gpt-muted">默认「用户」 用户名前 5 位。</p>
+      <div class="gpt-row gpt-row-end">
+        <button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button>
+      </div>
+      <p class="gpt-log" id="profileMsg" hidden></p>
+    </div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgHelp">
+    <div class="gpt-dlg-head">
+      <h2>帮助</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button>
+    </div>
+    <div class="gpt-dlg-body gpt-help-body">
+      <p><strong>即时文档</strong>：加号上传，正文≤10 万字符、文件&lt;5MB。以文档为主，可适度结合通用知识（会区分标注）；可开「联网」补充网页摘要。历史与智能问答分页隔离。</p>
+      <p><strong>知识库智能问答</strong>：<a href="/">智能问答</a>页仅依据入库检索片段作答，更严格、不瞎编。</p>
+      <p class="gpt-muted">技术问题见 <a href="/docs" target="_blank" rel="noopener">API 文档</a>。</p>
+    </div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgRename">
+    <form method="dialog" class="gpt-rename-form" id="formRename">
+      <h3>重命名对话</h3>
+      <input type="text" id="renameInput" class="gpt-input" required maxlength="64" />
+      <div class="gpt-row gpt-row-end">
+        <button type="button" class="gpt-btn-text" id="renameCancel">取消</button>
+        <button type="submit" class="gpt-btn-primary" id="renameOk">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/static/app.js?v=20260470"></script>
+</body>
+</html>

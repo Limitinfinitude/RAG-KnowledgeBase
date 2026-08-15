@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>注册 · AskDoc</title>
+  <link rel="stylesheet" href="/static/auth-pages.css?v=20260473" />
+</head>
+<body class="auth-body">
+  <div class="auth-bg" aria-hidden="true"></div>
+  <div class="auth-shell">
+    <div>
+      <div class="auth-brand">
+        <div class="auth-brand-mark auth-brand-mark--word">AskDoc</div>
+        <p class="auth-brand-title">创建账号</p>
+        <p class="auth-brand-sub">知识库按用户隔离存储</p>
+      </div>
+      <div class="auth-card">
+    <h1>注册</h1>
+    <p class="sub">账号保存在服务端 MySQL，知识库按用户隔离。</p>
+    <form id="form">
+      <label for="username">用户名</label>
+      <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="32"
+        pattern="[a-zA-Z0-9_]+" title="仅字母、数字、下划线" />
+      <label for="password">密码</label>
+      <input id="password" type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+      <label for="password2">确认密码</label>
+      <input id="password2" type="password" autocomplete="new-password" required minlength="8" />
+      <p class="auth-hint">请勿使用弱密码；生产环境请配合HTTPS 与更强策略。</p>
+      <button type="submit" class="btn" id="btn">注册</button>
+    </form>
+    <div class="err" id="err"></div>
+    <a class="link" href="/login.html">已有账号？登录</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const form = document.getElementById("form");
+      const regOff = document.createElement("p");
+      regOff.className = "auth-hint";
+      regOff.style.display = "none";
+      regOff.id = "regClosed";
+      regOff.textContent = "管理员已关闭注册，请联系管理员开通账号。";
+      form.parentNode.insertBefore(regOff, form);
+
+      fetch("/api/public/settings")
+        .then((r) => r.json())
+        .then((s) => {
+          if (s && s.registration_enabled === false) {
+            regOff.style.display = "block";
+            form.style.display = "none";
+            document.getElementById("btn").disabled = true;
+          }
+        })
+        .catch(() => {});
+
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = document.getElementById("err");
+        const btn = document.getElementById("btn");
+        err.classList.remove("show");
+        const p1 = document.getElementById("password").value;
+        const p2 = document.getElementById("password2").value;
+        if (p1 !== p2) {
+          err.textContent = "两次密码不一致";
+          err.classList.add("show");
+          return;
+        }
+        btn.disabled = true;
+        try {
+          const r = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: document.getElementById("username").value.trim(),
+              password: p1,
+            }),
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            const d = data.detail;
+            const msg = Array.isArray(d) ? d.map((x) => x.msg).join("; ") : d || r.statusText;
+            throw new Error(typeof msg === "string" ? msg : "注册失败");
+          }
+          alert("注册成功，请登录");
+          location.href = "/login.html";
+        } catch (x) {
+          err.textContent = x.message || String(x);
+          err.classList.add("show");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+  <title>调控中心 · 管理端</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260471" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+</head>
+<body data-portal="admin" data-page="admin-hub" class="gpt-subpage" data-admin-nav="hub">
+  <div class="gpt-layout">
+    <aside class="gpt-sidebar gpt-sidebar-admin" id="gptSidebar">
+      <div class="gpt-sidebar-head gpt-sidebar-head-bar">
+        <div class="gpt-sidebar-head-primary">
+          <a href="/admin/hub.html" class="gpt-btn-newchat" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:0.35rem;"><span class="gpt-icon">⌂</span><span class="gpt-sidebar-btn-text">管理首页</span></a>
+          <button type="button" class="gpt-btn-newchat gpt-sidebar-expand-btn" id="btnSidebarExpand" aria-label="展开侧栏">
+            <span class="gpt-icon" aria-hidden="true">⟩</span><span class="gpt-sidebar-btn-text">展开侧栏</span>
+          </button>
+        </div>
+        <button type="button" class="gpt-sidebar-rail-corner" id="btnSidebarRailToggle" aria-label="收起侧栏文字" title="收起文字仅保留图标">⟨</button>
+      </div>
+      <nav class="gpt-sidebar-nav" id="adminNavMount" aria-label="管理功能"></nav>
+      <div class="gpt-sidebar-foot gpt-sidebar-foot-stack">
+        <div class="gpt-sidebar-user-row">
+          <div class="gpt-user-menu gpt-user-menu-sidebar" id="userMenu">
+            <button type="button" class="gpt-avatar-btn gpt-avatar-btn-sidebar" id="avatarBtn" aria-haspopup="true" aria-label="账户菜单">
+              <img id="avatarImg" alt="" width="32" height="32" hidden /><span id="avatarFallback">管</span>
+            </button>
+            <div class="gpt-user-dropdown" id="userDropdown" role="menu">
+              <button type="button" class="gpt-dropdown-item" data-menu="account" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◎</span>账户</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="appearance" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◐</span>外观</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="help" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">?</span>帮助</button>
+              <button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-menu="logout" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">→</span>退出登录</button>
+            </div>
+          </div>
+        </div>
+        <div class="gpt-sidebar-foot-links">
+          <a class="gpt-foot-link" href="/" rel="noopener">用户前台</a>
+          <a class="gpt-foot-link" href="/admin/api-docs.html">API 规范（Swagger）</a>
+        </div>
+      </div>
+    </aside>
+    <div class="gpt-backdrop" id="gptBackdrop" hidden aria-hidden="true"></div>
+    <div class="gpt-main gpt-main-subpage">
+      <header class="gpt-topbar">
+        <button type="button" class="gpt-menu-mobile" id="btnSidebarToggle" aria-label="打开菜单">☰</button>
+        <div class="gpt-topbar-title">
+          <span id="topbarTitle">调控中心</span>
+          <span class="gpt-topbar-sub" id="topbarSub">快捷运维与导出</span>
+        </div>
+      </header>
+      <div class="gpt-subpage-inner">
+        <div class="gpt-subpage-card">
+          <div class="gpt-dlg-body">
+            <h3 class="gpt-settings-block-title" style="margin-top:0">消息质量反馈</h3>
+            <p class="gpt-muted" style="margin:0 0 0.75rem">智能问答 / 即时文档页「有用 / 需改进」流水；无单独列表页，在此导出即可。</p>
+            <div class="gpt-row gpt-row-wrap">
+              <button type="button" class="gpt-btn-primary" id="hubExportMqfCsv">导出 CSV</button>
+              <button type="button" class="gpt-btn-secondary" id="hubExportMqfJson">导出 JSON</button>
+            </div>
+            <p class="gpt-log" id="hubExportMsg" hidden></p>
+            <hr style="opacity:0.2;margin:1.25rem 0" />
+            <h3 class="gpt-settings-block-title">常用入口</h3>
+            <ul class="gpt-muted" style="margin:0.5rem 0 0;line-height:1.7">
+              <li><a href="/admin/users.html">用户管理</a></li>
+              <li><a href="/admin/vector.html">向量维护与 FAISS 登记</a></li>
+              <li><a href="/admin/settings.html?tab=set-model">模型 API 预设（存 MySQL）</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="toastHost" class="gpt-toast-host" aria-live="polite"></div>
+  <dialog class="gpt-dialog" id="dlgProfile">
+    <div class="gpt-dlg-head"><h2>账户</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button></div>
+    <div class="gpt-dlg-body">
+      <p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p>
+      <label>昵称</label>
+      <input type="text" id="profileNickname" class="gpt-input" maxlength="32" />
+      <div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button></div>
+      <p class="gpt-log" id="profileMsg" hidden></p>
+    </div>
+  </dialog>
+  <dialog class="gpt-dialog" id="dlgHelp">
+    <div class="gpt-dlg-head"><h2>帮助</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button></div>
+    <div class="gpt-dlg-body gpt-help-body"><p>调控中心聚合导出与跳转；详细功能请使用侧栏各模块。</p></div>
+  </dialog>
+  <dialog class="gpt-dialog" id="dlgRename">
+    <form method="dialog" class="gpt-rename-form" id="formRename">
+      <h3>重命名对话</h3>
+      <input type="text" id="renameInput" class="gpt-input" required maxlength="64" />
+      <div class="gpt-row gpt-row-end">
+        <button type="button" class="gpt-btn-text" id="renameCancel">取消</button>
+        <button type="submit" class="gpt-btn-primary" id="renameOk">保存</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="/static/admin-nav.js?v=20260402"></script>
+  <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
+  <script src="/static/app.js?v=20260472"></script>
+  <script>
+    (function () {
+      function tok() {
+        return localStorage.getItem("rag_auth_token") || "";
+      }
+      async function pullExport(kind, filename) {
+        var msg = document.getElementById("hubExportMsg");
+        if (msg) {
+          msg.hidden = true;
+          msg.textContent = "";
+        }
+        var t = tok();
+        if (!t) {
+          if (msg) {
+            msg.hidden = false;
+            msg.textContent = "请先登录";
+          }
+          return;
+        }
+        var r = await fetch("/api/admin/message-quality-feedback/export?kind=" + encodeURIComponent(kind), {
+          headers: { Authorization: "Bearer " + t },
+        });
+        if (!r.ok) {
+          var err = await r.text().catch(function () {
+            return "";
+          });
+          if (msg) {
+            msg.hidden = false;
+            msg.textContent = "导出失败 " + r.status + " " + err.slice(0, 200);
+          }
+          return;
+        }
+        var blob = await r.blob();
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+      document.getElementById("hubExportMqfCsv")?.addEventListener("click", function () {
+        pullExport("csv", "message_quality_feedback.csv");
+      });
+      document.getElementById("hubExportMqfJson")?.addEventListener("click", function () {
+        pullExport("json", "message_quality_feedback.json");
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>管理员注册</title>
+  <link rel="stylesheet" href="/static/auth-admin.css?v=20260456" />
+</head>
+<body class="auth-admin-body">
+  <div class="auth-admin-bg" aria-hidden="true"></div>
+  <div class="auth-admin-wrap">
+    <div>
+      <div class="auth-admin-brand">
+        <div class="auth-admin-brand-mark" aria-hidden="true">A</div>
+        <p class="auth-admin-brand-title">管理员注册</p>
+        <p class="auth-admin-brand-sub">与用户共用账号库 · 本页注册的账号均为管理员（可与多名管理员并存）</p>
+      </div>
+      <div class="auth-admin-card">
+        <span class="auth-admin-badge">Admin</span>
+        <h1>注册账号</h1>
+        <p class="sub">需要普通用户请使用用户站注册。关闭公开注册时，本页同样受服务端「允许注册」开关约束。</p>
+        <form id="form">
+          <label for="username">用户名</label>
+          <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="32"
+            pattern="[a-zA-Z0-9_]+" title="仅字母、数字、下划线" />
+          <label for="password">密码</label>
+          <input id="password" type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+          <label for="password2">确认密码</label>
+          <input id="password2" type="password" autocomplete="new-password" required minlength="8" />
+          <button type="submit" class="btn" id="btn">注册</button>
+        </form>
+        <div class="err" id="err"></div>
+        <div class="links">
+          <a href="/admin/login.html">已有账号？管理员登录</a>
+          <a href="/login.html">普通用户登录</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const form = document.getElementById("form");
+      const regOff = document.createElement("p");
+      regOff.className = "auth-admin-hint";
+      regOff.style.display = "none";
+      regOff.id = "regClosed";
+      regOff.textContent = "当前已关闭注册。请联系已有管理员开启注册或分配账号。";
+      form.parentNode.insertBefore(regOff, form);
+
+      fetch("/api/public/settings")
+        .then((r) => r.json())
+        .then((s) => {
+          if (s && s.registration_enabled === false) {
+            regOff.style.display = "block";
+            form.style.display = "none";
+            document.getElementById("btn").disabled = true;
+          }
+        })
+        .catch(() => {});
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = document.getElementById("err");
+        const btn = document.getElementById("btn");
+        err.classList.remove("show");
+        const p1 = document.getElementById("password").value;
+        const p2 = document.getElementById("password2").value;
+        if (p1 !== p2) {
+          err.textContent = "两次密码不一致";
+          err.classList.add("show");
+          return;
+        }
+        btn.disabled = true;
+        try {
+          const r = await fetch("/api/auth/register-admin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: document.getElementById("username").value.trim(),
+              password: p1,
+            }),
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            const d = data.detail;
+            const msg = Array.isArray(d) ? d.map((x) => x.msg).join("; ") : d || r.statusText;
+            throw new Error(typeof msg === "string" ? msg : "注册失败");
+          }
+          alert("注册成功，请使用管理员登录");
+          location.href = "/admin/login.html";
+        } catch (x) {
+          err.textContent = x.message || String(x);
+          err.classList.add("show");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

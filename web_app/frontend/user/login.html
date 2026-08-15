@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>登录 · AskDoc</title>
+  <link rel="stylesheet" href="/static/auth-pages.css?v=20260473" />
+</head>
+<body class="auth-body">
+  <div class="auth-bg" aria-hidden="true"></div>
+  <div class="auth-shell">
+    <div>
+      <div class="auth-brand">
+        <div class="auth-brand-mark auth-brand-mark--word">AskDoc</div>
+        <p class="auth-brand-title">智能文档问答</p>
+        <p class="auth-brand-sub">登录以使用个人知识库与对话</p>
+      </div>
+      <div class="auth-card">
+    <h1>登录</h1>
+    <p class="sub">登录后进入用户端问答首页。管理控制台请单独访问部署方提供的管理地址（通常路径为 <code>/admin/login.html</code>）。</p>
+    <form id="form">
+      <label for="username">用户名</label>
+      <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="32" />
+      <label for="password">密码</label>
+      <input id="password" type="password" name="password" autocomplete="current-password" required minlength="8" />
+      <p class="auth-hint">用户名：字母数字下划线，3～32 位；密码至少 8 位。</p>
+      <button type="submit" class="btn" id="btn">登录</button>
+    </form>
+    <div class="err" id="err"></div>
+    <a class="link" href="/register.html" id="linkRegister">没有账号？注册</a>
+    <a class="link" href="/">←返回首页（需登录后）</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const AUTH_TOKEN_KEY = "rag_auth_token";
+      const params = new URLSearchParams(location.search);
+      const nextUrl = params.get("next") || "/";
+
+      fetch("/api/public/settings")
+        .then((r) => r.json())
+        .then((s) => {
+          const a = document.getElementById("linkRegister");
+          if (a && s && s.registration_enabled === false) {
+            a.style.display = "none";
+          }
+        })
+        .catch(() => {});
+
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = document.getElementById("err");
+        const btn = document.getElementById("btn");
+        err.classList.remove("show");
+        err.textContent = "";
+        btn.disabled = true;
+        try {
+          const r = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: document.getElementById("username").value.trim(),
+              password: document.getElementById("password").value,
+            }),
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            throw new Error(data.detail || r.statusText || "登录失败");
+          }
+          localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          location.href = nextUrl.startsWith("/") ? nextUrl : "/";
+        } catch (x) {
+          err.textContent = x.message || String(x);
+          err.classList.add("show");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

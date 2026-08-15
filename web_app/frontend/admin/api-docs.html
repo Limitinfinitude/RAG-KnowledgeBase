@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API 规范（Swagger）· 管理端</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.min.css" crossorigin="anonymous" />
+  <style>
+    body { margin: 0; }
+    #swagger { min-height: 100vh; }
+    .api-docs-bar {
+      font-family: system-ui, sans-serif;
+      padding: 0.65rem 1rem;
+      background: #1e1e1e;
+      color: #e5e5e5;
+      font-size: 0.875rem;
+      border-bottom: 1px solid #333;
+    }
+    .api-docs-bar a { color: #93c5fd; }
+  </style>
+</head>
+<body>
+  <div class="api-docs-bar">
+    需已登录管理员账号（本地令牌）。<a href="/admin/login.html">去登录</a> · <a href="/admin/hub.html">返回管理端</a>
+  </div>
+  <div id="swagger"></div>
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin="anonymous"></script>
+  <script>
+    (function () {
+      var tok = localStorage.getItem("rag_auth_token");
+      var el = document.getElementById("swagger");
+      if (!tok) {
+        el.innerHTML = "<p style=\"padding:1rem;font-family:system-ui\">请先 <a href=\"/admin/login.html\">登录管理员</a> 后再打开本页。</p>";
+        return;
+      }
+      fetch("/api/admin/openapi.json", { headers: { Authorization: "Bearer " + tok } })
+        .then(function (r) {
+          if (r.status === 401 || r.status === 403) throw new Error("auth");
+          if (!r.ok) throw new Error(String(r.status));
+          return r.json();
+        })
+        .then(function (spec) {
+          window.ui = SwaggerUIBundle({
+            dom_id: "#swagger",
+            spec: spec,
+            deepLinking: true,
+            requestInterceptor: function (req) {
+              req.headers["Authorization"] = "Bearer " + tok;
+              return req;
+            },
+          });
+        })
+        .catch(function () {
+          el.innerHTML =
+            "<p style=\"padding:1rem;font-family:system-ui\">无法加载 OpenAPI（需要管理员权限或令牌已过期）。<a href=\"/admin/login.html\">重新登录</a></p>";
+        });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+  <title>设置 · 管理端</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260471" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+</head>
+<body data-portal="admin" data-page="admin-settings" class="gpt-subpage gpt-subpage-settings" data-admin-nav="settings">
+  <div class="gpt-layout">
+    <aside class="gpt-sidebar gpt-sidebar-admin" id="gptSidebar">
+      <div class="gpt-sidebar-head gpt-sidebar-head-bar">
+        <div class="gpt-sidebar-head-primary">
+          <a href="/admin/hub.html" class="gpt-btn-newchat" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:0.35rem;"><span class="gpt-icon">⌂</span><span class="gpt-sidebar-btn-text">管理首页</span></a>
+          <button type="button" class="gpt-btn-newchat gpt-sidebar-expand-btn" id="btnSidebarExpand" aria-label="展开侧栏">
+            <span class="gpt-icon" aria-hidden="true">⟩</span><span class="gpt-sidebar-btn-text">展开侧栏</span>
+          </button>
+        </div>
+        <button type="button" class="gpt-sidebar-rail-corner" id="btnSidebarRailToggle" aria-label="收起侧栏文字" title="收起文字仅保留图标">⟨</button>
+      </div>
+            <nav class="gpt-sidebar-nav" id="adminNavMount" aria-label="管理功能"></nav>
+<div class="gpt-sidebar-foot gpt-sidebar-foot-stack">
+        <div class="gpt-sidebar-user-row">
+          <div class="gpt-user-menu gpt-user-menu-sidebar" id="userMenu">
+            <button type="button" class="gpt-avatar-btn gpt-avatar-btn-sidebar" id="avatarBtn" aria-haspopup="true" aria-label="账户菜单">
+              <img id="avatarImg" alt="" width="32" height="32" hidden />
+              <span id="avatarFallback">管</span>
+            </button>
+            <div class="gpt-user-dropdown" id="userDropdown" role="menu">
+              <button type="button" class="gpt-dropdown-item" data-menu="account" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◎</span>账户</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="appearance" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">◐</span>外观</button>
+              <button type="button" class="gpt-dropdown-item" data-menu="help" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">?</span>帮助</button>
+              <button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-menu="logout" role="menuitem"><span class="gpt-dropdown-ico" aria-hidden="true">→</span>退出登录</button>
+            </div>
+          </div>
+        </div>
+        <div class="gpt-sidebar-foot-links">
+          <a class="gpt-foot-link" href="/" rel="noopener">用户前台</a>
+          <a class="gpt-foot-link" href="/admin/api-docs.html">API 规范（Swagger）</a>
+        </div>
+      </div>
+    </aside>
+
+    <div class="gpt-backdrop" id="gptBackdrop" hidden aria-hidden="true"></div>
+
+    <div class="gpt-main gpt-main-subpage">
+      <header class="gpt-topbar gpt-topbar-subpage-ghost">
+        <button type="button" class="gpt-menu-mobile" id="btnSidebarToggle" aria-label="打开菜单">☰</button>
+        <div class="gpt-topbar-title">
+          <span id="topbarTitle">管理端· 设置</span>
+          <span class="gpt-topbar-sub" id="topbarSub"></span>
+        </div>
+      </header>
+
+      <a href="/admin/hub.html" class="gpt-btn-back-float">返回调控中心</a>
+
+      <div class="gpt-subpage-inner gpt-subpage-inner--fluid">
+        <div id="settingsPageRoot" class="gpt-settings-page">
+          <div class="gpt-tabs gpt-tabs-settings" role="tablist">
+            <button type="button" class="gpt-tab active" data-tab="set-rag">助手性格</button>
+            <button type="button" class="gpt-tab" data-tab="set-model">模型 API</button>
+          </div>
+
+          <section class="gpt-tab-panel active" id="panel-set-rag" aria-label="助手性格">
+            <h1 class="gpt-settings-page-title">对话助手性格</h1>
+            <p class="gpt-muted gpt-settings-lead">与前台相同，保存在本机浏览器；测试问答时会一并提交。检索范围与混合检索在问答页输入框上方调整。</p>
+            <label for="activePersonaSelect">当前对话使用</label>
+            <select id="activePersonaSelect" class="gpt-input"></select>
+            <div id="personasList" class="gpt-personas-list"></div>
+            <button type="button" class="gpt-btn-secondary" id="btnPersonaAdd">＋新增性格预设</button>
+            <p class="gpt-status-pill gpt-status-pill-spaced" id="status">—</p>
+          </section>
+
+          <section class="gpt-tab-panel" id="panel-set-model" aria-label="模型 API">
+            <h1 class="gpt-settings-page-title">模型 API</h1>
+            <p class="gpt-muted gpt-settings-lead">LLM 预设与下方表单对应服务端配置，保存后全局生效。</p>
+            <label for="presetSelect">LLM 预设</label>
+            <select id="presetSelect" class="gpt-input"></select>
+
+            <h2 class="gpt-settings-block-title gpt-settings-block-title-spaced">连接与密钥</h2>
+            <label>API Base URL</label>
+            <input type="text" id="cfgBaseUrl" class="gpt-input" autocomplete="off" />
+            <label>API Key（留空则保留已保存）</label>
+            <input type="password" id="cfgApiKey" class="gpt-input" autocomplete="new-password" placeholder="••••••••" />
+            <label>模型名称</label>
+            <input type="text" id="cfgModel" class="gpt-input" />
+            <label>提供商类型</label>
+            <select id="cfgProvider" class="gpt-input">
+              <option value="deepseek">deepseek</option>
+              <option value="openai">openai</option>
+              <option value="custom">custom</option>
+            </select>
+            <div class="gpt-row" id="modelAdminActions">
+              <button type="button" class="gpt-btn-primary" id="btnCfgSave">保存配置</button>
+              <button type="button" class="gpt-btn-secondary" id="btnCfgTest">测试连接</button>
+            </div>
+            <pre class="gpt-log" id="cfgTestLog" hidden></pre>
+            <p class="gpt-muted">多预设保存在 MySQL <code>app_settings</code> 的 <code>llm_api_presets</code> 字段（经服务端归一化）。</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastHost" class="gpt-toast-host" aria-live="polite"></div>
+
+  <dialog class="gpt-dialog" id="dlgProfile">
+    <div class="gpt-dlg-head">
+      <h2>账户</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button>
+    </div>
+    <div class="gpt-dlg-body">
+      <div class="gpt-profile-avatar-row">
+        <div class="gpt-profile-avatar-preview" id="profileAvatarPreview">
+          <img id="profileAvatarImg" alt="" hidden />
+          <span id="profileAvatarPh">头像</span>
+        </div>
+        <div class="gpt-profile-avatar-actions">
+          <label class="gpt-btn-sm gpt-btn-file">
+            上传头像
+            <input type="file" id="profileAvatarFile" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+          </label>
+          <button type="button" class="gpt-btn-sm" id="btnProfileClearAvatar">移除头像</button>
+        </div>
+      </div>
+      <p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p>
+      <p class="gpt-muted">角色：<span id="profileRole">—</span></p>
+      <label>昵称</label>
+      <input type="text" id="profileNickname" class="gpt-input" maxlength="32" />
+      <div class="gpt-row gpt-row-end">
+        <button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button>
+      </div>
+      <p class="gpt-log" id="profileMsg" hidden></p>
+    </div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgHelp">
+    <div class="gpt-dlg-head">
+      <h2>帮助</h2>
+      <button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button>
+    </div>
+    <div class="gpt-dlg-body gpt-help-body">
+      <p>「模型 API」保存全局密钥；助手性格等用户侧偏好在 <a href="/">用户前台</a> 设置。</p>
+      <p class="gpt-muted"><a href="/admin/api-docs.html">API 规范（Swagger）</a></p>
+    </div>
+  </dialog>
+
+  <dialog class="gpt-dialog" id="dlgRename">
+    <form method="dialog" class="gpt-rename-form" id="formRename">
+      <h3>重命名对话</h3>
+      <input type="text" id="renameInput" class="gpt-input" required maxlength="64" />
+      <div class="gpt-row gpt-row-end">
+        <button type="button" class="gpt-btn-text" id="renameCancel">取消</button>
+        <button type="submit" class="gpt-btn-primary" id="renameOk">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+    <script src="/static/admin-nav.js?v=20260402"></script>
+  <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
+  <script src="/static/app.js?v=20260471"></script>
+</body>
+</html>

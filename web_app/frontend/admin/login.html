@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>管理员登录</title>
+  <link rel="stylesheet" href="/static/auth-admin.css?v=20260456" />
+</head>
+<body class="auth-admin-body">
+  <div class="auth-admin-bg" aria-hidden="true"></div>
+  <div class="auth-admin-wrap">
+    <div>
+      <div class="auth-admin-brand">
+        <div class="auth-admin-brand-mark" aria-hidden="true">A</div>
+        <p class="auth-admin-brand-title">管理控制台</p>
+        <p class="auth-admin-brand-sub">管理员专用入口 · 与普通用户账号体系相同</p>
+      </div>
+      <div class="auth-admin-card">
+        <span class="auth-admin-badge">Admin</span>
+        <h1>登录</h1>
+        <p class="sub">仅限管理员账号。普通用户请使用 <a href="/login.html">用户登录</a>。</p>
+        <form id="form">
+          <label for="username">用户名</label>
+          <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="32" />
+          <label for="password">密码</label>
+          <input id="password" type="password" name="password" autocomplete="current-password" required minlength="8" />
+          <p class="auth-admin-hint">登录成功后将进入 <code>/admin/hub.html</code>（调控中心）。</p>
+          <button type="submit" class="btn" id="btn">登录</button>
+        </form>
+        <div class="err" id="err"></div>
+        <div class="links">
+          <a href="/admin/register.html">注册新的管理员账号</a>
+          <a href="/">返回用户首页</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const AUTH_TOKEN_KEY = "rag_auth_token";
+      const params = new URLSearchParams(location.search);
+      const nextUrl = params.get("next") || "/admin/hub.html";
+
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const err = document.getElementById("err");
+        const btn = document.getElementById("btn");
+        err.classList.remove("show");
+        err.textContent = "";
+        btn.disabled = true;
+        try {
+          const r = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: document.getElementById("username").value.trim(),
+              password: document.getElementById("password").value,
+            }),
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) {
+            throw new Error(data.detail || r.statusText || "登录失败");
+          }
+          if (!data.user || !data.user.is_admin) {
+            throw new Error("该账号不是管理员，请使用用户登录入口");
+          }
+          localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          location.href = nextUrl.startsWith("/") ? nextUrl : "/admin/hub.html";
+        } catch (x) {
+          err.textContent = x.message || String(x);
+          err.classList.add("show");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
