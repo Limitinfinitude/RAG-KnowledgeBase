@@ -266,7 +266,7 @@ RAG-KnowledgeBase/
 python scripts/eval_retrieval.py --user 1 --k 5 --mode both
 ```
 
-评测报告见 [`docs/eval_report.md`](docs/eval_report.md)，当前基准集 Recall@5 = 1.0。
+评测报告见 [`docs/eval_report.md`](docs/eval_report.md)，当前基准集 Recall@5 = 0.87（多格式文档 pdf/docx/xlsx/txt 的 Recall = 1.0）。
 
 ---
 
