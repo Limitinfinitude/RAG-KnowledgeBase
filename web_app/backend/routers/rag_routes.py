@@ -465,6 +465,17 @@ def config_save(body: ConfigSaveBody, _: User = Depends(get_admin_user)):
     return {"ok": True}
 
 
+@router.delete("/api/config/delete")
+def config_delete(preset: str = Query(..., min_length=1), _: User = Depends(get_admin_user)):
+    from utils.api_config import delete_api_config
+
+    try:
+        delete_api_config(preset)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    return {"ok": True, "presets": list(load_api_config().keys())}
+
+
 @router.post("/api/config/test")
 def config_test(body: ConfigTestBody, _: User = Depends(get_admin_user)):
     if not body.api_key.strip():

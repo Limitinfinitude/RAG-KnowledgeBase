@@ -80,5 +80,20 @@ def update_config(config_name: str, base_url: str, api_key: str, model: str) -> 
     return configs
 
 
+def delete_api_config(config_name: str) -> Dict[str, Dict[str, str]]:
+    """删除指定 LLM 预设；内置模板（DeepSeek/OpenAI/自定义）不可删除，抛出 ValueError。"""
+    cn = (config_name or "").strip()
+    if not cn:
+        raise ValueError("预设名不能为空")
+    if cn in _templates():
+        raise ValueError(f"内置预设「{cn}」不可删除")
+    configs = load_api_config()
+    if cn not in configs:
+        return configs
+    configs.pop(cn, None)
+    save_api_config(configs)
+    return configs
+
+
 def _blank_custom() -> Dict[str, str]:
     return {"base_url": "", "api_key": "", "model": "", "provider": "custom"}

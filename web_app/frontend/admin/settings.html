@@ -93,7 +93,11 @@
                   </div>
                 </div>
                 <label for="presetSelect">LLM 预设</label>
-                <select id="presetSelect" class="gpt-input"></select>
+                <div class="gpt-row" style="gap:0.5rem;align-items:center;">
+                  <select id="presetSelect" class="gpt-input" style="flex:1;min-width:0;"></select>
+                  <button type="button" class="gpt-btn-secondary" id="btnPresetAdd">＋新增</button>
+                  <button type="button" class="gpt-btn-secondary" id="btnPresetDelete">删除</button>
+                </div>
                 <div class="gpt-model-card-grid" style="margin-top:0.6rem;">
                   <div class="gpt-model-field">
                     <label>API Base URL</label>

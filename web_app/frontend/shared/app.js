@@ -4865,6 +4865,39 @@
     }
   });
 
+  $("btnPresetAdd")?.addEventListener("click", async () => {
+    const name = (window.prompt("请输入新预设名称（如「硅基流动」）") || "").trim();
+    if (!name) return;
+    try {
+      await api("/api/config/save", {
+        method: "POST",
+        body: JSON.stringify({ preset: name, base_url: "", api_key: "", model: "", provider: "custom" }),
+      });
+      showToast(`已新增预设「${name}」`, "ok");
+      await loadPresets();
+      const sel = $("presetSelect");
+      if (sel && [...sel.options].some((o) => o.value === name)) sel.value = name;
+      await loadCfgDetail();
+    } catch (e) {
+      showToast(e.message || String(e), "err");
+    }
+  });
+
+  $("btnPresetDelete")?.addEventListener("click", async () => {
+    const sel = $("presetSelect");
+    const name = sel?.value;
+    if (!name) return;
+    if (!window.confirm(`确定删除预设「${name}」吗？`)) return;
+    try {
+      await api("/api/config/delete?preset=" + encodeURIComponent(name), { method: "DELETE" });
+      showToast(`已删除预设「${name}」`, "ok");
+      await loadPresets();
+      await loadCfgDetail();
+    } catch (e) {
+      showToast(e.message || String(e), "err");
+    }
+  });
+
   $("btnCfgTest")?.addEventListener("click", async () => {
     $("cfgTestLog").hidden = false;
     const key = $("cfgApiKey").value.trim();
