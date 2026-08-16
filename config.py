@@ -56,6 +56,11 @@ EMBEDDING_MODEL = "BAAI/bge-small-zh-v1.5"
 RERANKER_MODEL = "BAAI/bge-reranker-base"
 LLM_MODEL = "deepseek-v4-flash"
 
+# —— 硅基流动（SiliconFlow）云端嵌入/重排序（可选，Web 管理端也可配置覆盖）——
+# 环境变量优先级：管理端 MySQL app_settings > 环境变量 > 下方默认值
+SILICONFLOW_API_KEY = (os.environ.get("SILICONFLOW_API_KEY") or "").strip()
+SILICONFLOW_BASE_URL = (os.environ.get("SILICONFLOW_BASE_URL") or "https://api.siliconflow.cn").strip()
+
 # Brave 联网检索：优先环境变量（.env / 系统），不再在代码中留明文密钥。
 BRAVE_SEARCH_API_KEY = (os.environ.get("BRAVE_SEARCH_API_KEY") or "").strip()
 # 博查（Streamlit 或未配管理端密钥时）：环境变量 BOCHA_API_KEY

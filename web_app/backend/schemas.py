@@ -196,6 +196,14 @@ class AdminAdvancedSettingsBody(BaseModel):
     chunk_levels: Optional[Dict[str, Any]] = None
     system_prompt_extra: Optional[str] = Field(default=None, max_length=12000)
     embedding_model_note: Optional[str] = Field(default=None, max_length=500)
+    # 嵌入模型 provider 配置
+    embedding_provider: Optional[str] = Field(default=None, description="local | siliconflow")
+    embedding_model: Optional[str] = Field(default=None, max_length=256)
+    siliconflow_api_key: Optional[str] = Field(default=None, max_length=512)
+    siliconflow_base_url: Optional[str] = Field(default=None, max_length=256)
+    # 重排序模型 provider 配置
+    rerank_provider: Optional[str] = Field(default=None, description="local | siliconflow")
+    rerank_model: Optional[str] = Field(default=None, max_length=256)
     web_search_provider: Optional[str] = Field(
         default=None,
         description="联网搜索供应商：bocha（默认）、brave、baidu（千帆 web_search）",

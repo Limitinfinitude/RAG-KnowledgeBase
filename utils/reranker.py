@@ -20,7 +20,10 @@ OLLAMA_RERANKER_MODEL = "qllama/bge-reranker-v2-m3:q4_k_m"
 
 class OllamaReranker:
     """Ollama 重排序器"""
-    
+
+    # 返回的分数已是 0-1（_extract_score/_get_embedding_score/_fallback_score 均裁剪到 0-1）
+    score_is_probability = True
+
     def __init__(self, base_url: str = OLLAMA_BASE_URL, model: str = OLLAMA_RERANKER_MODEL):
         self.base_url = base_url
         self.model = model
@@ -166,26 +169,36 @@ def get_reranker(use_ollama: bool = False, ollama_base_url: str = None, ollama_m
         base_url = ollama_base_url or OLLAMA_BASE_URL
         model = ollama_model or OLLAMA_RERANKER_MODEL
         return OllamaReranker(base_url=base_url, model=model)
+
+    # 硅基流动云端重排序
+    from utils.web_system_settings import get_rerank_config
+
+    cfg = get_rerank_config()
+    if cfg["provider"] == "siliconflow":
+        from utils.siliconflow_client import SiliconFlowReranker
+
+        logger.info("[Reranker] 使用硅基流动云端重排序模型: %s", cfg["model"])
+        return SiliconFlowReranker(api_key=cfg["api_key"], model=cfg["model"], base_url=cfg["base_url"])
+
+    # 使用本地 CrossEncoder
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    local_reranker_path = os.path.join(project_root, "models", "bge-reranker-base_local")
+
+    device = 'cuda' if os.environ.get('CUDA_VISIBLE_DEVICES') is not None else 'cpu'
+
+    if os.path.exists(local_reranker_path):
+        logger.info("[Reranker] 使用本地 reranker: %s", local_reranker_path)
+        return CrossEncoder(local_reranker_path, device=device)
     else:
-        # 使用本地 CrossEncoder
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        local_reranker_path = os.path.join(project_root, "models", "bge-reranker-base_local")
-        
-        device = 'cuda' if os.environ.get('CUDA_VISIBLE_DEVICES') is not None else 'cpu'
-        
-        if os.path.exists(local_reranker_path):
-            logger.info("[Reranker] 使用本地 reranker: %s", local_reranker_path)
-            return CrossEncoder(local_reranker_path, device=device)
-        else:
-            logger.info("[Reranker] 本地 reranker 不存在，正在从 Hugging Face 下载 BAAI/bge-reranker-base ...")
-            logger.info("（约 1GB，第一次运行较慢，后续离线使用）")
-            
-            model = CrossEncoder("BAAI/bge-reranker-base")
-            os.makedirs(local_reranker_path, exist_ok=True)
-            model.save(local_reranker_path)
-            logger.info("[Reranker] 下载完成，已保存到: %s", local_reranker_path)
-            
-            return CrossEncoder(local_reranker_path, device=device)
+        logger.info("[Reranker] 本地 reranker 不存在，正在从 Hugging Face 下载 BAAI/bge-reranker-base ...")
+        logger.info("（约 1GB，第一次运行较慢，后续离线使用）")
+
+        model = CrossEncoder("BAAI/bge-reranker-base")
+        os.makedirs(local_reranker_path, exist_ok=True)
+        model.save(local_reranker_path)
+        logger.info("[Reranker] 下载完成，已保存到: %s", local_reranker_path)
+
+        return CrossEncoder(local_reranker_path, device=device)
 
 
 def rerank_documents(query: str, documents: List, reranker, 
@@ -209,22 +222,21 @@ def rerank_documents(query: str, documents: List, reranker,
         pairs = [[query, doc.page_content if hasattr(doc, 'page_content') else str(doc)] 
                  for doc in documents]
         
-        # 获取分数（CrossEncoder 返回的是 logits，范围约 -10 到 10）
+        # 获取分数（CrossEncoder 返回 logits；硅基流动 rerank 返回 0-1 概率，见 score_is_probability 标记）
         scores = reranker.predict(pairs)
-        
+
         # 调试信息：原始分数
         logger.debug("[Reranker] 类型: %s, 文档数: %d", reranker_type, len(documents))
         logger.debug("[Reranker] 原始分数范围: min=%.4f, max=%.4f, avg=%.4f", min(scores), max(scores), sum(scores)/len(scores))
-        logger.debug("[Reranker] 前5个原始分数: %s", [round(s, 4) for s in scores[:5]])
-        
-        # 【关键修复】：将 CrossEncoder 的 logits 转换为 0-1 概率
-        # 方法1：使用 sigmoid 函数
-        import math
-        normalized_scores = [1 / (1 + math.exp(-score)) for score in scores]
-        
-        # 调试信息：归一化后的分数
-        logger.debug("[Reranker] 归一化后分数范围: min=%.4f, max=%.4f, avg=%.4f", min(normalized_scores), max(normalized_scores), sum(normalized_scores)/len(normalized_scores))
-        logger.debug("[Reranker] 前5个归一化分数: %s", [round(s, 4) for s in normalized_scores[:5]])
+
+        if getattr(reranker, "score_is_probability", False):
+            # 分数已是 0-1 概率（硅基流动 / Ollama），直接裁剪，无需 sigmoid
+            normalized_scores = [max(0.0, min(1.0, float(s))) for s in scores]
+        else:
+            # 本地 CrossEncoder 返回 logits（约 -10~10），用 sigmoid 转 0-1 概率
+            import math
+
+            normalized_scores = [1 / (1 + math.exp(-score)) for score in scores]
         
         # 排序
         scored_docs = sorted(zip(documents, normalized_scores), key=lambda x: x[1], reverse=True)

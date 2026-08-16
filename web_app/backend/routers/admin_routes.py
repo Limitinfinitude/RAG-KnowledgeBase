@@ -294,6 +294,21 @@ def admin_put_advanced_settings(
         patch["system_prompt_extra"] = body.system_prompt_extra.strip()
     if body.embedding_model_note is not None:
         patch["embedding_model_note"] = str(body.embedding_model_note).strip()[:500]
+    # —— 嵌入/重排序 provider 配置 ——
+    if body.embedding_provider is not None:
+        ep = str(body.embedding_provider).strip().lower()
+        patch["embedding_provider"] = ep if ep in ("local", "siliconflow") else "local"
+    if body.embedding_model is not None:
+        patch["embedding_model"] = str(body.embedding_model).strip()[:256]
+    if body.rerank_provider is not None:
+        rp = str(body.rerank_provider).strip().lower()
+        patch["rerank_provider"] = rp if rp in ("local", "siliconflow") else "local"
+    if body.rerank_model is not None:
+        patch["rerank_model"] = str(body.rerank_model).strip()[:256]
+    if body.siliconflow_base_url is not None and str(body.siliconflow_base_url).strip():
+        patch["siliconflow_base_url"] = str(body.siliconflow_base_url).strip()[:256]
+    if body.siliconflow_api_key is not None and str(body.siliconflow_api_key).strip():
+        patch["siliconflow_api_key"] = str(body.siliconflow_api_key).strip()
     if body.rag_defaults is not None:
         patch["rag_defaults"] = merge_rag_defaults_patch(body.rag_defaults)
     if body.chunk_levels is not None:

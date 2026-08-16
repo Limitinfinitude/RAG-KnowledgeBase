@@ -96,6 +96,13 @@ _DEFAULTS: Dict[str, Any] = {
     "chunk_levels": {k: dict(v) for k, v in _CHUNK_LEVEL_DEFAULTS.items()},
     "system_prompt_extra": "",
     "embedding_model_note": "BAAI/bge-small-zh-v1.5（见 utils/embedding.py，改模型需重启服务）",
+    # —— 嵌入模型与重排序模型 provider 配置（local 本地 / siliconflow 硅基流动）——
+    "embedding_provider": "local",
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "siliconflow_api_key": "",
+    "siliconflow_base_url": "https://api.siliconflow.cn",
+    "rerank_provider": "local",
+    "rerank_model": "BAAI/bge-reranker-base",
     "login_bruteforce_enabled": True,
     "login_bruteforce_window_minutes": 15,
     "login_bruteforce_max_per_ip": 40,
@@ -104,6 +111,22 @@ _DEFAULTS: Dict[str, Any] = {
     "rag_show_web_search_ui": True,
     "instant_show_web_search_ui": True,
 }
+
+
+def _normalize_embedding_rerank_settings(out: Dict[str, Any]) -> None:
+    """归一化嵌入/重排序 provider 配置。"""
+    ep = str(out.get("embedding_provider") or "local").strip().lower()
+    out["embedding_provider"] = ep if ep in ("local", "siliconflow") else "local"
+    rp = str(out.get("rerank_provider") or "local").strip().lower()
+    out["rerank_provider"] = rp if rp in ("local", "siliconflow") else "local"
+    if not isinstance(out.get("embedding_model"), str) or not out["embedding_model"].strip():
+        out["embedding_model"] = _DEFAULTS["embedding_model"]
+    if not isinstance(out.get("rerank_model"), str) or not out["rerank_model"].strip():
+        out["rerank_model"] = _DEFAULTS["rerank_model"]
+    if not isinstance(out.get("siliconflow_api_key"), str):
+        out["siliconflow_api_key"] = ""
+    if not isinstance(out.get("siliconflow_base_url"), str) or not out["siliconflow_base_url"].strip():
+        out["siliconflow_base_url"] = _DEFAULTS["siliconflow_base_url"]
 
 
 def _normalize_web_search_settings(out: Dict[str, Any]) -> None:
@@ -169,6 +192,7 @@ def _normalize_full_settings(out: Dict[str, Any]) -> None:
         out["system_prompt_extra"] = ""
     if not isinstance(out.get("embedding_model_note"), str):
         out["embedding_model_note"] = _DEFAULTS["embedding_model_note"]
+    _normalize_embedding_rerank_settings(out)
     _normalize_web_search_settings(out)
     if not isinstance(out.get("kb_disabled"), dict):
         out["kb_disabled"] = {}
@@ -475,6 +499,45 @@ def get_system_prompt_extra() -> str:
     return str(v).strip() if isinstance(v, str) else ""
 
 
+def get_embedding_config() -> Dict[str, Any]:
+    """返回嵌入模型运行配置：provider / model / api_key / base_url。
+
+    优先级：MySQL app_settings → 环境变量（SILICONFLOW_API_KEY / SILICONFLOW_BASE_URL）。
+    """
+    s = load_system_settings()
+    provider = str(s.get("embedding_provider") or "local").strip().lower()
+    model = str(s.get("embedding_model") or _DEFAULTS["embedding_model"]).strip()
+    api_key = (str(s.get("siliconflow_api_key") or "").strip()
+               or os.environ.get("SILICONFLOW_API_KEY", "").strip())
+    base_url = (str(s.get("siliconflow_base_url") or "").strip()
+                or os.environ.get("SILICONFLOW_BASE_URL", "").strip()
+                or _DEFAULTS["siliconflow_base_url"])
+    return {
+        "provider": provider,
+        "model": model,
+        "api_key": api_key,
+        "base_url": base_url,
+    }
+
+
+def get_rerank_config() -> Dict[str, Any]:
+    """返回重排序模型运行配置：provider / model / api_key / base_url。"""
+    s = load_system_settings()
+    provider = str(s.get("rerank_provider") or "local").strip().lower()
+    model = str(s.get("rerank_model") or _DEFAULTS["rerank_model"]).strip()
+    api_key = (str(s.get("siliconflow_api_key") or "").strip()
+               or os.environ.get("SILICONFLOW_API_KEY", "").strip())
+    base_url = (str(s.get("siliconflow_base_url") or "").strip()
+                or os.environ.get("SILICONFLOW_BASE_URL", "").strip()
+                or _DEFAULTS["siliconflow_base_url"])
+    return {
+        "provider": provider,
+        "model": model,
+        "api_key": api_key,
+        "base_url": base_url,
+    }
+
+
 def get_web_search_provider() -> str:
     s = load_system_settings()
     p = str(s.get("web_search_provider") or "bocha").strip().lower()
@@ -539,6 +602,8 @@ def admin_settings_response() -> Dict[str, Any]:
     out.pop("bocha_api_key", None)
     out.pop("brave_api_key_server", None)
     out.pop("qianfan_api_key", None)
+    out["siliconflow_api_key_configured"] = bool((out.get("siliconflow_api_key") or "").strip())
+    out.pop("siliconflow_api_key", None)
     lp = out.get("llm_api_presets")
     if isinstance(lp, dict):
         safe_lp: Dict[str, Any] = {}

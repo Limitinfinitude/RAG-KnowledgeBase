@@ -3828,6 +3828,24 @@
       setLv("large", "advCsLarge", "advCoLarge");
       const en = $("advEmbedNote");
       if (en) en.value = String(s.embedding_model_note || "");
+      const ep = $("advEmbedProvider");
+      if (ep) ep.value = s.embedding_provider === "siliconflow" ? "siliconflow" : "local";
+      const em = $("advEmbedModel");
+      if (em) em.value = String(s.embedding_model || "BAAI/bge-m3");
+      const rp = $("advRerankProvider");
+      if (rp) rp.value = s.rerank_provider === "siliconflow" ? "siliconflow" : "local";
+      const rm = $("advRerankModel");
+      if (rm) rm.value = String(s.rerank_model || "BAAI/bge-reranker-v2-m3");
+      const sbu = $("advSiliconflowBaseUrl");
+      if (sbu) sbu.value = String(s.siliconflow_base_url || "https://api.siliconflow.cn");
+      const sfh = $("advSiliconflowKeyHint");
+      if (sfh) {
+        sfh.textContent = s.siliconflow_api_key_configured
+          ? "当前已保存硅基流动密钥（输入新值可覆盖）"
+          : "尚未在服务端保存硅基流动密钥";
+      }
+      const sfk = $("advSiliconflowKey");
+      if (sfk) sfk.value = "";
       const tx = $("advSysExtra");
       if (tx) tx.value = String(s.system_prompt_extra || "");
       const wp = $("advWebSearchProvider");
@@ -4963,9 +4981,16 @@
           },
         },
         system_prompt_extra: ($("advSysExtra")?.value || "").slice(0, 12000),
-        embedding_model_note: ($("advEmbedNote")?.value || "").slice(0, 500),
+        embedding_model_note: ($("advEmbedNote")?.value || "").slice(0,500),
+        embedding_provider: $("advEmbedProvider")?.value || "local",
+        embedding_model: ($("advEmbedModel")?.value || "").trim().slice(0,256),
+        rerank_provider: $("advRerankProvider")?.value || "local",
+        rerank_model: ($("advRerankModel")?.value || "").trim().slice(0,256),
+        siliconflow_base_url: ($("advSiliconflowBaseUrl")?.value || "").trim().slice(0,256),
         web_search_provider: $("advWebSearchProvider")?.value || "bocha",
       };
+      const sfkV = ($("advSiliconflowKey")?.value || "").trim();
+      if (sfkV) body.siliconflow_api_key = sfkV;
       const bochaV = ($("advBochaKey")?.value || "").trim();
       const braveV = ($("advBraveKey")?.value || "").trim();
       const qfV = ($("advQianfanKey")?.value || "").trim();
