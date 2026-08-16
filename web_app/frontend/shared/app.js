@@ -2710,6 +2710,20 @@
     });
   }
 
+  function wireSubTabs(root) {
+    if (!root) return;
+    root.querySelectorAll(".gpt-subtab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.subtab;
+        root.querySelectorAll(".gpt-subtab").forEach((t) => t.classList.remove("active"));
+        root.querySelectorAll(".gpt-subpanel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        const panel = root.querySelector("#subpanel-" + id);
+        if (panel) panel.classList.add("active");
+      });
+    });
+  }
+
   function wireCloseDialogs() {
     document.querySelectorAll("[data-close-dlg]").forEach((b) => {
       b.addEventListener("click", () => {
@@ -4874,11 +4888,10 @@
     }
   });
 
-  $("btnFetchModels")?.addEventListener("click", async () => {
-    const msg = $("sfMsg");
-    if (msg) {
-      msg.hidden = false;
-      msg.textContent = "获取模型列表中…";
+  async function fetchModelsIntoDatalists(msgEl) {
+    if (msgEl) {
+      msgEl.hidden = false;
+      msgEl.textContent = "获取模型列表中…";
     }
     try {
       const d = await api("/api/admin/models/fetch");
@@ -4888,12 +4901,20 @@
       const c = (d.chat || []).length;
       const e = (d.embedding || []).length;
       const r = (d.rerank || []).length;
-      if (msg) msg.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}），已填充建议项`;
+      if (msgEl) msgEl.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}），已填充建议项`;
       showToast("模型列表已更新", "ok");
     } catch (e2) {
-      if (msg) msg.textContent = e2.message || String(e2);
+      if (msgEl) msgEl.textContent = e2.message || String(e2);
       showToast(e2.message || String(e2), "err");
     }
+  }
+
+  $("btnFetchModels")?.addEventListener("click", () => {
+    fetchModelsIntoDatalists($("sfMsg"));
+  });
+
+  $("btnFetchLlmModels")?.addEventListener("click", () => {
+    fetchModelsIntoDatalists($("cfgTestLog"));
   });
 
   $("btnSaveEmbedRerank")?.addEventListener("click", async () => {
@@ -5518,6 +5539,7 @@
     if (kbRoot) wireTabs(kbRoot);
     const stRoot = $("settingsPageRoot");
     if (stRoot && stRoot.querySelector(".gpt-tabs")) wireTabs(stRoot);
+    if (stRoot && stRoot.querySelector(".gpt-subtabs")) wireSubTabs(stRoot);
     const consoleRoot = $("consolePageRoot");
     if (consoleRoot) wireTabs(consoleRoot);
     const adminDocsRoot = $("adminDocsPageRoot");

@@ -2183,6 +2183,94 @@ body.gpt-subpage .gpt-sidebar-history {
   border-top: 1px solid var(--border);
 }
 
+/* —— 模型配置页：分段式子标签 + 卡片布局 —— */
+.gpt-subtabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--bg-hover);
+  border-radius: 10px;
+  margin: 0 0 1.1rem;
+}
+.gpt-subtab {
+  padding: 0.45rem 1.05rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.gpt-subtab:hover { color: var(--text); }
+.gpt-subtab.active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.gpt-subpanel { display: none; }
+.gpt-subpanel.active { display: block; }
+
+.gpt-model-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  padding: 1.05rem 1.15rem;
+}
+.gpt-model-card + .gpt-model-card { margin-top: 1rem; }
+.gpt-model-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.7rem;
+}
+.gpt-model-card-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-hover);
+  font-size: 0.9rem;
+  flex: none;
+}
+.gpt-model-card-title {
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--text);
+  margin: 0;
+}
+.gpt-model-card-sub {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin: 0.1rem 0 0;
+}
+.gpt-model-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.8rem;
+}
+.gpt-model-field label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0 0 0.25rem;
+}
+.gpt-model-field .gpt-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.gpt-model-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  align-items: center;
+}
+
 .gpt-rag-switch-block {
   margin-top: 0.35rem;
   margin-bottom: 0.65rem;
