@@ -1,7 +1,9 @@
-# config.py — 路径规划：Streamlit 本地一套库，Web 多用户每人一套库 + 全局 server 配置
+# config.py — 路径规划 + 密钥/模型配置统一入口
+# 密钥与模型默认配置统一存 config.json（启动读一次）；环境变量（.env）优先级最高。
+import json
 import os
 
-# 加载项目根目录的 .env（若存在），使密钥等敏感项脱离代码、仅走环境变量
+# 加载项目根目录的 .env（若存在），使环境变量可覆盖 config.json
 try:
     from dotenv import load_dotenv
 
@@ -10,70 +12,91 @@ except Exception:
     pass
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+_CONFIG_JSON_PATH = os.path.join(PROJECT_ROOT, "config.json")
 
-# —— Streamlit 本地个人部署：独立知识库（与线上用户完全分离）——
+
+def _load_config_json() -> dict:
+    """启动时读一次 config.json，作为密钥/模型的默认来源。"""
+    try:
+        with open(_CONFIG_JSON_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+_CONFIG = _load_config_json()
+
+
+def _pick(env_key: str, *json_keys: str, default: str = "") -> str:
+    """配置取值优先级：环境变量 > config.json 嵌套键 > 默认值。"""
+    v = os.environ.get(env_key)
+    if v is not None and str(v).strip():
+        return str(v).strip()
+    cur = _CONFIG
+    for k in json_keys:
+        if isinstance(cur, dict) and k in cur:
+            cur = cur[k]
+        else:
+            cur = None
+            break
+    if cur is not None and str(cur).strip():
+        return str(cur).strip()
+    return default
+
+
+# —— 路径规划：Streamlit 本地一套库，Web 多用户每人一套库 + 全局 server 配置 ——
 STREAMLIT_KB_DIR = os.path.join(PROJECT_ROOT, "data", "streamlit", "knowledge_db")
-
-# —— Web 线上：每用户 knowledge_db ——
 WEB_USERS_ROOT = os.path.join(PROJECT_ROOT, "data", "web", "users")
-
-# —— Web 线上：server 目录（遗留 json 迁移等；LLM 多预设主存 MySQL app_settings）——
 WEB_SERVER_DIR = os.path.join(PROJECT_ROOT, "data", "web", "server")
 
-# —— 认证（仅 Web）：MySQL（需 pip install pymysql，并先创建库）——
-# 优先读环境变量；未设置时用下方默认值。
-#
-# PowerShell 示例：
-#   $env:MYSQL_HOST = "127.0.0.1"
-#   $env:MYSQL_PORT = "3306"
-#   $env:MYSQL_USER = "root"
-#   $env:MYSQL_PASSWORD = "你的密码"
-#   $env:MYSQL_DATABASE = "rag_auth"
-#   $env:RAG_SESSION_DAYS = "7"
-#
-_DEFAULT_MYSQL_HOST = "127.0.0.1"
-_DEFAULT_MYSQL_PORT = 3306
-_DEFAULT_MYSQL_USER = "root"
-_DEFAULT_MYSQL_PASSWORD = ""  # 请通过 .env 的 MYSQL_PASSWORD 或环境变量提供
-_DEFAULT_MYSQL_DATABASE = "rag_auth"
-_DEFAULT_SESSION_DAYS = 7
-
-MYSQL_HOST = (os.environ.get("MYSQL_HOST") or _DEFAULT_MYSQL_HOST).strip()
-MYSQL_PORT = int(os.environ.get("MYSQL_PORT", str(_DEFAULT_MYSQL_PORT)))
-MYSQL_USER = (os.environ.get("MYSQL_USER") or _DEFAULT_MYSQL_USER).strip()
-MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD") or _DEFAULT_MYSQL_PASSWORD or ""
-MYSQL_DATABASE = (os.environ.get("MYSQL_DATABASE") or _DEFAULT_MYSQL_DATABASE).strip()
-SESSION_DAYS = int(os.environ.get("RAG_SESSION_DAYS", str(_DEFAULT_SESSION_DAYS)))
+# —— MySQL 认证库连接（环境变量 > config.json.mysql > 默认）——
+MYSQL_HOST = _pick("MYSQL_HOST", "mysql", "host", default="127.0.0.1")
+try:
+    MYSQL_PORT = int(_pick("MYSQL_PORT", "mysql", "port", default="3306") or 3306)
+except (TypeError, ValueError):
+    MYSQL_PORT = 3306
+MYSQL_USER = _pick("MYSQL_USER", "mysql", "user", default="root")
+MYSQL_PASSWORD = _pick("MYSQL_PASSWORD", "mysql", "password", default="")
+MYSQL_DATABASE = _pick("MYSQL_DATABASE", "mysql", "database", default="rag_auth")
+try:
+    SESSION_DAYS = int(_pick("RAG_SESSION_DAYS", "mysql", "session_days", default="7") or 7)
+except (TypeError, ValueError):
+    SESSION_DAYS = 7
 
 # 兼容旧代码：未设置 path_context 时默认 Streamlit 知识库
 DB_DIR = STREAMLIT_KB_DIR
 
-# 请通过 .env 的 API_KEY / BASE_URL 或环境变量提供
-API_KEY = (os.environ.get("API_KEY") or "").strip()
-BASE_URL = (os.environ.get("BASE_URL") or "https://api.openai.com/v1").strip()
+# —— LLM（OpenAI 兼容）——
+API_KEY = _pick("API_KEY", "llm", "api_key", default="")
+BASE_URL = _pick("BASE_URL", "llm", "base_url", default="https://api.openai.com/v1")
+
+# —— DeepSeek 官方（供 LLM 预设模板与默认值）——
+DEEPSEEK_API_KEY = _pick("DEEPSEEK_API_KEY", "deepseek", "api_key", default="")
+DEEPSEEK_BASE_URL = _pick("DEEPSEEK_BASE_URL", "deepseek", "base_url", default="https://api.deepseek.com")
+DEEPSEEK_MODEL = _pick("DEEPSEEK_MODEL", "deepseek", "model", default="deepseek-chat")
 
 EMBEDDING_MODEL = "BAAI/bge-small-zh-v1.5"
 RERANKER_MODEL = "BAAI/bge-reranker-base"
 LLM_MODEL = "deepseek-v4-flash"
 
-# —— 硅基流动（SiliconFlow）云端嵌入/重排序（可选，Web 管理端也可配置覆盖）——
-# 环境变量优先级：管理端 MySQL app_settings > 环境变量 > 下方默认值
-SILICONFLOW_API_KEY = (os.environ.get("SILICONFLOW_API_KEY") or "").strip()
-SILICONFLOW_BASE_URL = (os.environ.get("SILICONFLOW_BASE_URL") or "https://api.siliconflow.cn").strip()
+# —— 嵌入 / 重排序 provider 默认（Web 管理端 MySQL 配置优先级更高）——
+EMBEDDING_PROVIDER = _pick("EMBEDDING_PROVIDER", "embedding", "provider", default="local")
+RERANK_PROVIDER = _pick("RERANK_PROVIDER", "rerank", "provider", default="local")
 
-# Brave 联网检索：优先环境变量（.env / 系统），不再在代码中留明文密钥。
-BRAVE_SEARCH_API_KEY = (os.environ.get("BRAVE_SEARCH_API_KEY") or "").strip()
-# 博查（Streamlit 或未配管理端密钥时）：环境变量 BOCHA_API_KEY
-BOCHA_API_KEY = (os.environ.get("BOCHA_API_KEY") or "").strip()
-# 国内直连 api.search.brave.com 常超时：可设 BRAVE_HTTPS_PROXY（仅 Brave 请求）或系统 HTTPS_PROXY
+# —— 硅基流动（SiliconFlow）云端嵌入/重排序 ——
+SILICONFLOW_API_KEY = _pick("SILICONFLOW_API_KEY", "siliconflow", "api_key", default="")
+SILICONFLOW_BASE_URL = _pick("SILICONFLOW_BASE_URL", "siliconflow", "base_url", default="https://api.siliconflow.cn")
+
+# —— 联网检索 ——
+BRAVE_SEARCH_API_KEY = _pick("BRAVE_SEARCH_API_KEY", "search", "brave", default="")
+BOCHA_API_KEY = _pick("BOCHA_API_KEY", "search", "bocha", default="")
+QIANFAN_API_KEY = _pick("QIANFAN_API_KEY", "search", "qianfan", default="")
 BRAVE_HTTPS_PROXY = (os.environ.get("BRAVE_HTTPS_PROXY") or "").strip()
 try:
     BRAVE_SEARCH_TIMEOUT = float(os.environ.get("BRAVE_SEARCH_TIMEOUT", "30"))
 except ValueError:
     BRAVE_SEARCH_TIMEOUT = 30.0
-
-# 百度千帆 AI 搜索 web_search：环境变量 QIANFAN_API_KEY
-QIANFAN_API_KEY = (os.environ.get("QIANFAN_API_KEY") or "").strip()
 
 TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
@@ -89,4 +112,3 @@ MAX_CONTEXT_LENGTH = 4000
 CONTEXT_TOP_K = 5
 # 低质量结果回退时保留的最大条数
 LOW_QUALITY_FALLBACK_K = 3
-

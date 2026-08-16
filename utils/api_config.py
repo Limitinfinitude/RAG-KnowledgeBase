@@ -54,8 +54,16 @@ def get_api_config_for(config_name: str | None) -> dict:
     tmpl = _templates()
     name = config_name if config_name else _resolve_active_config_name()
     if name in configs:
-        return dict(configs[name])
-    return dict(tmpl.get(name) or tmpl.get("DeepSeek") or _blank_custom())
+        cfg = dict(configs[name])
+    else:
+        cfg = dict(tmpl.get(name) or tmpl.get("DeepSeek") or _blank_custom())
+    # 密钥兜底：MySQL 预设未配 key 时，按 base_url 从 config.json 取（启动读一次）
+    if not (cfg.get("api_key") or "").strip():
+        from config import API_KEY, DEEPSEEK_API_KEY
+
+        base = (cfg.get("base_url") or "").lower()
+        cfg["api_key"] = DEEPSEEK_API_KEY if "deepseek.com" in base else API_KEY
+    return cfg
 
 
 def get_current_config() -> dict:

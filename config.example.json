@@ -1,0 +1,37 @@
+{
+  "mysql": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "root",
+    "password": "your_mysql_password",
+    "database": "rag_auth",
+    "session_days": 7
+  },
+  "llm": {
+    "base_url": "https://api.openai.com/v1",
+    "api_key": "sk-your-openai-compatible-key",
+    "model": "gpt-4o-mini"
+  },
+  "deepseek": {
+    "base_url": "https://api.deepseek.com",
+    "api_key": "sk-your-deepseek-key",
+    "model": "deepseek-chat"
+  },
+  "embedding": {
+    "provider": "local",
+    "model": "BAAI/bge-small-zh-v1.5"
+  },
+  "rerank": {
+    "provider": "local",
+    "model": "BAAI/bge-reranker-base"
+  },
+  "siliconflow": {
+    "api_key": "",
+    "base_url": "https://api.siliconflow.cn"
+  },
+  "search": {
+    "brave": "",
+    "bocha": "",
+    "qianfan": ""
+  }
+}

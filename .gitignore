@@ -14,10 +14,12 @@ __pycache__/
 .venv/
 venv/
 
-# 敏感配置（密钥走环境变量，勿提交 .env）
+# 敏感配置（密钥走环境变量 / config.json，勿提交）
 .env
 .env.*
 !.env.example
+config.json
+!.config.example.json
 
 # Web 用户数据与运行时数据
 data/
