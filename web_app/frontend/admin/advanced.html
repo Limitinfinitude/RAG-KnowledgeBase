@@ -49,59 +49,7 @@
           </div>
           <h3>嵌入模型说明（只读备忘，改代码后填写）</h3>
           <input type="text" id="advEmbedNote" class="gpt-input" maxlength="500" placeholder="当前部署使用的 embedding 说明" />
-          <h3>嵌入模型与重排序模型（本地 / 硅基流动）</h3>
-          <p class="gpt-muted">provider 选「硅基流动」后走云端 API（需配置密钥）；嵌入模型变更后<strong>需重建向量库</strong>才对新文档生效。</p>
-          <div class="gpt-row" style="flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
-            <div style="min-width:180px;">
-              <label>嵌入 provider</label>
-              <select id="advEmbedProvider" class="gpt-input">
-                <option value="local">本地（bge-small-zh-v1.5）</option>
-                <option value="siliconflow">硅基流动 API</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:220px;">
-              <label>嵌入模型名（硅基流动）</label>
-              <input type="text" id="advEmbedModel" class="gpt-input" list="embedModelOptions" placeholder="BAAI/bge-m3" />
-              <datalist id="embedModelOptions">
-                <option value="BAAI/bge-m3"></option>
-                <option value="BAAI/bge-large-zh-v1.5"></option>
-                <option value="BAAI/bge-large-en-v1.5"></option>
-                <option value="Pro/BAAI/bge-m3"></option>
-                <option value="Qwen/Qwen3-Embedding-8B"></option>
-                <option value="Qwen/Qwen3-Embedding-4B"></option>
-                <option value="Qwen/Qwen3-Embedding-0.6B"></option>
-              </datalist>
-            </div>
-            <div style="min-width:180px;">
-              <label>重排序 provider</label>
-              <select id="advRerankProvider" class="gpt-input">
-                <option value="local">本地（bge-reranker-base）</option>
-                <option value="siliconflow">硅基流动 API</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:220px;">
-              <label>重排序模型名（硅基流动）</label>
-              <input type="text" id="advRerankModel" class="gpt-input" list="rerankModelOptions" placeholder="BAAI/bge-reranker-v2-m3" />
-              <datalist id="rerankModelOptions">
-                <option value="BAAI/bge-reranker-v2-m3"></option>
-                <option value="Pro/BAAI/bge-reranker-v2-m3"></option>
-                <option value="Qwen/Qwen3-Reranker-8B"></option>
-                <option value="Qwen/Qwen3-Reranker-4B"></option>
-                <option value="Qwen/Qwen3-Reranker-0.6B"></option>
-              </datalist>
-            </div>
-          </div>
-          <div class="gpt-row" style="flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
-            <div style="flex:1;min-width:220px;">
-              <label>硅基流动 API Key</label>
-              <input type="password" id="advSiliconflowKey" class="gpt-input" maxlength="512" placeholder="sk-..." autocomplete="off" />
-              <p class="gpt-muted" id="advSiliconflowKeyHint" style="margin:0.25rem 0 0;"></p>
-            </div>
-            <div style="flex:1;min-width:220px;">
-              <label>硅基流动 Base URL</label>
-              <input type="text" id="advSiliconflowBaseUrl" class="gpt-input" maxlength="256" placeholder="https://api.siliconflow.cn" />
-            </div>
-          </div>
+          <p class="gpt-muted">嵌入 / 重排序模型的 provider 与模型名配置已迁移至「设置 → 模型配置」页。</p>
           <h3>系统提示词补充（追加到RAG 系统消息，全局生效）</h3>
           <textarea id="advSysExtra" class="gpt-input" rows="6" maxlength="12000" placeholder="例如：回答中优先使用「章节」用语；禁止提及内部文件名等。"></textarea>
           <button type="button" class="gpt-btn-primary" id="btnAdminSaveAdvanced">保存高级参数</button>

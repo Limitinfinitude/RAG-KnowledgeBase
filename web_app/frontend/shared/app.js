@@ -2651,6 +2651,43 @@
     }
   }
 
+  function fillDatalist(id, items) {
+    const dl = $(id);
+    if (!dl) return;
+    dl.innerHTML = "";
+    (items || []).forEach((it) => {
+      const o = document.createElement("option");
+      o.value = it;
+      dl.appendChild(o);
+    });
+  }
+
+  async function loadSettingsModelConfig() {
+    try {
+      const s = await api("/api/admin/settings");
+      const ep = $("sfEmbedProvider");
+      if (ep) ep.value = s.embedding_provider === "siliconflow" ? "siliconflow" : "local";
+      const em = $("sfEmbedModel");
+      if (em) em.value = String(s.embedding_model || "BAAI/bge-m3");
+      const rp = $("sfRerankProvider");
+      if (rp) rp.value = s.rerank_provider === "siliconflow" ? "siliconflow" : "local";
+      const rm = $("sfRerankModel");
+      if (rm) rm.value = String(s.rerank_model || "BAAI/bge-reranker-v2-m3");
+      const sbu = $("sfBaseUrl");
+      if (sbu) sbu.value = String(s.siliconflow_base_url || "https://api.siliconflow.cn");
+      const sfh = $("sfKeyHint");
+      if (sfh) {
+        sfh.textContent = s.siliconflow_api_key_configured
+          ? "已保存硅基流动密钥（输入新值可覆盖）"
+          : "尚未保存硅基流动密钥";
+      }
+      const sfk = $("sfKey");
+      if (sfk) sfk.value = "";
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   function wireTabs(root) {
     if (!root) return;
     root.querySelectorAll(".gpt-tabs .gpt-tab").forEach((tab) => {
@@ -3828,24 +3865,6 @@
       setLv("large", "advCsLarge", "advCoLarge");
       const en = $("advEmbedNote");
       if (en) en.value = String(s.embedding_model_note || "");
-      const ep = $("advEmbedProvider");
-      if (ep) ep.value = s.embedding_provider === "siliconflow" ? "siliconflow" : "local";
-      const em = $("advEmbedModel");
-      if (em) em.value = String(s.embedding_model || "BAAI/bge-m3");
-      const rp = $("advRerankProvider");
-      if (rp) rp.value = s.rerank_provider === "siliconflow" ? "siliconflow" : "local";
-      const rm = $("advRerankModel");
-      if (rm) rm.value = String(s.rerank_model || "BAAI/bge-reranker-v2-m3");
-      const sbu = $("advSiliconflowBaseUrl");
-      if (sbu) sbu.value = String(s.siliconflow_base_url || "https://api.siliconflow.cn");
-      const sfh = $("advSiliconflowKeyHint");
-      if (sfh) {
-        sfh.textContent = s.siliconflow_api_key_configured
-          ? "当前已保存硅基流动密钥（输入新值可覆盖）"
-          : "尚未在服务端保存硅基流动密钥";
-      }
-      const sfk = $("advSiliconflowKey");
-      if (sfk) sfk.value = "";
       const tx = $("advSysExtra");
       if (tx) tx.value = String(s.system_prompt_extra || "");
       const wp = $("advWebSearchProvider");
@@ -4855,6 +4874,56 @@
     }
   });
 
+  $("btnFetchModels")?.addEventListener("click", async () => {
+    const msg = $("sfMsg");
+    if (msg) {
+      msg.hidden = false;
+      msg.textContent = "获取模型列表中…";
+    }
+    try {
+      const d = await api("/api/admin/models/fetch");
+      fillDatalist("cfgModelList", d.chat || []);
+      fillDatalist("sfEmbedModelList", d.embedding || []);
+      fillDatalist("sfRerankModelList", d.rerank || []);
+      const c = (d.chat || []).length;
+      const e = (d.embedding || []).length;
+      const r = (d.rerank || []).length;
+      if (msg) msg.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}），已填充建议项`;
+      showToast("模型列表已更新", "ok");
+    } catch (e2) {
+      if (msg) msg.textContent = e2.message || String(e2);
+      showToast(e2.message || String(e2), "err");
+    }
+  });
+
+  $("btnSaveEmbedRerank")?.addEventListener("click", async () => {
+    const msg = $("sfMsg");
+    const body = {
+      embedding_provider: $("sfEmbedProvider")?.value || "local",
+      embedding_model: ($("sfEmbedModel")?.value || "").trim(),
+      rerank_provider: $("sfRerankProvider")?.value || "local",
+      rerank_model: ($("sfRerankModel")?.value || "").trim(),
+      siliconflow_base_url: ($("sfBaseUrl")?.value || "").trim(),
+    };
+    const keyV = ($("sfKey")?.value || "").trim();
+    if (keyV) body.siliconflow_api_key = keyV;
+    try {
+      await api("/api/admin/settings/advanced", { method: "PUT", body: JSON.stringify(body) });
+      if (msg) {
+        msg.hidden = false;
+        msg.textContent = "已保存";
+      }
+      showToast("嵌入 / 重排序配置已保存", "ok");
+      await loadSettingsModelConfig();
+    } catch (e) {
+      if (msg) {
+        msg.hidden = false;
+        msg.textContent = e.message || String(e);
+      }
+      showToast(e.message || String(e), "err");
+    }
+  });
+
   $("profileAvatarFile")?.addEventListener("change", async function () {
     const f = this.files && this.files[0];
     if (!f) return;
@@ -4982,15 +5051,8 @@
         },
         system_prompt_extra: ($("advSysExtra")?.value || "").slice(0, 12000),
         embedding_model_note: ($("advEmbedNote")?.value || "").slice(0,500),
-        embedding_provider: $("advEmbedProvider")?.value || "local",
-        embedding_model: ($("advEmbedModel")?.value || "").trim().slice(0,256),
-        rerank_provider: $("advRerankProvider")?.value || "local",
-        rerank_model: ($("advRerankModel")?.value || "").trim().slice(0,256),
-        siliconflow_base_url: ($("advSiliconflowBaseUrl")?.value || "").trim().slice(0,256),
         web_search_provider: $("advWebSearchProvider")?.value || "bocha",
       };
-      const sfkV = ($("advSiliconflowKey")?.value || "").trim();
-      if (sfkV) body.siliconflow_api_key = sfkV;
       const bochaV = ($("advBochaKey")?.value || "").trim();
       const braveV = ($("advBraveKey")?.value || "").trim();
       const qfV = ($("advQianfanKey")?.value || "").trim();
@@ -5537,6 +5599,7 @@
       if ($("searchMode")) await refreshBm25Hint();
       await pingStatus();
       if ($("cfgBaseUrl")) await loadCfgDetail();
+      if ($("sfEmbedProvider")) await loadSettingsModelConfig().catch((e) => console.error(e));
       if (PAGE === "kb") {
         await Promise.all([refreshKbDocs().catch(() => {}), refreshKbCatList().catch(() => {})]);
       }

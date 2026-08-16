@@ -7,6 +7,7 @@ import os
 import shutil
 from typing import Any, Dict, List, Optional
 
+import requests
 from fastapi import Depends, HTTPException, Query, Request
 from fastapi.responses import StreamingResponse
 from fastapi.routing import APIRouter
@@ -326,6 +327,62 @@ def admin_put_advanced_settings(
         raise HTTPException(status_code=400, detail="无更新字段")
     save_system_settings(patch)
     return admin_settings_response()
+
+
+def _classify_siliconflow_model(model_id: str) -> str:
+    """按模型 id 命名推断硅基流动模型类型（其 /v1/models 不返回 type 字段）。"""
+    low = str(model_id).lower()
+    if "rerank" in low:
+        return "rerank"
+    if "embedding" in low or "bge-m3" in low or "bge-large" in low:
+        return "embedding"
+    return "chat"
+
+
+@router.get("/models/fetch")
+def admin_fetch_models(_: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    """从硅基流动拉取可用模型列表，按 chat / embedding / rerank 分类返回。
+
+    密钥取自后端 MySQL app_settings.siliconflow_api_key（或环境变量），不出后端。
+    """
+    from utils.web_system_settings import load_system_settings
+
+    s = load_system_settings()
+    key = (str(s.get("siliconflow_api_key") or "").strip()
+           or os.environ.get("SILICONFLOW_API_KEY", "").strip())
+    if not key:
+        raise HTTPException(status_code=400, detail="请先在下方配置硅基流动 API Key")
+    base_url = (str(s.get("siliconflow_base_url") or "").strip()
+                or "https://api.siliconflow.cn").rstrip("/")
+    try:
+        resp = requests.get(
+            f"{base_url}/v1/models",
+            headers={"Authorization": f"Bearer {key}"},
+            timeout=30,
+        )
+    except requests.RequestException as e:
+        raise HTTPException(status_code=502, detail=f"请求硅基流动失败: {e}") from e
+    if resp.status_code != 200:
+        raise HTTPException(status_code=502, detail=f"硅基流动返回 {resp.status_code}: {resp.text[:200]}")
+    data = resp.json().get("data") or []
+    chat: List[str] = []
+    embedding: List[str] = []
+    rerank: List[str] = []
+    for m in data:
+        mid = str(m.get("id") or "").strip()
+        if not mid:
+            continue
+        kind = _classify_siliconflow_model(mid)
+        if kind == "embedding":
+            embedding.append(mid)
+        elif kind == "rerank":
+            rerank.append(mid)
+        else:
+            chat.append(mid)
+    chat.sort()
+    embedding.sort()
+    rerank.sort()
+    return {"chat": chat, "embedding": embedding, "rerank": rerank, "total": len(chat) + len(embedding) + len(rerank)}
 
 
 @router.get("/vector/summary")

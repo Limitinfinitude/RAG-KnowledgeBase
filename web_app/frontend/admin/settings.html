@@ -61,7 +61,7 @@
         <div id="settingsPageRoot" class="gpt-settings-page">
           <div class="gpt-tabs gpt-tabs-settings" role="tablist">
             <button type="button" class="gpt-tab active" data-tab="set-rag">助手性格</button>
-            <button type="button" class="gpt-tab" data-tab="set-model">模型 API</button>
+            <button type="button" class="gpt-tab" data-tab="set-model">模型配置</button>
           </div>
 
           <section class="gpt-tab-panel active" id="panel-set-rag" aria-label="助手性格">
@@ -74,9 +74,9 @@
             <p class="gpt-status-pill gpt-status-pill-spaced" id="status">—</p>
           </section>
 
-          <section class="gpt-tab-panel" id="panel-set-model" aria-label="模型 API">
-            <h1 class="gpt-settings-page-title">模型 API</h1>
-            <p class="gpt-muted gpt-settings-lead">LLM 预设与下方表单对应服务端配置，保存后全局生效。</p>
+          <section class="gpt-tab-panel" id="panel-set-model" aria-label="模型配置">
+            <h1 class="gpt-settings-page-title">模型配置</h1>
+            <p class="gpt-muted gpt-settings-lead">LLM 预设与下方表单对应服务端配置，保存后全局生效；嵌入/重排序模型支持本地与硅基流动双 provider。</p>
             <label for="presetSelect">LLM 预设</label>
             <select id="presetSelect" class="gpt-input"></select>
 
@@ -86,7 +86,8 @@
             <label>API Key（留空则保留已保存）</label>
             <input type="password" id="cfgApiKey" class="gpt-input" autocomplete="new-password" placeholder="••••••••" />
             <label>模型名称</label>
-            <input type="text" id="cfgModel" class="gpt-input" />
+            <input type="text" id="cfgModel" class="gpt-input" list="cfgModelList" />
+            <datalist id="cfgModelList"></datalist>
             <label>提供商类型</label>
             <select id="cfgProvider" class="gpt-input">
               <option value="deepseek">deepseek</option>
@@ -99,6 +100,56 @@
             </div>
             <pre class="gpt-log" id="cfgTestLog" hidden></pre>
             <p class="gpt-muted">多预设保存在 MySQL <code>app_settings</code> 的 <code>llm_api_presets</code> 字段（经服务端归一化）。</p>
+
+            <h2 class="gpt-settings-block-title gpt-settings-block-title-spaced">嵌入 &amp; 重排序模型</h2>
+            <p class="gpt-muted">provider 选「硅基流动」后走云端 API；嵌入模型变更后<strong>需重建向量库</strong>才对已上传文档生效。</p>
+            <div class="gpt-row" style="flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
+              <div style="min-width:180px;">
+                <label>嵌入 provider</label>
+                <select id="sfEmbedProvider" class="gpt-input">
+                  <option value="local">本地（bge-small-zh-v1.5）</option>
+                  <option value="siliconflow">硅基流动 API</option>
+                </select>
+              </div>
+              <div style="flex:1;min-width:220px;">
+                <label>嵌入模型名</label>
+                <input type="text" id="sfEmbedModel" class="gpt-input" list="sfEmbedModelList" placeholder="BAAI/bge-m3" />
+                <datalist id="sfEmbedModelList"></datalist>
+              </div>
+              <div style="min-width:180px;">
+                <label>重排序 provider</label>
+                <select id="sfRerankProvider" class="gpt-input">
+                  <option value="local">本地（bge-reranker-base）</option>
+                  <option value="siliconflow">硅基流动 API</option>
+                </select>
+              </div>
+              <div style="flex:1;min-width:220px;">
+                <label>重排序模型名</label>
+                <input type="text" id="sfRerankModel" class="gpt-input" list="sfRerankModelList" placeholder="BAAI/bge-reranker-v2-m3" />
+                <datalist id="sfRerankModelList"></datalist>
+              </div>
+            </div>
+
+            <h2 class="gpt-settings-block-title gpt-settings-block-title-spaced">硅基流动（SiliconFlow）</h2>
+            <div class="gpt-row" style="flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
+              <div style="flex:1;min-width:220px;">
+                <label>API Key</label>
+                <input type="password" id="sfKey" class="gpt-input" maxlength="512" placeholder="sk-..." autocomplete="off" />
+                <p class="gpt-muted" id="sfKeyHint" style="margin:0.25rem 0 0;"></p>
+              </div>
+              <div style="flex:1;min-width:220px;">
+                <label>Base URL</label>
+                <input type="text" id="sfBaseUrl" class="gpt-input" maxlength="256" placeholder="https://api.siliconflow.cn" />
+              </div>
+              <div>
+                <button type="button" class="gpt-btn-secondary" id="btnFetchModels">获取模型列表</button>
+              </div>
+            </div>
+            <div class="gpt-row gpt-row-end" style="margin-top:0.75rem;">
+              <button type="button" class="gpt-btn-primary" id="btnSaveEmbedRerank">保存嵌入 / 重排序配置</button>
+            </div>
+            <pre class="gpt-log" id="sfMsg" hidden></pre>
+            <p class="gpt-muted">「获取模型列表」用后端已保存的硅基流动密钥拉取 chat / embedding / rerank 模型并填充上方建议项。</p>
           </section>
         </div>
       </div>
@@ -161,6 +212,6 @@
 
     <script src="/static/admin-nav.js?v=20260402"></script>
   <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
-  <script src="/static/app.js?v=20260471"></script>
+  <script src="/static/app.js?v=20260816"></script>
 </body>
 </html>
