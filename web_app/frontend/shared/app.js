@@ -5005,16 +5005,14 @@
     });
   }
 
-  async function fetchModels(msgEl) {
-    const baseUrl = ($("sfBaseUrl")?.value || "").trim();
-    const key = ($("sfKey")?.value || "").trim();
+  async function fetchModelList(baseUrl, key, msgEl) {
     if (!baseUrl) {
       if (msgEl) {
         msgEl.hidden = false;
         msgEl.textContent = "请先填写 Base URL";
       }
       showToast("请先填写 Base URL", "err");
-      return;
+      return null;
     }
     if (msgEl) {
       msgEl.hidden = false;
@@ -5025,22 +5023,48 @@
         method: "POST",
         body: JSON.stringify({ base_url: baseUrl, api_key: key }),
       });
-      fillDatalist("cfgModelList", d.chat || []);
-      fillModelSelect("sfEmbedModel", $("sfEmbedModel")?.value || "", d.embedding || []);
-      fillModelSelect("sfRerankModel", $("sfRerankModel")?.value || "", d.rerank || []);
-      const c = (d.chat || []).length;
-      const e = (d.embedding || []).length;
-      const r = (d.rerank || []).length;
-      if (msgEl) msgEl.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}）`;
-      showToast("模型列表已更新", "ok");
+      return d;
     } catch (e2) {
       if (msgEl) msgEl.textContent = e2.message || String(e2);
       showToast(e2.message || String(e2), "err");
+      return null;
     }
   }
 
-  $("btnFetchModels")?.addEventListener("click", () => fetchModels($("sfMsg")));
-  $("btnFetchLlmModels")?.addEventListener("click", () => fetchModels($("cfgTestLog")));
+  // LLM 标签页：用 LLM 自己的 base_url + key，只填充 chat 模型
+  async function fetchLlmModels() {
+    const msgEl = $("cfgTestLog");
+    const d = await fetchModelList(
+      ($("cfgBaseUrl")?.value || "").trim(),
+      ($("cfgApiKey")?.value || "").trim(),
+      msgEl,
+    );
+    if (!d) return;
+    fillDatalist("cfgModelList", d.chat || []);
+    const c = (d.chat || []).length;
+    if (msgEl) msgEl.textContent = `已获取 ${c} 个对话模型，已填充模型名称建议项`;
+    showToast("对话模型列表已更新", "ok");
+  }
+
+  // 向量标签页：用 provider 的 base_url + key，只填充 embedding / rerank 模型
+  async function fetchVectorModels() {
+    const msgEl = $("sfMsg");
+    const d = await fetchModelList(
+      ($("sfBaseUrl")?.value || "").trim(),
+      ($("sfKey")?.value || "").trim(),
+      msgEl,
+    );
+    if (!d) return;
+    fillModelSelect("sfEmbedModel", $("sfEmbedModel")?.value || "", d.embedding || []);
+    fillModelSelect("sfRerankModel", $("sfRerankModel")?.value || "", d.rerank || []);
+    const e = (d.embedding || []).length;
+    const r = (d.rerank || []).length;
+    if (msgEl) msgEl.textContent = `已获取 ${(d.total || 0)} 个模型（embedding ${e} / rerank ${r}），已填充模型下拉`;
+    showToast("向量模型列表已更新", "ok");
+  }
+
+  $("btnFetchModels")?.addEventListener("click", fetchVectorModels);
+  $("btnFetchLlmModels")?.addEventListener("click", fetchLlmModels);
   $("sfEmbedProvider")?.addEventListener("change", syncSfConnectionFields);
   $("sfRerankProvider")?.addEventListener("change", syncSfConnectionFields);
 
