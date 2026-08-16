@@ -150,25 +150,30 @@ conda activate rag_demo
 pip install -r requirements.txt
 ```
 
-### 3. 配置密钥（.env）
+### 3. 配置密钥（config.json）
 
-> 出于安全考虑，所有密钥均通过 `.env` 环境变量配置，不再硬编码。
+> 出于安全考虑，所有密钥统一存放在 `config.json`（启动读一次），不再硬编码。
 
 ```bash
-# 复制模板并填写真实值（.env 已被 .gitignore 忽略）
-cp .env.example .env
+# 复制模板并填写真实值（config.json 已被 .gitignore 忽略）
+cp config.example.json config.json
 ```
 
-`.env` 关键项：
+`config.json` 关键项：
 
-```dotenv
-MYSQL_PASSWORD=你的数据库密码       # Web 版 MySQL 模式需要
-API_KEY=sk-你的OpenAI兼容密钥
-BASE_URL=https://api.openai.com/v1
-BRAVE_SEARCH_API_KEY=               # 可选，联网检索
+```json
+{
+  "mysql": { "password": "你的数据库密码" },
+  "llm": { "base_url": "https://api.openai.com/v1", "api_key": "sk-你的密钥", "model": "gpt-4o-mini" },
+  "deepseek": { "api_key": "sk-你的DeepSeek密钥", "model": "deepseek-chat" },
+  "embedding": { "provider": "local", "model": "BAAI/bge-small-zh-v1.5" },
+  "rerank": { "provider": "local", "model": "BAAI/bge-reranker-base" },
+  "siliconflow": { "api_key": "", "base_url": "https://api.siliconflow.cn" },
+  "search": { "brave": "", "bocha": "", "qianfan": "" }
+}
 ```
 
-> **配置优先级**：运行时业务配置（LLM 预设、检索参数、分块层级、联网密钥、配额、开关、限流）主存 MySQL `app_settings` 表，管理端可**动态修改、免重启**；详见 `docs/DEPLOY.md`。
+> **配置优先级**：密钥/静态配置走 `config.json`（重启生效）；运行时业务配置（LLM 预设、检索参数、分块层级、开关、限流、向量 provider 选择）主存 MySQL `app_settings`，管理端**动态修改、免重启**。嵌入/重排支持本地与任意 OpenAI 兼容云端 API（硅基流动等），详见 `docs/DEPLOY.md`。
 
 ### 4. 启动
 
@@ -224,7 +229,9 @@ RAG-KnowledgeBase/
 │
 ├── models/                 # 本地模型缓存（gitignored）
 ├── data/                   # 运行时数据（gitignored）
-├── config.py               # 全局配置（密钥走环境变量）
+├── config.json             # 密钥与模型默认配置（gitignored）
+├── config.example.json     # 配置模板
+├── config.py               # 全局配置入口（启动读 config.json）
 └── requirements.txt
 ```
 
@@ -274,7 +281,7 @@ python scripts/eval_retrieval.py --user 1 --k 5 --mode both
 
 | 能力 | 说明 |
 |------|------|
-| 密钥治理 | 密钥走 `.env`（`.gitignore` 忽略），`.env.example` 提供模板 |
+| 密钥治理 | 密钥走 `config.json`（`.gitignore` 忽略），`config.example.json` 提供模板 |
 | 依赖锁定 | `requirements.lock.txt` + `environment.yml` 可复现 |
 | 单元测试 | 34 个用例（归一化/查询分类/检索），`pytest` 运行 |
 | CI | GitHub Actions 自动跑测试 |
