@@ -34,6 +34,22 @@ class TestSiliconFlowEmbeddings:
         assert calls["json"]["input"] == ["你好"]
         assert calls["json"] is not None
 
+    def test_is_callable(self, monkeypatch):
+        # FAISS 等 LangChain 组件会以 embedding(text) 方式调用，须支持 __call__
+        monkeypatch.setattr(
+            "utils.siliconflow_client.requests.post",
+            lambda *a, **k: _FakeResp(200, {"data": [{"index": 0, "embedding": [1.0, 2.0]}]}),
+        )
+        emb = SiliconFlowEmbeddings(api_key="sk-test")
+        assert callable(emb)
+        assert emb("查询") == [1.0, 2.0]
+
+    def test_isinstance_embeddings(self):
+        from langchain_core.embeddings import Embeddings
+
+        emb = SiliconFlowEmbeddings(api_key="sk-test")
+        assert isinstance(emb, Embeddings)
+
     def test_embed_documents_batches(self, monkeypatch):
         # 3 条文档，batch_size=2，应拆成 2 批
         def fake_post(url, headers=None, json=None, timeout=None):

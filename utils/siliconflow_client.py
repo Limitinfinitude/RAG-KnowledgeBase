@@ -14,6 +14,11 @@ from typing import List, Optional
 
 import requests
 
+try:
+    from langchain_core.embeddings import Embeddings
+except Exception:  # 若 langchain_core 不可用则退回纯 duck-typing
+    Embeddings = None
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_BASE_URL = "https://api.siliconflow.cn"
@@ -39,8 +44,16 @@ RERANK_MODEL_OPTIONS: List[str] = [
 ]
 
 
-class SiliconFlowEmbeddings:
-    """基于硅基流动 /v1/embeddings 的 LangChain 兼容嵌入实现。"""
+class SiliconFlowEmbeddingsBase(Embeddings if Embeddings is not None else object):
+    pass
+
+
+class SiliconFlowEmbeddings(SiliconFlowEmbeddingsBase):
+    """基于硅基流动 /v1/embeddings 的 LangChain 兼容嵌入实现。
+
+    继承 langchain_core.embeddings.Embeddings，满足 FAISS.add_documents / from_texts
+    对 embedding 对象的要求（含 __call__ = embed_query）。
+    """
 
     score_is_probability = False  # 标记：非 reranker，无意义，仅为接口统一
 
@@ -82,6 +95,10 @@ class SiliconFlowEmbeddings:
 
     def embed_query(self, text: str) -> List[float]:
         return self._embed_batch([text])[0]
+
+    def __call__(self, text: str) -> List[float]:
+        """LangChain 旧式调用别名：embedding(text) == embed_query(text)。"""
+        return self.embed_query(text)
 
 
 class SiliconFlowReranker:
