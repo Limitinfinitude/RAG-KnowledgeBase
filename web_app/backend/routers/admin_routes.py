@@ -69,6 +69,8 @@ from web_app.backend.schemas import (
     AdminFaissRegistryPatchBody,
     AdminVectorUserBody,
     ClearAllBody,
+    ModelFetchBody,
+    VectorProviderBody,
 )
 from utils.rag_admin_store import (
     admin_mysql_table_counts,
@@ -295,21 +297,15 @@ def admin_put_advanced_settings(
         patch["system_prompt_extra"] = body.system_prompt_extra.strip()
     if body.embedding_model_note is not None:
         patch["embedding_model_note"] = str(body.embedding_model_note).strip()[:500]
-    # —— 嵌入/重排序 provider 配置 ——
+    # —— 嵌入/重排序 provider 配置（provider 为任意 vector_providers 中的 name，由归一化校验）——
     if body.embedding_provider is not None:
-        ep = str(body.embedding_provider).strip().lower()
-        patch["embedding_provider"] = ep if ep in ("local", "siliconflow") else "local"
+        patch["embedding_provider"] = str(body.embedding_provider).strip().lower()[:64]
     if body.embedding_model is not None:
         patch["embedding_model"] = str(body.embedding_model).strip()[:256]
     if body.rerank_provider is not None:
-        rp = str(body.rerank_provider).strip().lower()
-        patch["rerank_provider"] = rp if rp in ("local", "siliconflow") else "local"
+        patch["rerank_provider"] = str(body.rerank_provider).strip().lower()[:64]
     if body.rerank_model is not None:
         patch["rerank_model"] = str(body.rerank_model).strip()[:256]
-    if body.siliconflow_base_url is not None and str(body.siliconflow_base_url).strip():
-        patch["siliconflow_base_url"] = str(body.siliconflow_base_url).strip()[:256]
-    if body.siliconflow_api_key is not None and str(body.siliconflow_api_key).strip():
-        patch["siliconflow_api_key"] = str(body.siliconflow_api_key).strip()
     if body.rag_defaults is not None:
         patch["rag_defaults"] = merge_rag_defaults_patch(body.rag_defaults)
     if body.chunk_levels is not None:
@@ -339,21 +335,22 @@ def _classify_siliconflow_model(model_id: str) -> str:
     return "chat"
 
 
-@router.get("/models/fetch")
-def admin_fetch_models(_: User = Depends(get_admin_user)) -> Dict[str, Any]:
-    """从硅基流动拉取可用模型列表，按 chat / embedding / rerank 分类返回。
+@router.post("/models/fetch")
+def admin_fetch_models(body: ModelFetchBody, _: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    """用提交的 base_url + api_key 拉取模型列表，按 chat / embedding / rerank 分类返回。
 
-    密钥取自后端 MySQL app_settings.siliconflow_api_key（或环境变量），不出后端。
+    api_key 留空时回退到后端已保存的 siliconflow provider 密钥。
     """
-    from utils.web_system_settings import load_system_settings
-
-    s = load_system_settings()
-    key = (str(s.get("siliconflow_api_key") or "").strip()
-           or os.environ.get("SILICONFLOW_API_KEY", "").strip())
+    key = (body.api_key or "").strip()
+    base_url = (body.base_url or "").strip().rstrip("/")
     if not key:
-        raise HTTPException(status_code=400, detail="请先在下方配置硅基流动 API Key")
-    base_url = (str(s.get("siliconflow_base_url") or "").strip()
-                or "https://api.siliconflow.cn").rstrip("/")
+        from utils.web_system_settings import get_rerank_config
+
+        key = get_rerank_config().get("api_key") or ""
+    if not key:
+        raise HTTPException(status_code=400, detail="请先填写 API Key（或先保存 provider 密钥）")
+    if not base_url:
+        raise HTTPException(status_code=400, detail="请填写 Base URL")
     try:
         resp = requests.get(
             f"{base_url}/v1/models",
@@ -361,9 +358,9 @@ def admin_fetch_models(_: User = Depends(get_admin_user)) -> Dict[str, Any]:
             timeout=30,
         )
     except requests.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"请求硅基流动失败: {e}") from e
+        raise HTTPException(status_code=502, detail=f"请求失败: {e}") from e
     if resp.status_code != 200:
-        raise HTTPException(status_code=502, detail=f"硅基流动返回 {resp.status_code}: {resp.text[:200]}")
+        raise HTTPException(status_code=502, detail=f"返回 {resp.status_code}: {resp.text[:200]}")
     data = resp.json().get("data") or []
     chat: List[str] = []
     embedding: List[str] = []
@@ -383,6 +380,85 @@ def admin_fetch_models(_: User = Depends(get_admin_user)) -> Dict[str, Any]:
     embedding.sort()
     rerank.sort()
     return {"chat": chat, "embedding": embedding, "rerank": rerank, "total": len(chat) + len(embedding) + len(rerank)}
+
+
+@router.get("/vector-providers")
+def admin_get_vector_providers(_: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    from utils.web_system_settings import get_vector_providers
+
+    providers = get_vector_providers()
+    safe = []
+    for p in providers:
+        d = {k: (v if k != "api_key" else "") for k, v in p.items()}
+        d["has_api_key"] = bool((p.get("api_key") or "").strip())
+        safe.append(d)
+    return {"providers": safe}
+
+
+@router.post("/vector-providers")
+def admin_add_vector_provider(body: VectorProviderBody, _: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    from utils.web_system_settings import load_system_settings, save_system_settings
+
+    name = body.name.strip().lower()
+    if not name:
+        raise HTTPException(status_code=400, detail="provider 名称不能为空")
+    s = load_system_settings()
+    providers = list(s.get("vector_providers") or [])
+    if any(p.get("name") == name for p in providers):
+        raise HTTPException(status_code=400, detail=f"provider「{name}」已存在")
+    providers.append({
+        "name": name,
+        "label": (body.label or name).strip()[:64],
+        "type": (body.type or "openai").strip().lower() if (body.type or "openai").strip().lower() in ("local", "openai") else "openai",
+        "base_url": (body.base_url or "").strip()[:256],
+        "api_key": (body.api_key or "").strip(),
+    })
+    save_system_settings({"vector_providers": providers})
+    return {"ok": True}
+
+
+@router.delete("/vector-providers/{name}")
+def admin_delete_vector_provider(name: str, _: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    from utils.web_system_settings import load_system_settings, save_system_settings
+
+    name = name.strip().lower()
+    if name == "local":
+        raise HTTPException(status_code=400, detail="本地 provider 不可删除")
+    s = load_system_settings()
+    providers = [p for p in (s.get("vector_providers") or []) if p.get("name") != name]
+    if len(providers) == len(s.get("vector_providers") or []):
+        raise HTTPException(status_code=404, detail=f"provider「{name}」不存在")
+    patch = {"vector_providers": providers}
+    # 若删除的是当前激活的 provider，回退到 local
+    if s.get("embedding_provider") == name:
+        patch["embedding_provider"] = "local"
+    if s.get("rerank_provider") == name:
+        patch["rerank_provider"] = "local"
+    save_system_settings(patch)
+    return {"ok": True}
+
+
+@router.put("/vector-providers/{name}")
+def admin_update_vector_provider(name: str, body: VectorProviderBody, _: User = Depends(get_admin_user)) -> Dict[str, Any]:
+    """更新 provider 的 label/type/base_url/api_key（name 用作定位，不可改）。"""
+    from utils.web_system_settings import load_system_settings, save_system_settings
+
+    name = name.strip().lower()
+    s = load_system_settings()
+    providers = list(s.get("vector_providers") or [])
+    target = next((p for p in providers if p.get("name") == name), None)
+    if target is None:
+        raise HTTPException(status_code=404, detail=f"provider「{name}」不存在")
+    if body.label is not None and str(body.label).strip():
+        target["label"] = str(body.label).strip()[:64]
+    if body.type is not None and str(body.type).strip().lower() in ("local", "openai"):
+        target["type"] = str(body.type).strip().lower()
+    if body.base_url is not None and str(body.base_url).strip():
+        target["base_url"] = str(body.base_url).strip()[:256]
+    if body.api_key is not None and str(body.api_key).strip():
+        target["api_key"] = str(body.api_key).strip()
+    save_system_settings({"vector_providers": providers})
+    return {"ok": True}
 
 
 @router.get("/vector/summary")

@@ -6,15 +6,15 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 
 logger = logging.getLogger(__name__)
 
-# ------------------- get_embeddings：provider 选择（siliconflow 云端 / 本地） -------------------
+# ------------------- get_embeddings：provider 选择（云端 OpenAI 兼容 / 本地） -------------------
 def get_embeddings():
     from utils.web_system_settings import get_embedding_config
 
     cfg = get_embedding_config()
-    if cfg["provider"] == "siliconflow":
+    if cfg["provider_type"] != "local":
         from utils.siliconflow_client import SiliconFlowEmbeddings
 
-        logger.info("[Embedding] 使用硅基流动云端嵌入模型: %s", cfg["model"])
+        logger.info("[Embedding] 使用云端嵌入模型 %s（provider=%s）", cfg["model"], cfg["provider"])
         return SiliconFlowEmbeddings(api_key=cfg["api_key"], model=cfg["model"], base_url=cfg["base_url"])
 
     # 本地模型
@@ -58,10 +58,10 @@ def get_reranker():
     from utils.web_system_settings import get_rerank_config
 
     cfg = get_rerank_config()
-    if cfg["provider"] == "siliconflow":
+    if cfg["provider_type"] != "local":
         from utils.siliconflow_client import SiliconFlowReranker
 
-        logger.info("[Reranker] 使用硅基流动云端重排序模型: %s", cfg["model"])
+        logger.info("[Reranker] 使用云端重排序模型 %s（provider=%s）", cfg["model"], cfg["provider"])
         return SiliconFlowReranker(api_key=cfg["api_key"], model=cfg["model"], base_url=cfg["base_url"])
 
     # 本地 CrossEncoder

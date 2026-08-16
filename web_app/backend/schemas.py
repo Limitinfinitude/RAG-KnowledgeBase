@@ -275,3 +275,20 @@ class AdminPromptTemplatePutBody(BaseModel):
     name: Optional[str] = Field(default=None, max_length=128)
     description: Optional[str] = Field(default=None, max_length=512)
     is_active: Optional[bool] = None
+
+
+class VectorProviderBody(BaseModel):
+    """向量模型 provider 新增/更新（name 唯一，type = local | openai）。"""
+
+    name: str = Field(..., min_length=1, max_length=64)
+    label: Optional[str] = Field(default=None, max_length=64)
+    type: Optional[str] = Field(default=None, description="local | openai")
+    base_url: Optional[str] = Field(default=None, max_length=256)
+    api_key: Optional[str] = Field(default=None, max_length=512)
+
+
+class ModelFetchBody(BaseModel):
+    """拉取模型列表：直接用提交的 base_url + api_key（api_key 留空则用后端已保存）。"""
+
+    base_url: str = Field(..., min_length=1, max_length=256)
+    api_key: Optional[str] = Field(default=None, max_length=512)

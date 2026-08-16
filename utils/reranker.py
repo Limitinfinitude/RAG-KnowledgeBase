@@ -170,14 +170,14 @@ def get_reranker(use_ollama: bool = False, ollama_base_url: str = None, ollama_m
         model = ollama_model or OLLAMA_RERANKER_MODEL
         return OllamaReranker(base_url=base_url, model=model)
 
-    # 硅基流动云端重排序
+    # 云端重排序（OpenAI 兼容 /v1/rerank）
     from utils.web_system_settings import get_rerank_config
 
     cfg = get_rerank_config()
-    if cfg["provider"] == "siliconflow":
+    if cfg["provider_type"] != "local":
         from utils.siliconflow_client import SiliconFlowReranker
 
-        logger.info("[Reranker] 使用硅基流动云端重排序模型: %s", cfg["model"])
+        logger.info("[Reranker] 使用云端重排序模型 %s（provider=%s）", cfg["model"], cfg["provider"])
         return SiliconFlowReranker(api_key=cfg["api_key"], model=cfg["model"], base_url=cfg["base_url"])
 
     # 使用本地 CrossEncoder

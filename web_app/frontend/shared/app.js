@@ -2651,38 +2651,111 @@
     }
   }
 
-  function fillDatalist(id, items) {
-    const dl = $(id);
-    if (!dl) return;
-    dl.innerHTML = "";
-    (items || []).forEach((it) => {
-      const o = document.createElement("option");
-      o.value = it;
-      dl.appendChild(o);
+  let _vectorProviders = [];
+
+  function fillModelSelect(selectId, currentModel, models) {
+    const sel = $(selectId);
+    if (!sel) return;
+    const opts = [];
+    const add = (v, label) => {
+      if (v && !opts.some((o) => o.value === v)) opts.push({ value: v, label: label || v });
+    };
+    add(currentModel, currentModel);
+    (models || []).forEach((m) => add(m, m));
+    sel.innerHTML = "";
+    opts.forEach((o) => {
+      const opt = document.createElement("option");
+      opt.value = o.value;
+      opt.textContent = o.label;
+      sel.appendChild(opt);
     });
+    if (currentModel && opts.some((o) => o.value === currentModel)) sel.value = currentModel;
+  }
+
+  function renderVectorProviders() {
+    const box = $("vectorProviderList");
+    if (!box) return;
+    const rows = _vectorProviders
+      .map((p) => {
+        const isLocal = p.name === "local";
+        const keyTag = p.has_api_key
+          ? '<span class="gpt-provider-key">密钥已配置</span>'
+          : '<span class="gpt-provider-key gpt-provider-key-empty">未配密钥</span>';
+        const delBtn = isLocal
+          ? ""
+          : `<button type="button" class="gpt-btn-text" data-del-provider="${escapeHtml(p.name)}">删除</button>`;
+        return (
+          '<div class="gpt-provider-row"><div class="gpt-provider-meta">' +
+          '<span class="gpt-provider-name">' + escapeHtml(p.label || p.name) + '</span>' +
+          '<span class="gpt-provider-type">' + (p.type === "local" ? "本地" : "OpenAI 兼容") + '</span>' +
+          '<span class="gpt-provider-url">' + escapeHtml(p.base_url || "—") + '</span>' +
+          keyTag + '</div>' + delBtn + '</div>'
+        );
+      })
+      .join("");
+    box.innerHTML = rows || '<p class="gpt-muted">暂无 provider</p>';
+    box.querySelectorAll("[data-del-provider]").forEach((b) => {
+      b.addEventListener("click", async () => {
+        const name = b.getAttribute("data-del-provider");
+        if (!window.confirm(`确定删除 provider「${name}」吗？`)) return;
+        try {
+          await api("/api/admin/vector-providers/" + encodeURIComponent(name), { method: "DELETE" });
+          showToast("已删除 provider", "ok");
+          await loadSettingsModelConfig();
+        } catch (e) {
+          showToast(e.message || String(e), "err");
+        }
+      });
+    });
+  }
+
+  function currentVectorProvider() {
+    const sel = $("sfEmbedProvider");
+    const name = sel && sel.value;
+    return _vectorProviders.find((p) => p.name === name) || null;
+  }
+
+  function syncSfConnectionFields() {
+    const p = currentVectorProvider();
+    const sbu = $("sfBaseUrl");
+    const sfh = $("sfKeyHint");
+    const sfk = $("sfKey");
+    if (p) {
+      if (sbu) sbu.value = p.base_url || "";
+      if (sfk) sfk.placeholder = p.has_api_key ? "****（已配置，留空沿用）" : "sk-...（未配置）";
+      if (sfh) {
+        sfh.textContent = p.has_api_key
+          ? `「${p.label || p.name}」已保存密钥（输入新值可覆盖）`
+          : `「${p.label || p.name}」尚未配置密钥`;
+      }
+    }
   }
 
   async function loadSettingsModelConfig() {
     try {
-      const s = await api("/api/admin/settings");
-      const ep = $("sfEmbedProvider");
-      if (ep) ep.value = s.embedding_provider === "siliconflow" ? "siliconflow" : "local";
-      const em = $("sfEmbedModel");
-      if (em) em.value = String(s.embedding_model || "BAAI/bge-m3");
-      const rp = $("sfRerankProvider");
-      if (rp) rp.value = s.rerank_provider === "siliconflow" ? "siliconflow" : "local";
-      const rm = $("sfRerankModel");
-      if (rm) rm.value = String(s.rerank_model || "BAAI/bge-reranker-v2-m3");
-      const sbu = $("sfBaseUrl");
-      if (sbu) sbu.value = String(s.siliconflow_base_url || "https://api.siliconflow.cn");
-      const sfh = $("sfKeyHint");
-      if (sfh) {
-        sfh.textContent = s.siliconflow_api_key_configured
-          ? "已保存硅基流动密钥（输入新值可覆盖）"
-          : "尚未保存硅基流动密钥";
-      }
-      const sfk = $("sfKey");
-      if (sfk) sfk.value = "";
+      const [prov, s] = await Promise.all([
+        api("/api/admin/vector-providers"),
+        api("/api/admin/settings"),
+      ]);
+      _vectorProviders = prov.providers || [];
+      const fillProv = (selId, current) => {
+        const sel = $(selId);
+        if (!sel) return;
+        sel.innerHTML = "";
+        _vectorProviders.forEach((p) => {
+          const o = document.createElement("option");
+          o.value = p.name;
+          o.textContent = p.label || p.name;
+          sel.appendChild(o);
+        });
+        if (current && _vectorProviders.some((p) => p.name === current)) sel.value = current;
+      };
+      fillProv("sfEmbedProvider", s.embedding_provider);
+      fillProv("sfRerankProvider", s.rerank_provider);
+      fillModelSelect("sfEmbedModel", s.embedding_model, []);
+      fillModelSelect("sfRerankModel", s.rerank_model, []);
+      renderVectorProviders();
+      syncSfConnectionFields();
     } catch (e) {
       console.error(e);
     }
@@ -4921,20 +4994,44 @@
     }
   });
 
-  async function fetchModelsIntoDatalists(msgEl) {
+  function fillDatalist(id, items) {
+    const dl = $(id);
+    if (!dl) return;
+    dl.innerHTML = "";
+    (items || []).forEach((it) => {
+      const o = document.createElement("option");
+      o.value = it;
+      dl.appendChild(o);
+    });
+  }
+
+  async function fetchModels(msgEl) {
+    const baseUrl = ($("sfBaseUrl")?.value || "").trim();
+    const key = ($("sfKey")?.value || "").trim();
+    if (!baseUrl) {
+      if (msgEl) {
+        msgEl.hidden = false;
+        msgEl.textContent = "请先填写 Base URL";
+      }
+      showToast("请先填写 Base URL", "err");
+      return;
+    }
     if (msgEl) {
       msgEl.hidden = false;
       msgEl.textContent = "获取模型列表中…";
     }
     try {
-      const d = await api("/api/admin/models/fetch");
+      const d = await api("/api/admin/models/fetch", {
+        method: "POST",
+        body: JSON.stringify({ base_url: baseUrl, api_key: key }),
+      });
       fillDatalist("cfgModelList", d.chat || []);
-      fillDatalist("sfEmbedModelList", d.embedding || []);
-      fillDatalist("sfRerankModelList", d.rerank || []);
+      fillModelSelect("sfEmbedModel", $("sfEmbedModel")?.value || "", d.embedding || []);
+      fillModelSelect("sfRerankModel", $("sfRerankModel")?.value || "", d.rerank || []);
       const c = (d.chat || []).length;
       const e = (d.embedding || []).length;
       const r = (d.rerank || []).length;
-      if (msgEl) msgEl.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}），已填充建议项`;
+      if (msgEl) msgEl.textContent = `已获取 ${d.total || 0} 个模型（chat ${c} / embedding ${e} / rerank ${r}）`;
       showToast("模型列表已更新", "ok");
     } catch (e2) {
       if (msgEl) msgEl.textContent = e2.message || String(e2);
@@ -4942,32 +5039,56 @@
     }
   }
 
-  $("btnFetchModels")?.addEventListener("click", () => {
-    fetchModelsIntoDatalists($("sfMsg"));
-  });
+  $("btnFetchModels")?.addEventListener("click", () => fetchModels($("sfMsg")));
+  $("btnFetchLlmModels")?.addEventListener("click", () => fetchModels($("cfgTestLog")));
+  $("sfEmbedProvider")?.addEventListener("change", syncSfConnectionFields);
+  $("sfRerankProvider")?.addEventListener("change", syncSfConnectionFields);
 
-  $("btnFetchLlmModels")?.addEventListener("click", () => {
-    fetchModelsIntoDatalists($("cfgTestLog"));
+  $("btnProviderAdd")?.addEventListener("click", async () => {
+    const name = (window.prompt("Provider 唯一标识（英文，如 openai / jina）") || "").trim().toLowerCase();
+    if (!name) return;
+    const label = (window.prompt("显示名（可留空，默认用标识）") || "").trim() || name;
+    const type = window.confirm("是否为「本地模型」provider？\n（确定 = 本地；取消 = OpenAI 兼容 API）") ? "local" : "openai";
+    const baseUrl = (window.prompt("Base URL（本地可留空）") || "").trim();
+    const apiKey = (window.prompt("API Key（可留空）") || "").trim();
+    try {
+      await api("/api/admin/vector-providers", {
+        method: "POST",
+        body: JSON.stringify({ name, label, type, base_url: baseUrl, api_key: apiKey }),
+      });
+      showToast(`已新增 provider「${label}」`, "ok");
+      await loadSettingsModelConfig();
+    } catch (e) {
+      showToast(e.message || String(e), "err");
+    }
   });
 
   $("btnSaveEmbedRerank")?.addEventListener("click", async () => {
     const msg = $("sfMsg");
     const body = {
       embedding_provider: $("sfEmbedProvider")?.value || "local",
-      embedding_model: ($("sfEmbedModel")?.value || "").trim(),
+      embedding_model: $("sfEmbedModel")?.value || "",
       rerank_provider: $("sfRerankProvider")?.value || "local",
-      rerank_model: ($("sfRerankModel")?.value || "").trim(),
-      siliconflow_base_url: ($("sfBaseUrl")?.value || "").trim(),
+      rerank_model: $("sfRerankModel")?.value || "",
     };
-    const keyV = ($("sfKey")?.value || "").trim();
-    if (keyV) body.siliconflow_api_key = keyV;
     try {
+      // 若填写了新密钥/URL，同步更新当前 provider 的连接配置
+      const keyV = ($("sfKey")?.value || "").trim();
+      const urlV = ($("sfBaseUrl")?.value || "").trim();
+      const curName = $("sfEmbedProvider")?.value || "";
+      const cur = _vectorProviders.find((p) => p.name === curName);
+      if (cur && cur.type !== "local" && (keyV || urlV)) {
+        await api("/api/admin/vector-providers/" + encodeURIComponent(curName), {
+          method: "PUT",
+          body: JSON.stringify({ name: curName, base_url: urlV, api_key: keyV }),
+        });
+      }
       await api("/api/admin/settings/advanced", { method: "PUT", body: JSON.stringify(body) });
       if (msg) {
         msg.hidden = false;
         msg.textContent = "已保存";
       }
-      showToast("嵌入 / 重排序配置已保存", "ok");
+      showToast("向量模型配置已保存", "ok");
       await loadSettingsModelConfig();
     } catch (e) {
       if (msg) {

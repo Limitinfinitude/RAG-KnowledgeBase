@@ -134,22 +134,15 @@
             <div class="gpt-subpanel" id="subpanel-vector">
               <div class="gpt-model-card">
                 <div class="gpt-model-card-head">
-                  <span class="gpt-model-card-icon">🔑</span>
+                  <span class="gpt-model-card-icon">🔌</span>
                   <div>
-                    <p class="gpt-model-card-title">硅基流动（SiliconFlow）</p>
-                    <p class="gpt-model-card-sub">嵌入与重排序共用的云端 provider，密钥保存在服务端</p>
+                    <p class="gpt-model-card-title">Provider 管理</p>
+                    <p class="gpt-model-card-sub">支持本地模型 + 任意 OpenAI 兼容 API（硅基流动等），可增删</p>
                   </div>
                 </div>
-                <div class="gpt-model-card-grid">
-                  <div class="gpt-model-field">
-                    <label>API Key</label>
-                    <input type="password" id="sfKey" class="gpt-input" maxlength="512" placeholder="sk-..." autocomplete="off" />
-                    <p class="gpt-muted" id="sfKeyHint" style="margin:0.25rem 0 0;"></p>
-                  </div>
-                  <div class="gpt-model-field">
-                    <label>Base URL</label>
-                    <input type="text" id="sfBaseUrl" class="gpt-input" maxlength="256" placeholder="https://api.siliconflow.cn" />
-                  </div>
+                <div id="vectorProviderList" class="gpt-provider-list"></div>
+                <div class="gpt-model-card-actions">
+                  <button type="button" class="gpt-btn-secondary" id="btnProviderAdd">＋新增 Provider</button>
                 </div>
               </div>
 
@@ -164,15 +157,11 @@
                 <div class="gpt-model-card-grid">
                   <div class="gpt-model-field">
                     <label>Provider</label>
-                    <select id="sfEmbedProvider" class="gpt-input">
-                      <option value="local">本地（bge-small-zh-v1.5）</option>
-                      <option value="siliconflow">硅基流动 API</option>
-                    </select>
+                    <select id="sfEmbedProvider" class="gpt-input"></select>
                   </div>
                   <div class="gpt-model-field">
                     <label>模型名</label>
-                    <input type="text" id="sfEmbedModel" class="gpt-input" list="sfEmbedModelList" placeholder="BAAI/bge-m3" />
-                    <datalist id="sfEmbedModelList"></datalist>
+                    <select id="sfEmbedModel" class="gpt-input"></select>
                   </div>
                 </div>
               </div>
@@ -188,24 +177,40 @@
                 <div class="gpt-model-card-grid">
                   <div class="gpt-model-field">
                     <label>Provider</label>
-                    <select id="sfRerankProvider" class="gpt-input">
-                      <option value="local">本地（bge-reranker-base）</option>
-                      <option value="siliconflow">硅基流动 API</option>
-                    </select>
+                    <select id="sfRerankProvider" class="gpt-input"></select>
                   </div>
                   <div class="gpt-model-field">
                     <label>模型名</label>
-                    <input type="text" id="sfRerankModel" class="gpt-input" list="sfRerankModelList" placeholder="BAAI/bge-reranker-v2-m3" />
-                    <datalist id="sfRerankModelList"></datalist>
+                    <select id="sfRerankModel" class="gpt-input"></select>
                   </div>
                 </div>
               </div>
 
-              <div class="gpt-model-card-actions">
-                <button type="button" class="gpt-btn-secondary" id="btnFetchModels">获取模型列表</button>
-                <button type="button" class="gpt-btn-primary" id="btnSaveEmbedRerank">保存向量模型配置</button>
+              <div class="gpt-model-card">
+                <div class="gpt-model-card-head">
+                  <span class="gpt-model-card-icon">🔍</span>
+                  <div>
+                    <p class="gpt-model-card-title">获取模型列表</p>
+                    <p class="gpt-model-card-sub">填写 Base URL 与 API Key 后拉取，填充上方模型下拉</p>
+                  </div>
+                </div>
+                <div class="gpt-model-card-grid">
+                  <div class="gpt-model-field">
+                    <label>Base URL</label>
+                    <input type="text" id="sfBaseUrl" class="gpt-input" maxlength="256" placeholder="https://api.siliconflow.cn" />
+                  </div>
+                  <div class="gpt-model-field">
+                    <label>API Key</label>
+                    <input type="password" id="sfKey" class="gpt-input" maxlength="512" placeholder="****（已配置）" autocomplete="off" />
+                    <p class="gpt-muted" id="sfKeyHint" style="margin:0.25rem 0 0;"></p>
+                  </div>
+                </div>
+                <div class="gpt-model-card-actions">
+                  <button type="button" class="gpt-btn-secondary" id="btnFetchModels">获取模型列表</button>
+                  <button type="button" class="gpt-btn-primary" id="btnSaveEmbedRerank">保存向量模型配置</button>
+                </div>
+                <pre class="gpt-log" id="sfMsg" hidden></pre>
               </div>
-              <pre class="gpt-log" id="sfMsg" hidden></pre>
             </div>
           </section>
         </div>

@@ -2271,6 +2271,61 @@ body.gpt-subpage .gpt-sidebar-history {
   align-items: center;
 }
 
+/* —— Provider 管理列表 —— */
+.gpt-provider-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.gpt-provider-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-hover);
+}
+.gpt-provider-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.gpt-provider-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.gpt-provider-type {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+}
+.gpt-provider-url {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 260px;
+}
+.gpt-provider-key {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+}
+.gpt-provider-key-empty {
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+}
+
 .gpt-rag-switch-block {
   margin-top: 0.35rem;
   margin-bottom: 0.65rem;

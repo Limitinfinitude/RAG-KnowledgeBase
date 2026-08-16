@@ -45,6 +45,13 @@ _LLM_PRESET_TEMPLATES: Dict[str, Dict[str, str]] = {
     },
 }
 
+# 向量模型 provider 默认清单（可增删）：type = local（本地）/ openai（OpenAI 兼容 API）
+_DEFAULT_VECTOR_PROVIDERS: List[Dict[str, str]] = [
+    {"name": "local", "label": "本地模型", "type": "local", "base_url": "", "api_key": ""},
+    {"name": "siliconflow", "label": "硅基流动", "type": "openai",
+     "base_url": "https://api.siliconflow.cn", "api_key": ""},
+]
+
 
 def get_llm_preset_templates() -> Dict[str, Dict[str, str]]:
     return {k: dict(v) for k, v in _LLM_PRESET_TEMPLATES.items()}
@@ -96,11 +103,10 @@ _DEFAULTS: Dict[str, Any] = {
     "chunk_levels": {k: dict(v) for k, v in _CHUNK_LEVEL_DEFAULTS.items()},
     "system_prompt_extra": "",
     "embedding_model_note": "BAAI/bge-small-zh-v1.5（见 utils/embedding.py，改模型需重启服务）",
-    # —— 嵌入模型与重排序模型 provider 配置（local 本地 / siliconflow 硅基流动）——
+    # —— 向量模型 provider 清单 + 当前激活的嵌入/重排序 provider 与模型 ——
+    "vector_providers": [dict(p) for p in _DEFAULT_VECTOR_PROVIDERS],
     "embedding_provider": "local",
     "embedding_model": "BAAI/bge-small-zh-v1.5",
-    "siliconflow_api_key": "",
-    "siliconflow_base_url": "https://api.siliconflow.cn",
     "rerank_provider": "local",
     "rerank_model": "BAAI/bge-reranker-base",
     "login_bruteforce_enabled": True,
@@ -113,20 +119,66 @@ _DEFAULTS: Dict[str, Any] = {
 }
 
 
-def _normalize_embedding_rerank_settings(out: Dict[str, Any]) -> None:
-    """归一化嵌入/重排序 provider 配置。"""
+def _normalize_vector_provider_settings(out: Dict[str, Any]) -> None:
+    """归一化向量模型 provider 清单与激活的嵌入/重排序 provider。"""
+    # 归一化 provider 清单，确保 local 始终存在且字段完整
+    raw_providers = out.get("vector_providers")
+    if not isinstance(raw_providers, list) or not raw_providers:
+        raw_providers = [dict(p) for p in _DEFAULT_VECTOR_PROVIDERS]
+    providers: List[Dict[str, str]] = []
+    seen: set = set()
+    for p in raw_providers:
+        if not isinstance(p, dict):
+            continue
+        name = str(p.get("name") or "").strip().lower()
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        providers.append({
+            "name": name,
+            "label": str(p.get("label") or name).strip()[:64],
+            "type": str(p.get("type") or "openai").strip().lower() in ("local", "openai")
+            and str(p.get("type") or "openai").strip().lower() or "openai",
+            "base_url": str(p.get("base_url") or "").strip()[:256],
+            "api_key": str(p.get("api_key") or "").strip(),
+        })
+    if "local" not in seen:
+        providers.insert(0, dict(_DEFAULT_VECTOR_PROVIDERS[0]))
+    out["vector_providers"] = providers
+
+    # 迁移旧的 siliconflow 专用字段（若有）到 siliconflow provider
+    _migrate_legacy_siliconflow_fields(out, providers)
+
+    names = {p["name"] for p in providers}
     ep = str(out.get("embedding_provider") or "local").strip().lower()
-    out["embedding_provider"] = ep if ep in ("local", "siliconflow") else "local"
+    out["embedding_provider"] = ep if ep in names else "local"
     rp = str(out.get("rerank_provider") or "local").strip().lower()
-    out["rerank_provider"] = rp if rp in ("local", "siliconflow") else "local"
+    out["rerank_provider"] = rp if rp in names else "local"
     if not isinstance(out.get("embedding_model"), str) or not out["embedding_model"].strip():
         out["embedding_model"] = _DEFAULTS["embedding_model"]
     if not isinstance(out.get("rerank_model"), str) or not out["rerank_model"].strip():
         out["rerank_model"] = _DEFAULTS["rerank_model"]
-    if not isinstance(out.get("siliconflow_api_key"), str):
-        out["siliconflow_api_key"] = ""
-    if not isinstance(out.get("siliconflow_base_url"), str) or not out["siliconflow_base_url"].strip():
-        out["siliconflow_base_url"] = _DEFAULTS["siliconflow_base_url"]
+
+
+def _migrate_legacy_siliconflow_fields(out: Dict[str, Any], providers: List[Dict[str, str]]) -> None:
+    """兼容旧数据：siliconflow_api_key / siliconflow_base_url 迁移到 vector_providers 的 siliconflow 项。"""
+    legacy_key = out.pop("siliconflow_api_key", None)
+    legacy_url = out.pop("siliconflow_base_url", None)
+    if not legacy_key and not legacy_url:
+        return
+    for p in providers:
+        if p["name"] == "siliconflow":
+            if legacy_key and not p["api_key"]:
+                p["api_key"] = str(legacy_key).strip()
+            if legacy_url and not p["base_url"]:
+                p["base_url"] = str(legacy_url).strip()
+            break
+    else:
+        providers.append({
+            "name": "siliconflow", "label": "硅基流动", "type": "openai",
+            "base_url": str(legacy_url or "https://api.siliconflow.cn").strip(),
+            "api_key": str(legacy_key or "").strip(),
+        })
 
 
 def _normalize_web_search_settings(out: Dict[str, Any]) -> None:
@@ -192,7 +244,7 @@ def _normalize_full_settings(out: Dict[str, Any]) -> None:
         out["system_prompt_extra"] = ""
     if not isinstance(out.get("embedding_model_note"), str):
         out["embedding_model_note"] = _DEFAULTS["embedding_model_note"]
-    _normalize_embedding_rerank_settings(out)
+    _normalize_vector_provider_settings(out)
     _normalize_web_search_settings(out)
     if not isinstance(out.get("kb_disabled"), dict):
         out["kb_disabled"] = {}
@@ -499,21 +551,41 @@ def get_system_prompt_extra() -> str:
     return str(v).strip() if isinstance(v, str) else ""
 
 
+def _find_provider(s: Dict[str, Any], name: str) -> Dict[str, str]:
+    """从 vector_providers 清单中按 name 查找 provider。"""
+    providers = s.get("vector_providers")
+    if not isinstance(providers, list):
+        return dict(_DEFAULT_VECTOR_PROVIDERS[0])
+    for p in providers:
+        if isinstance(p, dict) and p.get("name") == name:
+            return dict(p)
+    return dict(_DEFAULT_VECTOR_PROVIDERS[0])
+
+
+def get_vector_providers() -> List[Dict[str, str]]:
+    """返回向量模型 provider 清单（含 api_key，供后端内部使用；对外需脱敏）。"""
+    s = load_system_settings()
+    providers = s.get("vector_providers")
+    return [dict(p) for p in providers] if isinstance(providers, list) else [dict(p) for p in _DEFAULT_VECTOR_PROVIDERS]
+
+
 def get_embedding_config() -> Dict[str, Any]:
-    """返回嵌入模型运行配置：provider / model / api_key / base_url。
+    """返回嵌入模型运行配置：provider_name / provider_type / model / api_key / base_url。
 
     优先级：MySQL app_settings → 环境变量（SILICONFLOW_API_KEY / SILICONFLOW_BASE_URL）。
     """
     s = load_system_settings()
-    provider = str(s.get("embedding_provider") or "local").strip().lower()
+    name = str(s.get("embedding_provider") or "local").strip().lower()
+    p = _find_provider(s, name)
     model = str(s.get("embedding_model") or _DEFAULTS["embedding_model"]).strip()
-    api_key = (str(s.get("siliconflow_api_key") or "").strip()
+    api_key = (str(p.get("api_key") or "").strip()
                or os.environ.get("SILICONFLOW_API_KEY", "").strip())
-    base_url = (str(s.get("siliconflow_base_url") or "").strip()
+    base_url = (str(p.get("base_url") or "").strip()
                 or os.environ.get("SILICONFLOW_BASE_URL", "").strip()
-                or _DEFAULTS["siliconflow_base_url"])
+                or "https://api.siliconflow.cn")
     return {
-        "provider": provider,
+        "provider": name,
+        "provider_type": str(p.get("type") or "openai").strip().lower(),
         "model": model,
         "api_key": api_key,
         "base_url": base_url,
@@ -521,17 +593,19 @@ def get_embedding_config() -> Dict[str, Any]:
 
 
 def get_rerank_config() -> Dict[str, Any]:
-    """返回重排序模型运行配置：provider / model / api_key / base_url。"""
+    """返回重排序模型运行配置：provider_name / provider_type / model / api_key / base_url。"""
     s = load_system_settings()
-    provider = str(s.get("rerank_provider") or "local").strip().lower()
+    name = str(s.get("rerank_provider") or "local").strip().lower()
+    p = _find_provider(s, name)
     model = str(s.get("rerank_model") or _DEFAULTS["rerank_model"]).strip()
-    api_key = (str(s.get("siliconflow_api_key") or "").strip()
+    api_key = (str(p.get("api_key") or "").strip()
                or os.environ.get("SILICONFLOW_API_KEY", "").strip())
-    base_url = (str(s.get("siliconflow_base_url") or "").strip()
+    base_url = (str(p.get("base_url") or "").strip()
                 or os.environ.get("SILICONFLOW_BASE_URL", "").strip()
-                or _DEFAULTS["siliconflow_base_url"])
+                or "https://api.siliconflow.cn")
     return {
-        "provider": provider,
+        "provider": name,
+        "provider_type": str(p.get("type") or "openai").strip().lower(),
         "model": model,
         "api_key": api_key,
         "base_url": base_url,
@@ -602,8 +676,17 @@ def admin_settings_response() -> Dict[str, Any]:
     out.pop("bocha_api_key", None)
     out.pop("brave_api_key_server", None)
     out.pop("qianfan_api_key", None)
-    out["siliconflow_api_key_configured"] = bool((out.get("siliconflow_api_key") or "").strip())
-    out.pop("siliconflow_api_key", None)
+    # 脱敏 vector_providers 的 api_key，仅返回是否已配置
+    providers = out.get("vector_providers")
+    if isinstance(providers, list):
+        safe_providers = []
+        for p in providers:
+            if not isinstance(p, dict):
+                continue
+            d = {k: (v if k != "api_key" else "") for k, v in p.items()}
+            d["has_api_key"] = bool((p.get("api_key") or "").strip())
+            safe_providers.append(d)
+        out["vector_providers"] = safe_providers
     lp = out.get("llm_api_presets")
     if isinstance(lp, dict):
         safe_lp: Dict[str, Any] = {}
