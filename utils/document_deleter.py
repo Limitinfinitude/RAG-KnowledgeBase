@@ -108,25 +108,29 @@ def delete_document_from_vector_db(file_name: str, vector_db, embeddings=None):
     if deleted_count == 0:
         return False, 0
 
+    from utils.faiss_write_lock import faiss_write_lock
+
     try:
-        vector_db.delete(ids_to_delete)
-        if vector_db.index.ntotal == 0:
-            _write_empty_system_index(embeddings, index_dir)
-        else:
-            os.makedirs(index_dir, exist_ok=True)
-            vector_db.save_local(index_dir)
+        with faiss_write_lock():
+            vector_db.delete(ids_to_delete)
+            if vector_db.index.ntotal == 0:
+                _write_empty_system_index(embeddings, index_dir)
+            else:
+                os.makedirs(index_dir, exist_ok=True)
+                vector_db.save_local(index_dir)
     except Exception as e:
         err = f"FAISS.delete 失败，回退无重嵌入重建: {e}"
         logger.warning("%s", err)
         try:
             from utils.db import get_vector_db
 
-            vector_db = get_vector_db(embeddings)
-            ok, deleted_count = _rebuild_drop_file_no_reembed(
-                vector_db, file_name, embeddings, index_dir
-            )
-            if not ok:
-                return False, 0
+            with faiss_write_lock():
+                vector_db = get_vector_db(embeddings)
+                ok, deleted_count = _rebuild_drop_file_no_reembed(
+                    vector_db, file_name, embeddings, index_dir
+                )
+                if not ok:
+                    return False, 0
         except Exception as e2:
             log_error(
                 "document_delete",

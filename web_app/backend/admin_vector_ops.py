@@ -40,20 +40,24 @@ def admin_vector_summary_users(user_ids: List[int]) -> List[Dict[str, Any]]:
 
 def admin_reset_user_faiss(user_id: int) -> Dict[str, Any]:
     """删除 FAISS 目录并写入空索引；将未删除文档的 chunks_count 置 0。"""
+    from utils.faiss_write_lock import faiss_write_lock
+
     t_kb, t_api = set_user_kb_context(user_id)
     try:
         kb = get_kb_dir()
         index_dir = os.path.join(kb, "faiss_index")
-        if os.path.isdir(index_dir):
-            shutil.rmtree(index_dir)
         emb = get_embeddings()
         empty_db = FAISS.from_texts(
             texts=["初始空文档"],
             embedding=emb,
             metadatas=[{"source_file": "system", "note": "empty_init"}],
         )
-        os.makedirs(index_dir, exist_ok=True)
-        empty_db.save_local(index_dir)
+        # 嵌入在锁外完成，临界区内只做删目录 + 写空索引
+        with faiss_write_lock():
+            if os.path.isdir(index_dir):
+                shutil.rmtree(index_dir)
+            os.makedirs(index_dir, exist_ok=True)
+            empty_db.save_local(index_dir)
         meta = load_metadata()
         docs = meta.get("documents") or {}
         if isinstance(docs, dict):
