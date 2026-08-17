@@ -1,0 +1,249 @@
+2026-08-17 22:35:58,529 - utils.embedding - INFO - [Embedding] 使用云端嵌入模型 BAAI/bge-m3（provider=siliconflow）
+2026-08-17 22:35:58,531 - utils.db - INFO - [DB] 加载已有 FAISS 索引：D:\Python-project\PythonProject\data\web\users\99\knowledge_db\faiss_index
+2026-08-17 22:35:58,533 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2026-08-17 22:35:58,552 - faiss.loader - INFO - Successfully loaded faiss with AVX2 support.
+2026-08-17 22:35:58,567 - utils.reranker - INFO - [Reranker] 使用云端重排序模型 BAAI/bge-reranker-v2-m3（provider=siliconflow）
+2026-08-17 22:35:59.089 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-08-17 22:35:59.090 WARNING streamlit.runtime.state.session_state_proxy: Session state does not function when running a script without `streamlit run`
+D:\anaconda3\envs\rag_demo\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+
+=== 端到端评测（RAGAS 风格）：正样本 24 + 陷阱负样本 6 ===
+
+2026-08-17 22:35:59,795 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+Building prefix dict from the default dictionary ...
+2026-08-17 22:36:00,187 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+2026-08-17 22:36:00,188 - jieba - DEBUG - Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+Loading model cost 0.461 seconds.
+2026-08-17 22:36:00,648 - jieba - DEBUG - Loading model cost 0.461 seconds.
+Prefix dict has been built successfully.
+2026-08-17 22:36:00,648 - jieba - DEBUG - Prefix dict has been built successfully.
+2026-08-17 22:36:01,205 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.36s | Type: local
+2026-08-17 22:36:01,993 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:03,754 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:05,514 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:06,870 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [1/24] ✅ 为什么保本高收益不可信
+      faith=3/3 relev=10/10 ctx=10/10 来源命中=['个人理财入门读本_20260817.md', '个人理财入门读本_20260817.md']
+2026-08-17 22:36:08,023 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:08,355 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-17 22:36:08,975 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.45s | Type: local
+2026-08-17 22:36:09,647 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:11,136 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:12,488 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:13,615 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [2/24] ✅ 八纵八横什么时候建成
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['中国高速铁路发展资料_20260817.html']
+2026-08-17 22:36:14,404 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:15,326 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.43s | Type: local
+2026-08-17 22:36:15,641 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:16,964 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:19,935 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:20,942 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [3/24] ✅ 摩卡壶下壶水位有什么讲究
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['咖啡冲煮参数手册_20260817.csv', '咖啡冲煮参数手册_20260817.csv', '家庭急救常识手册_20260817.md']
+2026-08-17 22:36:22,082 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:22,977 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.39s | Type: local
+2026-08-17 22:36:23,221 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:24,757 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:25,854 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:26,988 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [4/24] ✅ 水调歌头这首词怀念谁
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['唐宋诗词名篇赏析_20260817.md', '唐宋诗词名篇赏析_20260817.md']
+2026-08-17 22:36:27,934 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:28,799 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.39s | Type: local
+2026-08-17 22:36:29,373 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:31,299 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:32,973 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:34,245 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [5/24] ✅ 图书馆座位怎么预约占座怎么办
+      faith=3/3 relev=10/10 ctx=10/10 来源命中=['城市图书馆借阅与服务规则_20260817.txt']
+2026-08-17 22:36:35,215 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:36,112 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.41s | Type: local
+2026-08-17 22:36:36,367 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:38,243 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:42,169 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:43,009 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [6/24] ✅ 鼻子出血正确处理方法
+      faith=2/2 relev=10/10 ctx=10/10 来源命中=['家庭急救常识手册_20260817.md', '家庭急救常识手册_20260817.md', '家庭急救常识手册_20260817.md']
+2026-08-17 22:36:44,110 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:44,893 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.32s | Type: local
+2026-08-17 22:36:45,489 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:46,790 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:47,919 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:49,235 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [7/24] ✅ 智能音箱有几个麦克风阵列
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['智能音箱新品发布要点_20260817.pptx']
+2026-08-17 22:36:50,178 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:36:51,111 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.43s | Type: local
+2026-08-17 22:36:51,390 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:36:52,872 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:37:49,446 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:37:52,011 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [8/24] ✅ 咖啡因对睡眠的影响
+      faith=3/3 relev=7/10 ctx=5/10 来源命中=['睡眠科学与健康指南_20260817.md', '运动训练基础手册_20260817.md', '睡眠科学与健康指南_20260817.md']
+2026-08-17 22:37:53,314 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:37:54,187 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.41s | Type: local
+2026-08-17 22:37:54,916 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:37:58,298 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:00,397 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:01,405 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [9/24] ✅ 混沌工程和测试的区别
+      faith=2/2 relev=10/10 ctx=10/10 来源命中=['软件测试基础实践指南_20260817.md', '软件测试基础实践指南_20260817.md']
+2026-08-17 22:38:03,430 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:38:04,316 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.40s | Type: local
+2026-08-17 22:38:04,610 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:06,196 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:08,116 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:09,488 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [10/24] ✅ WHO 每周运动量建议
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['运动训练基础手册_20260817.md']
+2026-08-17 22:38:10,524 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:38:11,372 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.34s | Type: local
+2026-08-17 22:38:12,062 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:38:14,607 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:07,958 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:09,053 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [11/24] ✅ 雪崩法和雪球法还债哪个好
+      faith=4/5 relev=10/10 ctx=10/10 来源命中=['个人理财入门读本_20260817.md', '个人理财入门读本_20260817.md']
+2026-08-17 22:39:09,855 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:10,654 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.32s | Type: local
+2026-08-17 22:39:11,264 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:12,905 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:14,041 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:15,020 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [12/24] ✅ 复兴号什么时候首发的
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['中国高速铁路发展资料_20260817.html']
+2026-08-17 22:39:15,592 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:16,458 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.41s | Type: local
+2026-08-17 22:39:16,860 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:18,420 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:19,820 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:20,971 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [13/24] ✅ 手冲V60 粉水比和研磨度
+      faith=2/2 relev=10/10 ctx=10/10 来源命中=['咖啡冲煮参数手册_20260817.csv']
+2026-08-17 22:39:21,970 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:22,867 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.43s | Type: local
+2026-08-17 22:39:23,124 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:25,143 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:28,192 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:29,482 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [14/24] ✅ 将进酒表达了什么情感
+      faith=3/3 relev=10/10 ctx=10/10 来源命中=['唐宋诗词名篇赏析_20260817.md']
+2026-08-17 22:39:30,383 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:31,237 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.35s | Type: local
+2026-08-17 22:39:31,885 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:33,495 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:34,953 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:36,038 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [15/24] ✅ 读者证丢了怎么补办
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['城市图书馆借阅与服务规则_20260817.txt']
+2026-08-17 22:39:37,547 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:38,434 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.44s | Type: local
+2026-08-17 22:39:38,751 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:40,844 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:42,223 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:43,287 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [16/24] ✅ 一氧化碳中毒要注意什么
+      faith=3/3 relev=10/10 ctx=10/10 来源命中=['家庭急救常识手册_20260817.md', '家庭急救常识手册_20260817.md']
+2026-08-17 22:39:44,068 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:44,954 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.39s | Type: local
+2026-08-17 22:39:45,196 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:46,281 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:48,403 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:51,097 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [17/24] ✅ 智能家居兼容什么协议
+      faith=1/1 relev=8/10 ctx=10/10 来源命中=['智能音箱新品发布要点_20260817.pptx']
+2026-08-17 22:39:51,905 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:52,718 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.38s | Type: local
+2026-08-17 22:39:53,362 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:54,699 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:56,070 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:39:57,065 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [18/24] ✅ 卧室温度多少度适合睡觉
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['睡眠科学与健康指南_20260817.md']
+2026-08-17 22:39:58,040 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:39:58,811 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.32s | Type: local
+2026-08-17 22:39:59,417 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:01,746 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:15,747 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:16,790 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [19/24] ✅ mock和stub有什么区别
+      faith=3/3 relev=10/10 ctx=10/10 来源命中=['软件测试基础实践指南_20260817.md']
+2026-08-17 22:40:18,415 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:40:19,340 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.33s | Type: local
+2026-08-17 22:40:20,019 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:21,415 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:31,186 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:32,705 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [20/24] ✅ 证据可靠的运动补剂有哪些
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['运动训练基础手册_20260817.md']
+2026-08-17 22:40:33,454 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:40:34,296 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.37s | Type: local
+2026-08-17 22:40:34,857 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:36,276 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:37,418 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:38,388 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [21/24] ✅ 应急基金应该存多少
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['个人理财入门读本_20260817.md']
+2026-08-17 22:40:39,196 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:40:40,135 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.37s | Type: local
+2026-08-17 22:40:40,714 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:42,206 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:44,918 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:46,122 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [22/24] ✅ 京沪高铁有多长客流多少
+      faith=2/2 relev=5/10 ctx=5/10 来源命中=['中国高速铁路发展资料_20260817.html']
+2026-08-17 22:40:47,306 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:40:48,106 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.30s | Type: local
+2026-08-17 22:40:48,721 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:50,497 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:51,762 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:52,939 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [23/24] ✅ 法压壶怎么泡咖啡
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['咖啡冲煮参数手册_20260817.csv', '咖啡冲煮参数手册_20260817.csv']
+2026-08-17 22:40:53,981 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:40:54,953 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.39s | Type: local
+2026-08-17 22:40:55,242 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:56,701 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:58,279 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:40:58,914 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [24/24] ✅ 春望反映了什么历史事件
+      faith=1/1 relev=10/10 ctx=10/10 来源命中=['唐宋诗词名篇赏析_20260817.md', '唐宋诗词名篇赏析_20260817.md', '中国高速铁路发展资料_20260817.html']
+2026-08-17 22:40:59,713 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:00,568 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.34s | Type: local
+2026-08-17 22:41:02,255 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:41:04,353 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 图书馆有咖啡的书吗 -> 拒答分 10/10（召回 2 条）
+2026-08-17 22:41:05,210 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:06,080 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.35s | Type: local
+2026-08-17 22:41:06,678 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:41:08,652 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 高铁上能办借阅证吗 -> 拒答分 10/10（召回 2 条）
+2026-08-17 22:41:10,380 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:11,273 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.37s | Type: local
+2026-08-17 22:41:11,578 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:41:15,213 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 运动手环记录睡眠准吗 -> 拒答分 9/10（召回 3 条）
+2026-08-17 22:41:15,984 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:16,882 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.39s | Type: local
+2026-08-17 22:41:17,290 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:41:20,831 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 理财经理建议我买高铁股票 -> 拒答分 10/10（召回 3 条）
+2026-08-17 22:41:21,611 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:21,955 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-17 22:41:22,494 - utils.logger - INFO - Retrieval: 5 -> 5 docs | Time: 0.43s | Type: local
+2026-08-17 22:41:23,160 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-08-17 22:41:26,794 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 心肺复苏的唐诗描写 -> 拒答分 10/10（召回 3 条）
+2026-08-17 22:41:27,674 - utils.hybrid_search - INFO - [BM25] 索引已加载: 110 个文档
+2026-08-17 22:41:27,998 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:41:28,355 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+  [负] 唐诗里的咖啡豆 -> 拒答分 10/10（召回 0 条）
+
+=== 汇总（耗时 329s）===
+  Faithfulness（主张支持率）: 0.992
+  Answer Relevancy:          0.958
+  Context Precision(有用度): 0.958
+  拒答正确性（负样本）:       0.983

@@ -19,7 +19,9 @@ if _PROJECT_ROOT not in sys.path:
 CORPUS_DIR = os.path.join(_PROJECT_ROOT, "eval_corpus")
 
 _TEXT_EXTS = {".txt", ".md"}
-_SUPPORTED_EXTS = _TEXT_EXTS | {".pdf", ".docx", ".xlsx", ".xls"}
+# 支持格式与上传白名单一致（document_parsers 注册表）
+from utils.document_parsers import SUPPORTED_EXTENSIONS as _SUPPORTED_EXTS
+_SUPPORTED_EXTS = {"." + e for e in _SUPPORTED_EXTS}
 
 
 class _BytesUploadFile:

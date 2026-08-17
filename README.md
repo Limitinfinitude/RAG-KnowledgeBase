@@ -18,7 +18,7 @@
 
 ## ✨ 项目简介
 
-RAG-KnowledgeBase 是一个功能完整的 **RAG（检索增强生成）知识库问答系统**。它能够将你的 PDF、Word、TXT、Markdown 等文档构建为可语义检索的知识库，并通过大语言模型给出**带来源溯源的精准回答**。
+RAG-KnowledgeBase 是一个功能完整的 **RAG（检索增强生成）知识库问答系统**。它能够将你的 PDF、Word、PPT、TXT、Markdown、CSV、HTML、Excel、图片（OCR）等文档构建为可语义检索的知识库，并通过大语言模型给出**带来源溯源的精准回答**。
 
 系统提供**两套运行形态**，共享同一套核心检索与对话引擎：
 
@@ -35,7 +35,7 @@ RAG-KnowledgeBase 是一个功能完整的 **RAG（检索增强生成）知识�
 
 ### 核心能力
 
-- 📄 **多格式文档上传**：PDF（图片型自动 OCR）、DOCX、TXT、MD、XLSX
+- 📄 **多格式文档上传**：PDF（扫描版自动 OCR）、DOCX、PPTX、TXT、MD、CSV、HTML、XLSX、图片（JPG/PNG，OCR 入库）
 - 🔍 **智能混合检索**：bge-small-zh-v1.5 向量嵌入 + BM25 混合检索 + RRF 融合
 - 🏆 **重排序优化**：bge-reranker CrossEncoder 交叉编码重排，显著提升召回精度
 - 🧩 **智能分块**：多层级分块（Small/Medium/Large）+ 父块扩展 + 边界修复
@@ -273,7 +273,7 @@ RAG-KnowledgeBase/
 python scripts/eval_retrieval.py --user 1 --k 5 --mode both
 ```
 
-评测报告见 [`docs/eval_report.md`](docs/eval_report.md)，当前基准集 Recall@5 = 0.87（多格式文档 pdf/docx/xlsx/txt 的 Recall = 1.0）。
+评测报告见 [`docs/eval_report.md`](docs/eval_report.md)（2026-08-17 基准：103 条评测集、21 文档跨领域语料，混合检索 Recall@5 = 0.988，生产管线（混合+重排）负样本误召回 5.9%、Balanced = 0.96）。
 
 ---
 

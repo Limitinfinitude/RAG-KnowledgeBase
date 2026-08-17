@@ -1,0 +1,285 @@
+D:\anaconda3\envs\rag_demo\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+Loading model cost 0.789 seconds.
+Prefix dict has been built successfully.
+
+=== 检索质量评测：用户 99，k=5，样本 103 条（正 86 / 负 17）===
+
+--- 检索模式：vector ---
+  ❌ R=0.50 什么是提示工程  top3=['chapter2_上下文工程_20260815.md', '提示词高级用法_20260815.md', 'chapter1_Agent入门_20260815.md']
+     期望=['提示词基础用法_20260815.md', 'chapter2_上下文工程_20260815.md']
+  ❌ R=0.50 什么是文本分块  top3=['文本分块技术_allinrag_20260815.md']
+     期望=['文本分块技术_allinrag_20260815.md', 'chapter3_用户记忆与知识库_20260815.md']
+  ❌ R=0.00 八纵八横什么时候建成  top3=[]
+     期望=['中国高速铁路发展资料_20260817.html']
+  ⚠️【负样本·误召回】红烧肉怎么做  top1=水浒传节选前二十回_20260815.txt (0.500)
+  ⚠️【负样本·误召回】如何办理房产过户手续  top1=RAG技术简介_allinrag_20260815.md (0.518)
+  ⚠️【负样本·误召回】图书馆有咖啡的书吗  top1=咖啡馆销售数据表节选200行_20260815.xlsx (0.555)
+  ⚠️【负样本·误召回】高铁上能办借阅证吗  top1=城市图书馆借阅与服务规则_20260817.txt (0.573)
+  ⚠️【负样本·误召回】运动手环记录睡眠准吗  top1=睡眠科学与健康指南_20260817.md (0.533)
+  ⚠️【负样本·误召回】理财经理建议我买高铁股票  top1=中国高速铁路发展资料_20260817.html (0.517)
+  ⚠️【负样本·误召回】黑洞的信息悖论怎么理解  top1=提示词基础用法_20260815.md (0.555)
+  ⚠️【负样本·误召回】如何注册一家公司  top1=RAG技术简介_allinrag_20260815.md (0.506)
+  ⚠️【负样本·误召回】量子纠缠是怎么回事  top1=chapter3_用户记忆与知识库_20260815.md (0.607)
+  ⚠️【负样本·误召回】区块链智能合约怎么开发  top1=chapter4_工具_20260815.md (0.532)
+  >>> Recall@5=0.9767 | nDCG@5=0.9758 | MRR=0.9826
+  >>> FalseRecall@5=58.82%（10/17 误召回） | Balanced=0.5793
+
+--- 检索模式：hybrid ---
+  ❌ R=0.50 什么是提示工程  top3=['提示词高级用法_20260815.md', 'chapter2_上下文工程_20260815.md', 'chapter1_Agent入门_20260815.md']
+     期望=['提示词基础用法_20260815.md', 'chapter2_上下文工程_20260815.md']
+  ❌ R=0.50 什么是文本分块  top3=['文本分块技术_allinrag_20260815.md']
+     期望=['文本分块技术_allinrag_20260815.md', 'chapter3_用户记忆与知识库_20260815.md']
+  ⚠️【负样本·误召回】红烧肉怎么做  top1=水浒传节选前二十回_20260815.txt (0.500)
+  ⚠️【负样本·误召回】如何办理房产过户手续  top1=RAG技术简介_allinrag_20260815.md (0.518)
+  ⚠️【负样本·误召回】图书馆有咖啡的书吗  top1=城市图书馆借阅与服务规则_20260817.txt (0.761)
+  ⚠️【负样本·误召回】高铁上能办借阅证吗  top1=城市图书馆借阅与服务规则_20260817.txt (0.968)
+  ⚠️【负样本·误召回】运动手环记录睡眠准吗  top1=睡眠科学与健康指南_20260817.md (0.533)
+  ⚠️【负样本·误召回】理财经理建议我买高铁股票  top1=个人理财入门读本_20260817.md (0.908)
+  ⚠️【负样本·误召回】黑洞的信息悖论怎么理解  top1=提示词基础用法_20260815.md (1.000)
+  ⚠️【负样本·误召回】如何注册一家公司  top1=chapter3_用户记忆与知识库_20260815.md (0.764)
+  ⚠️【负样本·误召回】量子纠缠是怎么回事  top1=chapter3_用户记忆与知识库_20260815.md (1.000)
+  ⚠️【负样本·误召回】区块链智能合约怎么开发  top1=chapter4_工具_20260815.md (0.532)
+  >>> Recall@5=0.9884 | nDCG@5=0.9841 | MRR=0.9884
+  >>> FalseRecall@5=58.82%（10/17 误召回） | Balanced=0.5813
+
+--- 检索模式：rerank ---
+2026-08-17 22:15:21,871 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:22,228 - utils.reranker - INFO - [Reranker] 使用云端重排序模型 BAAI/bge-reranker-v2-m3（provider=siliconflow）
+2026-08-17 22:15:22,773 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:15:22,845 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:23,910 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:15:23,989 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:24,984 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:15:25,053 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:26,087 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:15:26,187 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:27,153 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-17 22:15:27,284 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:28,364 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-17 22:15:28,457 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:29,493 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:15:29,601 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:30,631 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:15:30,735 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:31,698 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-17 22:15:31,771 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:32,759 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:15:32,878 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:33,866 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:15:33,975 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:34,957 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:15:35,061 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:36,150 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:15:36,283 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:37,195 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-17 22:15:37,479 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:38,531 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-17 22:15:38,662 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:39,638 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:15:39,711 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:40,751 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:15:40,841 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:41,832 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:15:41,944 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:42,841 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-17 22:15:42,958 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:44,058 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-17 22:15:44,130 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:45,675 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.11s | Type: cloud_or_local
+2026-08-17 22:15:45,743 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:46,796 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-17 22:15:46,863 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:48,001 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-17 22:15:48,110 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:49,243 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.78s | Type: cloud_or_local
+2026-08-17 22:15:49,333 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:50,370 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-17 22:15:50,488 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:51,532 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-17 22:15:51,641 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:52,753 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:15:52,859 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:53,918 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-17 22:15:54,015 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:55,032 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+  ❌ R=0.50 什么是提示工程  top3=['chapter2_上下文工程_20260815.md', 'chapter1_Agent入门_20260815.md']
+     期望=['提示词基础用法_20260815.md', 'chapter2_上下文工程_20260815.md']
+2026-08-17 22:15:55,145 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:56,127 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+  ❌ R=0.50 什么是文本分块  top3=['文本分块技术_allinrag_20260815.md']
+     期望=['文本分块技术_allinrag_20260815.md', 'chapter3_用户记忆与知识库_20260815.md']
+2026-08-17 22:15:56,216 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:57,258 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+  ❌ R=0.50 如何防止 Agent 陷入无限循环  top3=['chapter5_CodingAgent与通用Agent_20260815.md', 'chapter1_Agent入门_20260815.md']
+     期望=['chapter1_Agent入门_20260815.md', 'chapter2_上下文工程_20260815.md']
+2026-08-17 22:15:57,377 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:58,473 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-17 22:15:58,728 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:15:59,720 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:15:59,854 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:00,793 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-17 22:16:00,862 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:01,872 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:16:01,998 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:03,050 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-17 22:16:03,147 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:04,191 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-17 22:16:04,293 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:05,289 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:16:05,399 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:06,328 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-17 22:16:06,391 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:07,362 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-17 22:16:07,488 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:08,425 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:16:08,567 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:09,672 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-17 22:16:09,788 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:10,709 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:16:10,800 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:11,909 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:16:12,001 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:12,986 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:16:13,053 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:13,930 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:16:14,061 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:15,031 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:16:15,256 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:16,372 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.79s | Type: cloud_or_local
+2026-08-17 22:16:16,456 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:17,517 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:16:17,627 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:18,661 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:16:18,785 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:19,734 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:16:19,834 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:20,955 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:16:21,085 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:22,158 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-17 22:16:22,265 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:23,317 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:16:23,445 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:24,412 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-17 22:16:24,536 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:25,548 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:16:25,664 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:26,696 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-17 22:16:26,831 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:27,883 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:16:27,952 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:28,873 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:16:28,949 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:29,831 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-17 22:16:29,904 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:31,005 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-17 22:16:31,106 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:32,035 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:16:32,134 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:33,133 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-17 22:16:33,204 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:33,518 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-17 22:16:34,100 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-17 22:16:34,199 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:35,115 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-17 22:16:35,179 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:36,149 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-17 22:16:36,385 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:37,239 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:16:37,305 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:38,120 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.49s | Type: cloud_or_local
+2026-08-17 22:16:38,227 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:39,236 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-17 22:16:39,310 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:40,246 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:16:40,310 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:41,250 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-17 22:16:41,360 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:42,404 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-17 22:16:42,485 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:43,323 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-17 22:16:43,391 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:44,233 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.44s | Type: cloud_or_local
+2026-08-17 22:16:44,335 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:45,188 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.47s | Type: cloud_or_local
+2026-08-17 22:16:45,285 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:46,076 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.44s | Type: cloud_or_local
+2026-08-17 22:16:46,164 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:47,126 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-17 22:16:47,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:48,111 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:16:48,214 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:49,122 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.46s | Type: cloud_or_local
+2026-08-17 22:16:49,188 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:50,290 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-17 22:16:50,357 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:51,365 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:16:51,472 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:52,350 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-17 22:16:52,442 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:53,536 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:16:53,773 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:54,769 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:16:54,835 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:55,816 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+  ❌ R=0.50 睡眠如何影响肌肉恢复  top3=['运动训练基础手册_20260817.md']
+     期望=['运动训练基础手册_20260817.md', '睡眠科学与健康指南_20260817.md']
+2026-08-17 22:16:55,917 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:56,928 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-17 22:16:57,000 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:58,095 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-17 22:16:58,210 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:16:58,512 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:16:59,474 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-17 22:16:59,568 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:00,614 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:17:00,739 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:01,634 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-17 22:17:01,711 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:02,675 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-17 22:17:02,777 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:03,747 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:17:03,815 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:04,710 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-17 22:17:04,844 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:05,803 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-17 22:17:05,920 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:06,840 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-17 22:17:06,905 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:07,848 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+  ⚠️【负样本·误召回】量子纠缠是怎么回事  top1=chapter3_用户记忆与知识库_20260815.md (0.992)
+2026-08-17 22:17:07,922 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:08,237 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:09,108 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:17:09,180 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:10,228 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-17 22:17:10,349 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:10,678 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:11,534 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-17 22:17:11,776 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:12,127 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:13,080 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-17 22:17:13,187 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:13,473 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:14,331 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-17 22:17:14,471 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:14,784 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:15,675 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-17 22:17:15,812 - utils.hybrid_search - INFO - [BM25] 索引已加载: 2508 个文档
+2026-08-17 22:17:16,106 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-17 22:17:17,052 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+  >>> Recall@5=0.9767 | nDCG@5=0.9794 | MRR=0.9942
+  >>> FalseRecall@5=5.88%（1/17 误召回） | Balanced=0.9586
+
+=== Top-1 分数分布（阈值标定参考：正样本下界 vs 负样本上界的间隔）===
+  [vector] 正样本 top1: min=0.520 p25=0.574 median=0.619 max=0.833
+  [vector] 负样本误召回 top1: min=0.500 max=0.607（10 条误召回样本）
+  [hybrid] 正样本 top1: min=0.471 p25=0.683 median=0.847 max=1.000
+  [hybrid] 负样本误召回 top1: min=0.500 max=1.000（10 条误召回样本）
+  [rerank] 正样本 top1: min=0.368 p25=0.851 median=0.982 max=0.999
+  [rerank] 负样本误召回 top1: min=0.992 max=0.992（1 条误召回样本）
+
+=== 评测完成 ===
+
