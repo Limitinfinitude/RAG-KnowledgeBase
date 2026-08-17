@@ -5,9 +5,12 @@
 """
 import re
 import hashlib
+import logging
 from typing import List, Dict, Tuple, Optional
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+logger = logging.getLogger(__name__)
 
 
 # ==================== 分块配置 ====================

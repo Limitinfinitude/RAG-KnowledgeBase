@@ -6,8 +6,9 @@
 import logging
 import os
 import requests
+import threading
 import time
-from typing import List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from sentence_transformers import CrossEncoder
 from utils.logger import log_retrieval, log_error
 
@@ -17,6 +18,11 @@ logger = logging.getLogger(__name__)
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_RERANKER_MODEL = "qllama/bge-reranker-v2-m3:q4_k_m"
 
+# 进程级 reranker 缓存：Web 端每请求重载模型会阻塞事件循环且极慢，
+# 按 (provider, model, base_url) 缓存；配置变更换 key 自动重建
+_reranker_cache: Dict[tuple, Any] = {}
+_reranker_cache_lock = threading.Lock()
+
 
 class OllamaReranker:
     """Ollama 重排序器"""
@@ -25,6 +31,9 @@ class OllamaReranker:
     score_is_probability = True
 
     def __init__(self, base_url: str = OLLAMA_BASE_URL, model: str = OLLAMA_RERANKER_MODEL):
+        # 注意：本实现从自由文本中抓数字当分数、逐 pair 串行 HTTP，分数可靠性有限，
+        # 已不推荐使用（保留仅为兼容）；建议切换云端 rerank 或本地 CrossEncoder。
+        logger.warning("[Reranker] OllamaReranker 为遗留实现，分数可靠性有限，建议改用云端/本地重排")
         self.base_url = base_url
         self.model = model
         self.api_url = f"{base_url}/api/generate"
@@ -184,7 +193,12 @@ def get_reranker(use_ollama: bool = False, ollama_base_url: str = None, ollama_m
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     local_reranker_path = os.path.join(project_root, "models", "bge-reranker-base_local")
 
-    device = 'cuda' if os.environ.get('CUDA_VISIBLE_DEVICES') is not None else 'cpu'
+    try:
+        import torch
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    except ImportError:
+        device = "cpu"
 
     if os.path.exists(local_reranker_path):
         logger.info("[Reranker] 使用本地 reranker: %s", local_reranker_path)
@@ -201,8 +215,34 @@ def get_reranker(use_ollama: bool = False, ollama_base_url: str = None, ollama_m
         return CrossEncoder(local_reranker_path, device=device)
 
 
-def rerank_documents(query: str, documents: List, reranker, 
-                    top_k: int = 3, reranker_type: str = "local") -> List[Tuple]:
+def get_cached_reranker():
+    """带进程级缓存的 get_reranker（Web 端入口统一用这个）。
+
+    构造可能很慢（加载本地模型/下载），调用方应放在 asyncio.to_thread 里执行；
+    失败会抛异常（调用方记录日志并降级为不重排），不再静默。
+    """
+    from utils.web_system_settings import get_rerank_config
+
+    cfg = get_rerank_config()
+    key = (str(cfg.get("provider")), str(cfg.get("model")), str(cfg.get("base_url")))
+    with _reranker_cache_lock:
+        cached = _reranker_cache.get(key)
+    if cached is not None:
+        return cached
+    inst = get_reranker()  # 慢构造放锁外，避免阻塞其它请求
+    with _reranker_cache_lock:
+        _reranker_cache[key] = inst
+    return inst
+
+
+def rerank_documents(
+    query: str,
+    documents: List,
+    reranker,
+    top_k: int = 3,
+    reranker_type: str = "local",
+    fallback_scores: Optional[List[float]] = None,
+) -> List[Tuple]:
     """
     重排序文档
     :param query: 查询文本
@@ -210,18 +250,20 @@ def rerank_documents(query: str, documents: List, reranker,
     :param reranker: 重排序器实例
     :param top_k: 返回前 k 个结果
     :param reranker_type: 重排序器类型
+    :param fallback_scores: 重排失败时沿用的原始检索分数（保持原序原分，
+        不伪造高分——伪高分会让未重排结果绕过 SIMILARITY_THRESHOLD 与低置信防线）
     :return: 排序后的文档和分数列表（分数已归一化到0-1）
     """
     if not documents:
         return []
-    
+
     start_time = time.perf_counter()
-    
+
     try:
         # 构建查询-文档对
-        pairs = [[query, doc.page_content if hasattr(doc, 'page_content') else str(doc)] 
+        pairs = [[query, doc.page_content if hasattr(doc, "page_content") else str(doc)]
                  for doc in documents]
-        
+
         # 获取分数（CrossEncoder 返回 logits；硅基流动 rerank 返回 0-1 概率，见 score_is_probability 标记）
         scores = reranker.predict(pairs)
 
@@ -237,12 +279,12 @@ def rerank_documents(query: str, documents: List, reranker,
             import math
 
             normalized_scores = [1 / (1 + math.exp(-score)) for score in scores]
-        
+
         # 排序
         scored_docs = sorted(zip(documents, normalized_scores), key=lambda x: x[1], reverse=True)
-        
+
         rerank_time = time.perf_counter() - start_time
-        
+
         # 记录日志
         log_retrieval(
             query=query,
@@ -251,12 +293,14 @@ def rerank_documents(query: str, documents: List, reranker,
             rerank_time=rerank_time,
             reranker_type=reranker_type
         )
-        
+
         return scored_docs[:top_k]
     except Exception as e:
         log_error("reranker_error", str(e), {"query": query[:50], "doc_count": len(documents)})
-        logger.exception("[Reranker] 错误: %s", e)
-        # 返回原始顺序，使用降序分数（而非固定0.5）
-        fallback_scores = [1.0 - (i / len(documents)) * 0.5 for i in range(min(top_k, len(documents)))]
-        return [(documents[i], fallback_scores[i]) for i in range(min(top_k, len(documents)))]
+        logger.exception("[Reranker] 重排失败，保留原序原分: %s", e)
+        # 保留输入顺序与原始检索分（无原始分则 0.0 → 上层低置信分支正确触发）
+        n = min(top_k, len(documents))
+        if fallback_scores is not None and len(fallback_scores) >= n:
+            return [(documents[i], float(fallback_scores[i])) for i in range(n)]
+        return [(documents[i], 0.0) for i in range(n)]
 

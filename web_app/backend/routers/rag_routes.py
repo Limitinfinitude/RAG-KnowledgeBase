@@ -40,7 +40,7 @@ from utils.metadata_manager import (
 )
 from utils.path_context import get_kb_dir
 from utils.prompt_runtime import get_conversation_title_system
-from utils.reranker import get_reranker
+from utils.reranker import get_cached_reranker
 from utils.rag_prompt_hardening import prepend_to_first_system
 from utils.web_system_settings import (
     get_allowed_extensions,
@@ -262,11 +262,24 @@ def patch_doc_metadata(p: DocMetaPatch):
 @router.delete("/api/documents")
 def delete_document(request: Request, file_name: str = Query(...)):
     uid = request.state.user.id
-    vdb, emb = vdb_cache.get_cached_vdb_pair(uid)
+    # 私有 vdb 副本：删除会原地修改内存索引，不能与检索线程共享缓存对象
+    from utils.db import get_vector_db
+
+    _vdb, emb = vdb_cache.get_cached_vdb_pair(uid)
+    vdb = get_vector_db(emb)
     ok, deleted_count = delete_document_from_vector_db(file_name, vdb, emb)
     if not ok or deleted_count == 0:
         raise HTTPException(status_code=404, detail="未找到该文档或无可删块")
     vdb_cache.bump_user_cache(uid)
+    # 已删文档不能继续留在 BM25 索引里被关键词检索到
+    try:
+        from web_app.backend.ingest_queue import _invalidate_and_prewarm_bm25
+
+        _invalidate_and_prewarm_bm25(uid)
+    except Exception:
+        import logging
+
+        logging.getLogger(__name__).warning("删除后 BM25 索引失效调度失败: %s", file_name)
     return {"ok": True, "chunks_deleted": deleted_count}
 
 
@@ -656,8 +669,12 @@ async def chat(request: Request, req: ChatRequest):
     reranker = None
     if req.enable_reranker:
         try:
-            reranker = get_reranker()
-        except Exception:
+            # 缓存构造 + 线程化：模型加载可能秒级，不能阻塞事件循环
+            reranker = await asyncio.to_thread(get_cached_reranker)
+        except Exception as e:
+            import logging
+
+            logging.getLogger(__name__).warning("重排序器初始化失败，本次降级为不重排: %s", e)
             reranker = None
 
     hist = [m.model_dump() for m in req.history]

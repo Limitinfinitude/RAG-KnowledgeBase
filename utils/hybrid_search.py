@@ -2,7 +2,12 @@
 """
 混合检索模块：BM25关键词检索 + 向量检索 + RRF融合
 解决向量检索在专有名词、产品型号等场景下的局限性
+
+分数语义（重要）：返回的 score 是「证据分」0-1（max(向量相似度, BM25 归一分)），
+与 config 的 SIMILARITY_THRESHOLD / ABSOLUTE_MIN_SCORE 同尺度可比；
+RRF 只决定排序，不直接作为分数（RRF 原始量级 ~0.01，与绝对阈值比较无意义）。
 """
+import hashlib
 import logging
 import os
 import pickle
@@ -14,22 +19,45 @@ from utils.path_context import get_kb_dir
 
 logger = logging.getLogger(__name__)
 
+# 分词器版本：升版后索引文件名变化，旧 pickle 自动失效重建（改 tokenize 规则必须升版）
+_BM25_TOKENIZER_VERSION = 3
+
+# 单字 CJK 保留白名单除外的高频虚词（单字保留是为了单字查询/型号的 BM25 召回）
+_BM25_SINGLE_CHAR_STOP = set(
+    "的了是在和与及或就也都还把被让给跟比这那位吗呢吧啊嘛么"
+)
+
+# 多字疑问/功能虚词：从 BM25 token 中剔除（会稀释查询词覆盖率、引入跨域巧合命中）
+_BM25_MULTI_CHAR_STOP = {"怎么", "如何", "为什么", "什么", "哪些", "哪个"}
+
 
 def _bm25_index_file() -> str:
-    return os.path.join(get_kb_dir(), "bm25_index.pkl")
+    return os.path.join(get_kb_dir(), f"bm25_index.v{_BM25_TOKENIZER_VERSION}.pkl")
 
 
 def _bm25_docs_file() -> str:
-    return os.path.join(get_kb_dir(), "bm25_docs.pkl")
+    return os.path.join(get_kb_dir(), f"bm25_docs.v{_BM25_TOKENIZER_VERSION}.pkl")
+
+
+def _legacy_bm25_files() -> List[str]:
+    kb = get_kb_dir()
+    return [
+        os.path.join(kb, "bm25_index.pkl"),
+        os.path.join(kb, "bm25_docs.pkl"),
+    ] + [
+        os.path.join(kb, f"bm25_index.v{v}.pkl") for v in range(1, _BM25_TOKENIZER_VERSION)
+    ] + [
+        os.path.join(kb, f"bm25_docs.v{v}.pkl") for v in range(1, _BM25_TOKENIZER_VERSION)
+    ]
 
 
 def invalidate_bm25_index() -> None:
     """标记当前知识库的 BM25 索引为失效（入库/删除后调用）。
 
-    删除已持久化的 bm25_index.pkl / bm25_docs.pkl，使下次混合检索时自动重建，
+    删除已持久化的索引文件（含历史版本），使下次混合检索时自动重建，
     避免「旧索引 + 新文档」导致的一致性偏移问题。
     """
-    for p in (_bm25_index_file(), _bm25_docs_file()):
+    for p in (_bm25_index_file(), _bm25_docs_file(), *_legacy_bm25_files()):
         try:
             if os.path.isfile(p):
                 os.remove(p)
@@ -37,13 +65,37 @@ def invalidate_bm25_index() -> None:
             logger.warning("失效 BM25 索引失败: %s", p)
 
 
+def _fusion_key(doc: Document) -> str:
+    """跨来源稳定标识：source_file + 内容哈希。
+
+    不能用 id(doc)：BM25 文档来自 pickle 反序列化，与向量检索返回的 docstore
+    对象必然不同 id，同块两路永远无法融合。
+    """
+    meta = getattr(doc, "metadata", None) or {}
+    src = str(meta.get("source_file") or "")
+    body = (getattr(doc, "page_content", None) or "")[:320]
+    digest = hashlib.md5(body.encode("utf-8", errors="ignore")).hexdigest()[:16]
+    return f"{src}\x1f{digest}"
+
+
 def tokenize_chinese(text: str) -> List[str]:
     """
-    中文分词（用于BM25）
+    中文分词（用于BM25）。保留单字 CJK token（非虚词），避免单字查询/型号无关键词可用。
     """
-    # 使用jieba分词
     words = jieba.cut(text)
-    return [w for w in words if w.strip() and len(w.strip()) > 1]
+    out: List[str] = []
+    for w in words:
+        w = w.strip()
+        if not w:
+            continue
+        if len(w) == 1:
+            if "\u4e00" <= w <= "\u9fff" and w not in _BM25_SINGLE_CHAR_STOP:
+                out.append(w)
+            continue
+        if w in _BM25_MULTI_CHAR_STOP:
+            continue
+        out.append(w)
+    return out
 
 
 def build_bm25_index(documents: List[Document]) -> Optional[BM25Okapi]:
@@ -145,50 +197,72 @@ def rrf_fusion(
     """
     RRF (Reciprocal Rank Fusion) 融合算法
     融合向量检索和BM25检索的结果
-    
+
     :param vector_results: 向量检索结果 [(doc, score), ...]
     :param bm25_results: BM25检索结果 [(doc, score), ...]
     :param k: RRF参数，通常为60
-    :return: 融合后的结果 [(doc, rrf_score), ...]
+    :return: 融合后的结果 [(doc, 证据分), ...]，按 RRF 排序；
+             证据分 = max(该文档的向量相似度, BM25 归一分)，与绝对阈值同尺度
     """
-    # 创建文档到RRF分数的映射
-    doc_rrf_scores = {}
-    
-    # 处理向量检索结果
+    doc_rrf_scores: Dict[str, Dict] = {}
+    vector_evidence: Dict[str, float] = {}
+    bm25_evidence: Dict[str, float] = {}
+
     for rank, (doc, score) in enumerate(vector_results, 1):
-        doc_id = id(doc)  # 使用文档对象ID作为唯一标识
+        doc_id = _fusion_key(doc)
+        vector_evidence[doc_id] = max(vector_evidence.get(doc_id, 0.0), float(score))
         if doc_id not in doc_rrf_scores:
-            doc_rrf_scores[doc_id] = {
-                'doc': doc,
-                'rrf_score': 0.0,
-                'vector_rank': rank,
-                'bm25_rank': None
-            }
-        doc_rrf_scores[doc_id]['rrf_score'] += 1.0 / (k + rank)
-        doc_rrf_scores[doc_id]['vector_rank'] = rank
-    
-    # 处理BM25检索结果
+            doc_rrf_scores[doc_id] = {"doc": doc, "rrf_score": 0.0}
+        doc_rrf_scores[doc_id]["rrf_score"] += 1.0 / (k + rank)
+
     for rank, (doc, score) in enumerate(bm25_results, 1):
-        doc_id = id(doc)
+        doc_id = _fusion_key(doc)
+        bm25_evidence[doc_id] = max(bm25_evidence.get(doc_id, 0.0), float(score))
         if doc_id not in doc_rrf_scores:
-            doc_rrf_scores[doc_id] = {
-                'doc': doc,
-                'rrf_score': 0.0,
-                'vector_rank': None,
-                'bm25_rank': rank
-            }
-        doc_rrf_scores[doc_id]['rrf_score'] += 1.0 / (k + rank)
-        doc_rrf_scores[doc_id]['bm25_rank'] = rank
-    
-    # 按RRF分数排序
-    fused_results = sorted(
-        doc_rrf_scores.values(),
-        key=lambda x: x['rrf_score'],
-        reverse=True
-    )
-    
-    # 转换为标准格式
-    return [(item['doc'], item['rrf_score']) for item in fused_results]
+            doc_rrf_scores[doc_id] = {"doc": doc, "rrf_score": 0.0}
+        doc_rrf_scores[doc_id]["rrf_score"] += 1.0 / (k + rank)
+
+    fused_results = sorted(doc_rrf_scores.values(), key=lambda x: x["rrf_score"], reverse=True)
+
+    out: List[Tuple[Document, float]] = []
+    for item in fused_results:
+        doc_id = _fusion_key(item["doc"])
+        evidence = max(vector_evidence.get(doc_id, 0.0), bm25_evidence.get(doc_id, 0.0))
+        out.append((item["doc"], evidence))
+    return out
+
+
+def _bm25_coverage_gate(
+    query_toks: List[str],
+    bm25_results: List[Tuple[Document, float]],
+    min_coverage: float = 0.5,
+) -> List[Tuple[Document, float]]:
+    """BM25 命中的查询词覆盖率门控。
+
+    背景（2026-08-17 评测）：103 条评测集中负样本误召回 88% 来自弱词重叠——
+    「黑洞的信息悖论」仅靠「信息」一词命中提示词文档并取得 BM25 最高分，
+    经归一化后 evidence=1.0 直接穿透负样本防线。
+    规则：文档须覆盖查询分词的至少 min_coverage 比例，且命中词中至少一个为多字词
+    （排除单字巧合，如「潜水证」的「证」撞上「借阅证」）。
+    """
+    if not bm25_results:
+        return []
+    if not query_toks:
+        return []
+    out: List[Tuple[Document, float]] = []
+    for doc, score in bm25_results:
+        # 子串匹配而非 token 相等：分词边界不一致（查询「逾期」vs 文档 token「逾期费」）
+        # 会让真实命中漏检，用原文包含判断对此鲁棒
+        text = doc.page_content or ""
+        matched = [t for t in query_toks if t in text]
+        if not matched:
+            continue
+        if len(matched) / len(query_toks) < min_coverage:
+            continue
+        if not any(len(t) >= 2 for t in matched):
+            continue
+        out.append((doc, score))
+    return out
 
 
 def hybrid_search(
@@ -215,7 +289,7 @@ def hybrid_search(
     :return: 融合后的检索结果 [(doc, score), ...]
     """
     results = []
-    
+
     # 1. 向量检索
     try:
         vector_results = vector_db.similarity_search_with_score(query, k=top_k * 2)
@@ -223,33 +297,48 @@ def hybrid_search(
         vector_results = [
             (doc, 1 / (1 + score)) for doc, score in vector_results
         ]
-        # 负样本防线：向量相似度最高分低于绝对下限 → 无相关内容，混合检索直接返回空
-        if vector_results:
-            from config import ABSOLUTE_MIN_SCORE
-
-            if max(s for _, s in vector_results) < ABSOLUTE_MIN_SCORE:
-                logger.info("[Hybrid] 向量相似度过低（<%.2f），视为无相关内容", ABSOLUTE_MIN_SCORE)
-                return []
     except Exception as e:
         logger.warning("[Hybrid] 向量检索失败: %s", e)
         vector_results = []
-    
-    # 2. BM25检索
+
+    # 2. BM25检索（先于负样本判定：BM25 精确命中时不应被向量地板一票否决）
     bm25_results = []
+    bm25_max_raw = 0.0
     if bm25_index and bm25_docs:
         try:
-            bm25_results = bm25_search(query, bm25_index, bm25_docs, top_k=top_k * 2)
-            # 归一化BM25分数到0-1范围（全局归一化）
+            raw_results = bm25_search(query, bm25_index, bm25_docs, top_k=top_k * 2)
+            # 词覆盖率门控：剔除仅靠个别公共词的弱命中（负样本误召回主因）
+            bm25_results = _bm25_coverage_gate(tokenize_chinese(query), raw_results)
             if bm25_results:
-                max_score = max(score for _, score in bm25_results)
-                if max_score > 0:
+                bm25_max_raw = max(score for _, score in bm25_results)
+                # 归一化BM25分数到0-1范围（作为证据分；排序由 RRF 决定）
+                if bm25_max_raw > 0:
                     bm25_results = [
-                        (doc, score / max_score) for doc, score in bm25_results
+                        (doc, score / bm25_max_raw) for doc, score in bm25_results
                     ]
+                else:
+                    bm25_results = []
         except Exception as e:
             logger.warning("[Hybrid] BM25检索失败: %s", e)
-    
-    # 3. 分数归一化（按知识库分组归一化，解决分数膨胀问题）
+            bm25_results = []
+
+    # 3. 负样本防线：向量与 BM25 双信号都无命中才判「无相关内容」。
+    #    （向量最高分低于地板但 BM25 有精确命中 = 专有名词/型号场景，是混合检索的目标场景）
+    if vector_results:
+        from config import ABSOLUTE_MIN_SCORE
+
+        vector_max = max(s for _, s in vector_results)
+        if vector_max < ABSOLUTE_MIN_SCORE and bm25_max_raw <= 1e-9:
+            logger.info(
+                "[Hybrid] 向量相似度过低（<%.2f）且 BM25 无命中，视为无相关内容", ABSOLUTE_MIN_SCORE
+            )
+            return []
+        if vector_max < ABSOLUTE_MIN_SCORE:
+            logger.info(
+                "[Hybrid] 向量相似度过低（<%.2f），但 BM25 有命中，继续融合", ABSOLUTE_MIN_SCORE
+            )
+
+    # 4. 分数归一化（按知识库分组归一化，解决分数膨胀问题）
     if selected_kb == "全部知识库" and (vector_results or bm25_results):
         from utils.score_normalization import normalize_hybrid_search_scores
         try:
@@ -258,19 +347,16 @@ def hybrid_search(
             )
         except Exception as e:
             logger.warning("[Hybrid] 分数归一化失败: %s，使用原始分数", e)
-    
-    # 4. RRF融合
+
+    # 5. RRF融合（排序）+ 证据分（0-1，与阈值同尺度）
     if vector_results and bm25_results:
-        # 使用RRF融合
         fused_results = rrf_fusion(vector_results, bm25_results, k=60)
         results = fused_results[:top_k]
     elif vector_results:
-        # 只有向量检索结果
         results = vector_results[:top_k]
     elif bm25_results:
-        # 只有BM25检索结果
         results = bm25_results[:top_k]
-    
+
     return results
 
 

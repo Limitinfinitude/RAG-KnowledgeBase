@@ -64,6 +64,7 @@ def _retrieve_rag_decomposed(
 
 
 _brave_diag = logging.getLogger("rag.brave")
+logger = logging.getLogger(__name__)
 
 
 def augment_rag_with_web_search(
@@ -547,7 +548,8 @@ async def run_chat_turn_astream(
 
     standalone_q = user_input
     has_history = len(chat_history) > 0
-    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其", "该"]
+    # 指代词用完整词而非单字："其"会误命中"其中/其他"等
+    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其他", "其它", "其中", "其实", "其余", "该文", "该书", "该方法"]
     has_pronoun = any(p in user_input for p in pronouns)
     if has_history and has_pronoun:
         standalone_q = await asyncio.to_thread(
@@ -734,7 +736,8 @@ def run_chat_turn(
 
     standalone_q = user_input
     has_history = len(chat_history) > 0
-    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其", "该"]
+    # 指代词用完整词而非单字："其"会误命中"其中/其他"等
+    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其他", "其它", "其中", "其实", "其余", "该文", "该书", "该方法"]
     has_pronoun = any(p in user_input for p in pronouns)
     if has_history and has_pronoun:
         try:
@@ -746,7 +749,8 @@ def run_chat_turn(
             response_text = response.content if hasattr(response, "content") else str(response)
             lines = response_text.strip().split("\n", 1)
             standalone_q = lines[1].strip() if len(lines) > 1 else user_input
-        except Exception:
+        except Exception as e:
+            logger.warning("指代改写失败，使用原始输入: %s", e)
             standalone_q = user_input
 
     sink = RetrievalUISink.noop()
@@ -917,7 +921,8 @@ def run_chat_turn_stream(
 
     standalone_q = user_input
     has_history = len(chat_history) > 0
-    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其", "该"]
+    # 指代词用完整词而非单字："其"会误命中"其中/其他"等
+    pronouns = ["他", "她", "它", "这个", "那个", "这些", "那些", "其他", "其它", "其中", "其实", "其余", "该文", "该书", "该方法"]
     has_pronoun = any(p in user_input for p in pronouns)
     if has_history and has_pronoun:
         try:
@@ -929,7 +934,8 @@ def run_chat_turn_stream(
             response_text = response.content if hasattr(response, "content") else str(response)
             lines = response_text.strip().split("\n", 1)
             standalone_q = lines[1].strip() if len(lines) > 1 else user_input
-        except Exception:
+        except Exception as e:
+            logger.warning("指代改写失败，使用原始输入: %s", e)
             standalone_q = user_input
 
     sink = RetrievalUISink.noop()

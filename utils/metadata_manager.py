@@ -6,12 +6,18 @@
 import logging
 import os
 import json
+import threading
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from utils.path_context import get_current_web_user_id, get_kb_dir
 from utils.web_system_settings import is_kb_disabled_for_user
 
 logger = logging.getLogger(__name__)
+
+# 元数据读缓存（path -> (mtime, data)）：一次检索会多次全量读 documents_metadata.json，
+# 写入经 save_metadata 后 mtime 变化自动失效；按 path 隔离，多用户安全
+_meta_cache: Dict[str, Tuple[float, Dict]] = {}
+_meta_cache_lock = threading.Lock()
 
 MAX_FILE_SIZE_MB = 50
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024  # 50MB
@@ -22,16 +28,27 @@ def _metadata_file() -> str:
 
 
 def load_metadata() -> Dict:
-    """加载文档元数据"""
+    """加载文档元数据（mtime 缓存）"""
     path = _metadata_file()
-    if os.path.exists(path):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception as e:
-            logger.warning("加载元数据失败: %s", e)
-            return {"documents": {}, "categories": ["默认知识库"]}
-    return {"documents": {}, "categories": ["默认知识库"]}
+    try:
+        mtime = os.path.getmtime(path)
+    except OSError:
+        return {"documents": {}, "categories": ["默认知识库"]}
+    with _meta_cache_lock:
+        hit = _meta_cache.get(path)
+        if hit is not None and hit[0] == mtime:
+            return hit[1]
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        logger.warning("加载元数据失败: %s", e)
+        return {"documents": {}, "categories": ["默认知识库"]}
+    if not isinstance(data, dict):
+        data = {"documents": {}, "categories": ["默认知识库"]}
+    with _meta_cache_lock:
+        _meta_cache[path] = (mtime, data)
+    return data
 
 
 def save_metadata(metadata: Dict):

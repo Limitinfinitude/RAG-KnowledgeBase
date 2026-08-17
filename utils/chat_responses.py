@@ -55,7 +55,11 @@ def get_chat_response(query: str) -> str:
     # 问候语
     greetings = ["你好", "hello", "hi", "嗨", "早上好", "下午好", "晚上好"]
     for greeting in greetings:
-        if query_lower == greeting or query_zh == greeting or query_lower.startswith(greeting):
+        if query_lower == greeting or query_zh == greeting:
+            return random.choice(GREETING_RESPONSES)
+        # 前缀匹配必须落在词边界上，否则 "hipaa…" 会被当成 "hi" 问候
+        rest = query_lower[len(greeting):]
+        if query_lower.startswith(greeting) and (not rest or not rest[0].isalpha()):
             return random.choice(GREETING_RESPONSES)
     
     # 关于身份

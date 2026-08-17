@@ -87,10 +87,20 @@ def finalize_retrieval_from_scored(
             expanded_docs.append((doc, score))
 
     if expanded_docs:
-        high_quality_docs = expanded_docs[:CONTEXT_TOP_K]
+        # 去重：多个 small 子块常扩展到同一 medium 父块，重复占位会挤掉其它来源
+        seen: set = set()
+        deduped: List[Tuple[Any, float]] = []
+        for doc, score in expanded_docs:
+            key = _merge_doc_key(doc)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append((doc, score))
+        # 用调用方传入的 k（多子查询路径的 k_sub 由此生效），不再全局钉死 CONTEXT_TOP_K
+        high_quality_docs = deduped[: max(k, CONTEXT_TOP_K)]
         sink.caption("📖 已扩展上下文（Parent-Document Retrieval）")
 
-    context_docs = high_quality_docs[:CONTEXT_TOP_K]
+    context_docs = high_quality_docs[: max(k, CONTEXT_TOP_K)]
     context_parts: List[str] = []
     numbered_context_parts: List[Dict] = []
     total_length = 0
@@ -315,6 +325,7 @@ def retrieve_for_rag(
             reranker=reranker,
             top_k=k,
             reranker_type="local",
+            fallback_scores=initial_scores,
         )
     else:
         scored_docs = list(zip(initial_docs, initial_scores))
@@ -393,6 +404,7 @@ def retrieve_for_rag_multi(
             reranker=reranker,
             top_k=k,
             reranker_type="local",
+            fallback_scores=[sc for _d, sc in pool],
         )
     else:
         scored_docs = pool[:k]

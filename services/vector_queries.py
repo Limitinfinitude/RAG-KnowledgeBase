@@ -1,5 +1,8 @@
 """与向量库相关的只读查询（无 Streamlit）。"""
+import logging
 from typing import Any, List
+
+logger = logging.getLogger(__name__)
 
 
 def list_indexed_source_files(
@@ -21,4 +24,5 @@ def list_indexed_source_files(
         }
         return sorted(names)
     except Exception:
+        logger.warning("list_indexed_source_files 拉取向量库失败，返回空列表", exc_info=True)
         return []

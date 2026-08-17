@@ -25,6 +25,7 @@ CHAT_QPM_PATHS: frozenset[str] = frozenset(
 
 _CHAT_QPM_WINDOW_SEC = 60.0
 _user_chat_buckets: dict[int, deque[float]] = defaultdict(deque)
+_CHAT_BUCKETS_MAX = 5000  # 桶总数上限：一次性访客的空桶只在下次请求时清理，超量时主动清扫
 _GUEST_ALLOWED = {
     *CHAT_QPM_PATHS,
     "/api/instant-doc/parse",
@@ -179,6 +180,10 @@ async def auth_kb_audit_middleware(request: Request, call_next):
     if path in CHAT_QPM_PATHS:
         qpm = get_rate_limit_qpm_per_user()
         now = time.time()
+        if len(_user_chat_buckets) > _CHAT_BUCKETS_MAX:
+            # 一次性访客的空桶/过期桶清扫，防止长期运行的慢泄漏
+            for uid in [u for u, b in _user_chat_buckets.items() if not b or now - b[-1] > _CHAT_QPM_WINDOW_SEC]:
+                _user_chat_buckets.pop(uid, None)
         bucket = _user_chat_buckets[int(user.id)]
         while bucket and now - bucket[0] > _CHAT_QPM_WINDOW_SEC:
             bucket.popleft()

@@ -53,29 +53,4 @@ def get_embeddings():
         )
 
 
-# ------------------- get_reranker：provider 选择（siliconflow 云端 / 本地） -------------------
-def get_reranker():
-    from utils.web_system_settings import get_rerank_config
-
-    cfg = get_rerank_config()
-    if cfg["provider_type"] != "local":
-        from utils.siliconflow_client import SiliconFlowReranker
-
-        logger.info("[Reranker] 使用云端重排序模型 %s（provider=%s）", cfg["model"], cfg["provider"])
-        return SiliconFlowReranker(api_key=cfg["api_key"], model=cfg["model"], base_url=cfg["base_url"])
-
-    # 本地 CrossEncoder
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    local_reranker_path = os.path.join(project_root, "models", "bge-reranker-base_local")
-    device = 'cuda' if os.environ.get('CUDA_VISIBLE_DEVICES') is not None else 'cpu'
-
-    if os.path.exists(local_reranker_path):
-        logger.info("[Reranker] 使用本地 reranker: %s", local_reranker_path)
-        return CrossEncoder(local_reranker_path, device=device)
-    else:
-        logger.info("[Reranker] 本地 reranker 不存在，正在从 Hugging Face 下载 BAAI/bge-reranker-base ...")
-        model = CrossEncoder("BAAI/bge-reranker-base")
-        os.makedirs(local_reranker_path, exist_ok=True)
-        model.save(local_reranker_path)
-        logger.info("[Reranker] 下载完成，已保存到: %s", local_reranker_path)
-        return CrossEncoder(local_reranker_path, device=device)
+# ------------------- get_reranker：统一在 utils/reranker.py（含进程级缓存） -------------------
