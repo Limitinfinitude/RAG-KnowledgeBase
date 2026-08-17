@@ -13,7 +13,7 @@ def render_sidebar(vector_db):
     files = st.file_uploader(
         f"新增文档（支持PDF/TXT/DOCX/MD/Excel，最大{MAX_FILE_SIZE_BYTES / (1024*1024)}MB）",
         accept_multiple_files=True,
-        type=["pdf", "txt", "docx", "doc", "md", "xlsx", "xls"]
+        type=["pdf", "docx", "pptx", "txt", "md", "csv", "html", "xlsx", "xls", "jpg", "jpeg", "png"]
     )
     
     # 显示文件大小信息

@@ -56,7 +56,7 @@ with st.popover("➕ 上传文档", help="点击上传文档（最多5个），�
     
     uploaded_files = st.file_uploader(
         "选择文件",
-        type=["pdf", "txt", "docx", "doc", "md", "xlsx", "xls"],
+        type=["pdf", "docx", "pptx", "txt", "md", "csv", "html", "xlsx", "xls", "jpg", "jpeg", "png"],
         accept_multiple_files=True,
         key="doc_qa_file_uploader",
         label_visibility="collapsed"

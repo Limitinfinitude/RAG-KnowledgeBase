@@ -34,7 +34,6 @@ dataclasses-json==0.6.7
 decorator==5.2.1
 distro==1.9.0
 dnspython @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_dnspython_1757292856/work
-docx2txt==0.9
 durationpy==0.10
 editdistance==0.8.1
 email-validator @ file:///home/conda/feedstock_root/build_artifacts/email-validator-meta_1756221362582/work
@@ -162,6 +161,7 @@ pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pybase64==1.4.3
 pycparser==2.23
+python-pptx==1.0.2
 pycryptodome==3.23.0
 pydantic @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_pydantic_1764434463/work
 pydantic-extra-types @ file:///home/conda/feedstock_root/build_artifacts/pydantic-extra-types_1767220962105/work
@@ -255,3 +255,4 @@ xxhash==3.6.0
 yarl==1.22.0
 zipp==3.23.0
 zstandard==0.25.0
+XlsxWriter==3.2.9

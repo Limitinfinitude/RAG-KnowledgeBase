@@ -10,9 +10,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-from langchain_community.document_loaders import PyPDFLoader
-from docx import Document as DocxDocument
-
 from utils.metadata_manager import get_document_metadata
 from utils.path_context import get_kb_dir
 
@@ -77,56 +74,15 @@ def reconstruct_full_text_from_vector_db(file_name: str, vector_db) -> str:
     return "\n\n".join(parts)
 
 
-def _read_txt_like(path: str) -> str:
-    for enc in ("utf-8", "gb18030", "gbk", "latin-1"):
-        try:
-            with open(path, "r", encoding=enc) as f:
-                return f.read()
-        except UnicodeDecodeError:
-            continue
-    with open(path, "rb") as f:
-        return f.read().decode("utf-8", errors="replace")
-
-
 def extract_plain_text_from_original_path(abs_path: str, *, max_chars: int) -> str:
-    """从本地原文文件提取纯文本（知识库查看用，限制最大字符）。"""
-    ext = os.path.splitext(abs_path)[1].lower()
-    text = ""
-    if ext in (".txt", ".md"):
-        text = _read_txt_like(abs_path)
-    elif ext == ".pdf":
-        loader = PyPDFLoader(abs_path)
-        pdf_docs = loader.load()
-        text = "\n\n".join(d.page_content for d in pdf_docs if d.page_content)
-    elif ext in (".docx", ".doc"):
-        docx_doc = DocxDocument(abs_path)
-        paragraphs: List[str] = []
-        for para in docx_doc.paragraphs:
-            if para.text.strip():
-                paragraphs.append(para.text)
-        for table in docx_doc.tables:
-            rows_txt: List[str] = []
-            for row in table.rows:
-                rows_txt.append(" | ".join(cell.text.strip() for cell in row.cells))
-            if rows_txt:
-                paragraphs.append("\n".join(rows_txt))
-        text = "\n\n".join(paragraphs)
-    elif ext in (".xlsx", ".xls"):
-        try:
-            import pandas as pd
+    """从本地原文文件提取纯文本（知识库查看用，限制最大字符）。
 
-            excel_file = pd.ExcelFile(abs_path)
-            sheets_text: List[str] = []
-            for sheet_name in excel_file.sheet_names:
-                df = pd.read_excel(excel_file, sheet_name=sheet_name)
-                sheet_text = f"工作表: {sheet_name}\n\n"
-                sheet_text += df.to_string(index=False)
-                sheets_text.append(sheet_text)
-            text = "\n\n" + "=" * 50 + "\n\n".join(sheets_text)
-        except ImportError:
-            raise RuntimeError("查看 Excel 需要 pandas / openpyxl，请安装依赖") from None
-    else:
-        raise ValueError(f"暂不支持从该扩展名提取全文：{ext}")
+    解析统一走 utils/document_parsers，支持的格式与上传一致。
+    """
+    from utils.document_parsers import parse_file_to_documents
+
+    docs = parse_file_to_documents(abs_path, os.path.basename(abs_path))
+    text = "\n\n".join(d.page_content for d in docs if d.page_content)
 
     text = (text or "").strip()
     if len(text) > max_chars:

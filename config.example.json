@@ -33,5 +33,8 @@
     "brave": "",
     "bocha": "",
     "qianfan": ""
+  },
+  "ocr": {
+    "tesseract_cmd": ""
   }
 }

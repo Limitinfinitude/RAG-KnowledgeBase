@@ -98,17 +98,44 @@ try:
 except ValueError:
     BRAVE_SEARCH_TIMEOUT = 30.0
 
-TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# —— Tesseract OCR 路径（跨平台解析；OCR 仅扫描版 PDF / 图片入库时用到）——
+# 优先级：环境变量 TESSERACT_CMD > config.json ocr.tesseract_cmd > PATH 中的 tesseract
+# > 常见安装路径。找不到时为 None，OCR 调用方会按「未安装 Tesseract」给出明确报错。
+def _resolve_tesseract_cmd() -> "str | None":
+    v = _pick("TESSERACT_CMD", "ocr", "tesseract_cmd")
+    if v:
+        return v
+    import shutil
+
+    found = shutil.which("tesseract")
+    if found:
+        return found
+    for p in (
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+        "/usr/bin/tesseract",
+        "/usr/local/bin/tesseract",
+    ):
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+TESSERACT_CMD = _resolve_tesseract_cmd()
 
 # —— 检索管线的可调超参（集中管理，便于调参；部分可被 Web 管理端 rag_defaults 覆盖）——
 # 相似度阈值：低于该分值的检索结果视为低质量，回退取前若干条
+# （2026-08-17 标定：作用在重排概率上时，正样本 p25=0.851、负样本绝大多数 <0.25，0.3 有效；
+#   注意向量相似度分数与该阈值不可比，最终防线应依赖重排，详见 docs/2026-08-17-修复与升级记录.md）
 SIMILARITY_THRESHOLD = 0.3
 # 绝对下限：最高分低于此值视为「无相关内容」，返回空而非硬凑低分结果
-# （依据 2026-08-15 评测：正样本最高分 0.62~0.68，负样本 0.41~0.47，取 0.5 可区分）
+# （2026-08-17 重标定：bge-m3 下正样本 top1 0.520~0.833 与负样本 0.500~0.607 重叠，
+#   0.5 只能当廉价预过滤，不能作为最终判别——维持现值，勿调高）
 ABSOLUTE_MIN_SCORE = 0.5
 # 送入 LLM 的上下文最大字符数（超出则截断）
-MAX_CONTEXT_LENGTH = 4000
-# 最终进入上下文的召回片段数量
-CONTEXT_TOP_K = 5
+# （2026-08-17：4000→10000，父块扩展去重与 k 生效后旧值会频繁截断不同来源）
+MAX_CONTEXT_LENGTH = 10000
+# 最终进入上下文的召回片段数量下限（实际取 max(调用方 k, 本值)）
+CONTEXT_TOP_K = 8
 # 低质量结果回退时保留的最大条数
 LOW_QUALITY_FALLBACK_K = 3

@@ -8,7 +8,8 @@ from typing import Any, Dict, List, Optional
 
 from config import WEB_SERVER_DIR
 
-_DEFAULT_EXT = ["pdf", "txt", "docx", "doc", "md", "xlsx", "xls"]
+# 上传白名单默认值；须与 utils/document_parsers.SUPPORTED_EXTENSIONS 保持一致（有单测校验）
+_DEFAULT_EXT = ["pdf", "docx", "pptx", "txt", "md", "csv", "html", "xlsx", "xls", "jpg", "jpeg", "png"]
 
 _RAG_DEFAULTS: Dict[str, Any] = {
     "default_retrieval_k": 10,
@@ -112,6 +113,10 @@ _DEFAULTS: Dict[str, Any] = {
     "login_bruteforce_enabled": True,
     "login_bruteforce_window_minutes": 15,
     "login_bruteforce_max_per_ip": 40,
+    # —— 云端 OCR 二层回退（本地 Tesseract 低质量时走硅基流动 DeepSeek-OCR 等）——
+    "ocr_cloud_mode": "fallback",
+    "ocr_cloud_model": "deepseek-ai/DeepSeek-OCR",
+    "ocr_cloud_conf_threshold": 60,
     "login_bruteforce_max_per_username": 12,
     "llm_api_presets": {},
     "rag_show_web_search_ui": True,
@@ -609,6 +614,41 @@ def get_rerank_config() -> Dict[str, Any]:
         "model": model,
         "api_key": api_key,
         "base_url": base_url,
+    }
+
+
+def get_ocr_cloud_config() -> Dict[str, Any]:
+    """云端 OCR 运行配置：mode / model / api_key / base_url / conf_threshold。
+
+    mode: off=仅本地 Tesseract；fallback=本地低置信度时回退云端（默认）；
+    always=云端优先（限免期可切此档，云端失败自动回退本地）。
+    密钥复用 vector_providers 中的 siliconflow 项 → 环境变量 SILICONFLOW_API_KEY；
+    无密钥时 mode 视同 off，保证未配置的部署零影响。
+    """
+    s = load_system_settings()
+    mode = str(s.get("ocr_cloud_mode") or "fallback").strip().lower()
+    if mode not in ("off", "fallback", "always"):
+        mode = "fallback"
+    model = str(s.get("ocr_cloud_model") or "deepseek-ai/DeepSeek-OCR").strip()
+    p = _find_provider(s, "siliconflow")
+    api_key = (str(p.get("api_key") or "").strip()
+               or os.environ.get("SILICONFLOW_API_KEY", "").strip())
+    base_url = (str(p.get("base_url") or "").strip()
+                or os.environ.get("SILICONFLOW_BASE_URL", "").strip()
+                or "https://api.siliconflow.cn")
+    try:
+        conf_threshold = int(s.get("ocr_cloud_conf_threshold", 60))
+    except (TypeError, ValueError):
+        conf_threshold = 60
+    conf_threshold = max(0, min(conf_threshold, 100))
+    if not api_key:
+        mode = "off"
+    return {
+        "mode": mode,
+        "model": model,
+        "api_key": api_key,
+        "base_url": base_url,
+        "conf_threshold": conf_threshold,
     }
 
 

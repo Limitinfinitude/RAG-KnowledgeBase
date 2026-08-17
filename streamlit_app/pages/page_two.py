@@ -182,7 +182,7 @@ with tab2:
     uploaded_files = st.file_uploader(
         f"选择文件（支持 PDF、TXT、DOCX、MD、Excel，最大 {MAX_FILE_SIZE_BYTES / (1024*1024)}MB）",
         accept_multiple_files=True,
-        type=["pdf", "txt", "docx", "doc", "md", "xlsx", "xls"],
+        type=["pdf", "docx", "pptx", "txt", "md", "csv", "html", "xlsx", "xls", "jpg", "jpeg", "png"],
         key="kb_upload_page_two"
     )
 

@@ -9,7 +9,9 @@ API 端点：
 """
 from __future__ import annotations
 
+import base64
 import logging
+import re
 from typing import List, Optional
 
 import requests
@@ -123,23 +125,103 @@ class SiliconFlowReranker:
         self._endpoint = f"{self.base_url}/v1/rerank"
 
     def predict(self, pairs: List[List[str]]) -> List[float]:
+        """重排打分；失败抛 RuntimeError（由 rerank_documents 捕获并保留原序原分）。
+
+        不在内部回退伪造分数：1.0 递减的假分会让未重排结果绕过
+        SIMILARITY_THRESHOLD 与低置信防线，掩盖 API 故障。
+        """
         if not pairs:
             return []
         query = pairs[0][0] if pairs[0] else ""
         documents = [p[1] if len(p) > 1 else "" for p in pairs]
+        resp = requests.post(
+            self._endpoint,
+            headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+            json={"model": self.model, "query": query, "documents": documents, "top_n": len(documents)},
+            timeout=self.timeout,
+        )
+        if resp.status_code != 200:
+            raise RuntimeError(f"硅基流动 rerank 请求失败 {resp.status_code}: {resp.text[:300]}")
+        results = (resp.json().get("results") or [])
+        score_map = {int(r.get("index", -1)): float(r.get("relevance_score", 0.0)) for r in results}
+        return [score_map.get(i, 0.0) for i in range(len(pairs))]
+
+
+# DeepSeek-OCR 官方提示词（硅基流动文档 §4 PDF OCR）：grounding 版输出带版面的 markdown，
+# 表格/公式还原效果最好，适合 RAG 入库
+OCR_MARKDOWN_PROMPT = "<image>\n<|grounding|>Convert the document to markdown."
+
+
+def _strip_markdown_wrapper(text: str) -> str:
+    """去掉模型输出外层的 <markdown>…</markdown> 或 ```markdown 代码围栏。"""
+    t = (text or "").strip()
+    m = re.match(r"^<markdown>(.*)</markdown>$", t, re.S)
+    if m:
+        return m.group(1).strip()
+    if t.startswith("```"):
+        t = re.sub(r"^```(?:markdown)?\s*", "", t)
+        t = re.sub(r"\s*```$", "", t)
+    return t.strip()
+
+
+# grounding 版提示词会给标题/元素附坐标标注（<|ref|>…<|det|>[[x1,y1,x2,y2]]<|/det|>），
+# 识别内容在标注行的下一行，标注本身对 RAG 入库是噪音，统一剔除
+_GROUNDING_SPAN = re.compile(r"<\|ref\|>.*?<\|/det\|>|<\|ref\|>.*?(?=\n)|<\|det\|>.*?<\|/det\|>")
+
+
+def _clean_ocr_content(text: str) -> str:
+    t = _strip_markdown_wrapper(text)
+    t = _GROUNDING_SPAN.sub("", t)
+    t = re.sub(r"<\|/ref\|>|<\|/det\|>", "", t)
+    # 压缩 3 连以上空行
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
+class SiliconFlowOCR:
+    """OCR：POST {base_url}/v1/chat/completions（image_url base64 + DeepSeek-OCR 提示词）。
+
+    兼容 DeepSeek-OCR 及任何 OpenAI 视觉格式的模型（Qwen-VL 系列等），
+    换模型只需改 model 名。
+    """
+
+    def __init__(self, api_key: str, model: str = "deepseek-ai/DeepSeek-OCR",
+                 base_url: str = DEFAULT_BASE_URL, timeout: int = 120,
+                 prompt: str = OCR_MARKDOWN_PROMPT):
+        if not api_key:
+            raise ValueError("硅基流动 API Key 未配置")
+        self.api_key = api_key
+        self.model = model
+        self.base_url = base_url.rstrip("/")
+        self.timeout = int(timeout)
+        self.prompt = prompt
+        self._endpoint = f"{self.base_url}/v1/chat/completions"
+
+    def extract_text(self, image_bytes: bytes, mime: str = "image/png") -> str:
+        """识别单页图片字节，返回 markdown 文本；失败抛 RuntimeError（由调用方回退）。"""
+        b64 = base64.b64encode(image_bytes).decode("ascii")
+        resp = requests.post(
+            self._endpoint,
+            headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+            json={
+                "model": self.model,
+                "messages": [{
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}},
+                        {"type": "text", "text": self.prompt},
+                    ],
+                }],
+            },
+            timeout=self.timeout,
+        )
+        if resp.status_code != 200:
+            raise RuntimeError(f"硅基流动 OCR 请求失败 {resp.status_code}: {resp.text[:300]}")
         try:
-            resp = requests.post(
-                self._endpoint,
-                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
-                json={"model": self.model, "query": query, "documents": documents, "top_n": len(documents)},
-                timeout=self.timeout,
-            )
-            if resp.status_code != 200:
-                raise RuntimeError(f"硅基流动 rerank 请求失败 {resp.status_code}: {resp.text[:300]}")
-            results = (resp.json().get("results") or [])
-            score_map = {int(r.get("index", -1)): float(r.get("relevance_score", 0.0)) for r in results}
-            return [score_map.get(i, 0.0) for i in range(len(pairs))]
-        except Exception as e:
-            logger.warning("[SiliconFlowReranker] rerank 失败: %s，回退默认分数", e)
-            # 回退：降序分数，保持输入顺序
-            return [1.0 - (i / len(pairs)) * 0.5 for i in range(len(pairs))]
+            content = (resp.json().get("choices") or [{}])[0].get("message", {}).get("content") or ""
+        except (ValueError, KeyError, IndexError) as e:
+            raise RuntimeError(f"硅基流动 OCR 响应格式异常: {e}") from e
+        text = _clean_ocr_content(content)
+        if not text:
+            raise RuntimeError("硅基流动 OCR 返回空内容")
+        return text

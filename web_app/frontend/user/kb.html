@@ -116,7 +116,7 @@
               <label>描述（可选）</label>
               <textarea id="uploadDesc" class="gpt-input" rows="2"></textarea>
               <label id="uploadFilesLabel">文件</label>
-              <input type="file" id="uploadFiles" class="gpt-input" multiple accept=".pdf,.txt,.docx,.doc,.md,.xlsx,.xls" />
+              <input type="file" id="uploadFiles" class="gpt-input" multiple accept=".pdf,.txt,.docx,.md,.xlsx,.xls,.csv,.pptx,.html,.jpg,.jpeg,.png" />
               <p class="gpt-muted gpt-upload-hint">选择文件后先快速传到服务器，解析与向量入库在后台排队执行，一般不会拖慢其他用户。支持Service Worker 时，可离开本页，上传与排队仍会继续；状态会显示「后台解析入库中」直至完成。</p>
               <div id="uploadQueueList" class="gpt-upload-queue" hidden></div>
               <pre class="gpt-log" id="uploadLog" hidden></pre>

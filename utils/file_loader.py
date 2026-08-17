@@ -3,21 +3,13 @@ import logging
 import os
 import tempfile
 import traceback
-from PIL import Image
-import pytesseract
-from pdf2image import convert_from_path
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_core.documents import Document
-from docx import Document as DocxDocument
-from config import TESSERACT_CMD
+from utils.document_parsers import parse_file_to_documents
 from utils.path_context import get_kb_dir
 from utils.document_preview import persist_original_from_temp
 from utils.metadata_manager import MAX_FILE_SIZE_BYTES, add_document_metadata, update_chunks_count
 from utils.logger import log_file_upload, log_error
 
 logger = logging.getLogger(__name__)
-
-pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
 __all__ = ["ingest_file", "MAX_FILE_SIZE_BYTES"]
 
@@ -122,7 +114,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, n)
             return n
 
-        if use_stream and file_ext in (".docx", ".doc"):
+        if use_stream and file_ext == ".docx":
             sample = ins.read_docx_sample(temp_path)
             summary = ins.make_rule_summary_from_sample(sample, uploaded_file.name, "docx")
             n = ins.run_streaming_ingest(
@@ -138,157 +130,7 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             return n
 
         # ---------- 原有路径（较小文件）：全文进内存 + 多层级 smart chunk ----------
-        docs = []
-        if file_ext == ".txt":
-            with open(temp_path, "rb") as f:
-                raw_data = f.read()
-
-            decoded_text = None
-            for enc in ["utf-8", "gb18030", "gbk", "latin-1"]:
-                try:
-                    decoded_text = raw_data.decode(enc)
-                    break
-                except UnicodeDecodeError:
-                    continue
-
-            if decoded_text is None:
-                raise ValueError(f"无法解码文件 {uploaded_file.name}，不支持的编码格式")
-
-            docs = [
-                Document(
-                    page_content=decoded_text.strip(),
-                    metadata={"source_file": uploaded_file.name},
-                )
-            ]
-
-        elif file_ext == ".pdf":
-            try:
-                loader = PyPDFLoader(temp_path)
-                pdf_docs = loader.load()
-
-                has_text = any(doc.page_content.strip() for doc in pdf_docs)
-
-                if not has_text:
-                    st_images = convert_from_path(
-                        temp_path,
-                        poppler_path=None,
-                        fmt="png",
-                        dpi=300,
-                    )
-
-                    ocr_text = []
-                    for i, img in enumerate(st_images):
-                        try:
-                            page_text = pytesseract.image_to_string(img, lang="chi_sim")
-                            ocr_text.append(f"第{i + 1}页：\n{page_text}")
-                        except Exception as e:
-                            logger.warning("第%d页OCR失败: %s", i + 1, e)
-                            ocr_text.append(f"第{i + 1}页：OCR识别失败")
-
-                    full_text = "\n\n".join(ocr_text)
-                    docs = [
-                        Document(
-                            page_content=full_text,
-                            metadata={"source_file": uploaded_file.name},
-                        )
-                    ]
-                else:
-                    docs = []
-                    for i, doc in enumerate(pdf_docs):
-                        doc.metadata.update({"source_file": uploaded_file.name, "page": i + 1})
-                        docs.append(doc)
-
-            except Exception as e:
-                raise RuntimeError(f"PDF处理失败: {str(e)}\n{traceback.format_exc()}")
-
-        elif file_ext in [".docx", ".doc"]:
-            try:
-                docx_file = DocxDocument(temp_path)
-                paragraphs = []
-                for para in docx_file.paragraphs:
-                    if para.text.strip():
-                        paragraphs.append(para.text.strip())
-
-                full_text = "\n\n".join(paragraphs)
-
-                for table in docx_file.tables:
-                    table_text = []
-                    for row in table.rows:
-                        row_text = [cell.text.strip() for cell in row.cells]
-                        table_text.append(" | ".join(row_text))
-                    if table_text:
-                        full_text += "\n\n" + "\n".join(table_text)
-
-                if not full_text.strip():
-                    raise ValueError("DOCX文件中未提取到文本内容")
-
-                docs = [
-                    Document(
-                        page_content=full_text,
-                        metadata={"source_file": uploaded_file.name, "file_type": "docx"},
-                    )
-                ]
-            except Exception as e:
-                raise RuntimeError(f"DOCX处理失败: {str(e)}\n{traceback.format_exc()}")
-
-        elif file_ext == ".md":
-            try:
-                with open(temp_path, "r", encoding="utf-8") as f:
-                    md_text = f.read()
-
-                if not md_text.strip():
-                    raise ValueError("Markdown文件中未提取到文本内容")
-
-                docs = [
-                    Document(
-                        page_content=md_text,
-                        metadata={"source_file": uploaded_file.name, "file_type": "md"},
-                    )
-                ]
-            except UnicodeDecodeError:
-                with open(temp_path, "r", encoding="gb18030") as f:
-                    md_text = f.read()
-                docs = [
-                    Document(
-                        page_content=md_text,
-                        metadata={"source_file": uploaded_file.name, "file_type": "md"},
-                    )
-                ]
-            except Exception as e:
-                raise RuntimeError(f"Markdown处理失败: {str(e)}\n{traceback.format_exc()}")
-
-        elif file_ext in [".xlsx", ".xls"]:
-            try:
-                import pandas as pd
-
-                excel_file = pd.ExcelFile(temp_path)
-                sheets_text = []
-
-                for sheet_name in excel_file.sheet_names:
-                    df = pd.read_excel(excel_file, sheet_name=sheet_name)
-                    sheet_text = f"工作表: {sheet_name}\n\n"
-                    sheet_text += df.to_string(index=False)
-                    sheets_text.append(sheet_text)
-
-                full_text = "\n\n" + "=" * 50 + "\n\n".join(sheets_text)
-
-                if not full_text.strip():
-                    raise ValueError("Excel文件中未提取到文本内容")
-
-                docs = [
-                    Document(
-                        page_content=full_text,
-                        metadata={"source_file": uploaded_file.name, "file_type": "excel"},
-                    )
-                ]
-            except ImportError:
-                raise RuntimeError("处理Excel文件需要安装pandas和openpyxl库，请运行: pip install pandas openpyxl")
-            except Exception as e:
-                raise RuntimeError(f"Excel处理失败: {str(e)}\n{traceback.format_exc()}")
-
-        else:
-            logger.warning("不支持的文件类型: %s", file_ext)
-            return 0
+        docs = parse_file_to_documents(temp_path, uploaded_file.name)
 
         from utils.smart_chunker import smart_chunk_document
 
@@ -321,9 +163,12 @@ def ingest_file(uploaded_file, vector_db, category: str = "默认知识库", des
             index_dir = os.path.join(get_kb_dir(), "faiss_index")
             os.makedirs(index_dir, exist_ok=True)
             bs = ins.EMBED_ADD_BATCH_SIZE
-            for i in range(0, len(chunks), bs):
-                vector_db.add_documents(chunks[i : i + bs])
-            vector_db.save_local(index_dir)
+            from utils.faiss_write_lock import faiss_write_lock
+
+            with faiss_write_lock():
+                for i in range(0, len(chunks), bs):
+                    vector_db.add_documents(chunks[i : i + bs])
+                vector_db.save_local(index_dir)
             logger.info("成功入库 %d 个文本块，文件：%s", len(chunks), uploaded_file.name)
             _finalize_ingest_metadata(uploaded_file, file_ext, cat, desc, len(chunks))
 

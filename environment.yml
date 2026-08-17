@@ -98,7 +98,7 @@ dependencies:
       - dataclasses-json==0.6.7
       - decorator==5.2.1
       - distro==1.9.0
-      - docx2txt==0.9
+      - xlsxwriter==3.2.9
       - durationpy==0.10
       - editdistance==0.8.1
       - emoji==2.15.0
@@ -225,6 +225,7 @@ dependencies:
       - pytesseract==0.3.13
       - python-dateutil==2.9.0.post0
       - python-docx==1.2.0
+      - python-pptx==1.0.2
       - python-iso639==2025.11.16
       - python-magic==0.4.27
       - python-oxmsg==0.0.2

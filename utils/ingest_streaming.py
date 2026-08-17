@@ -10,6 +10,7 @@ from typing import Generator, Iterable, List, Optional, Tuple
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from utils.document_parsers import detect_text_file_encoding  # noqa: F401 — 兼容旧引用 ins.detect_text_file_encoding
 from utils.path_context import get_kb_dir
 from utils.smart_chunker import CHINESE_SEPARATORS, SmartChunker
 from utils.web_system_settings import get_merged_chunk_levels
@@ -35,20 +36,6 @@ def doc_length_factor_from_filesize(file_size_bytes: int) -> float:
     if sz > 900_000:
         return 1.15
     return 1.0
-
-
-def detect_text_file_encoding(path: str, sample_size: int = 262144) -> str:
-    with open(path, "rb") as f:
-        raw = f.read(sample_size)
-    if not raw:
-        return "utf-8"
-    for enc in ("utf-8-sig", "utf-8", "gb18030", "gbk"):
-        try:
-            raw.decode(enc, errors="strict")
-            return enc
-        except UnicodeDecodeError:
-            continue
-    return "utf-8"
 
 
 def read_text_head(path: str, encoding: str, max_chars: int = 16000) -> str:
@@ -266,13 +253,10 @@ def read_docx_sample(path: str, max_chars: int = 16000) -> str:
 
 
 def iter_segments_pdf_ocr(path: str, dpi: int = 200) -> Generator[str, None, None]:
-    """扫描版 PDF：按页渲染 OCR，按字数合并为段，避免一次性载入全书图像。"""
-    import pytesseract
+    """扫描版 PDF：按页渲染两层 OCR（本地 → 云端回退），按字数合并为段，避免一次性载入全书图像。"""
     from pdf2image import convert_from_path
 
-    from config import TESSERACT_CMD
-
-    pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
+    from utils.document_parsers import _ocr_image
 
     n = pdf_page_count(path)
     if n <= 0:
@@ -283,7 +267,7 @@ def iter_segments_pdf_ocr(path: str, dpi: int = 200) -> Generator[str, None, Non
         imgs = convert_from_path(path, first_page=i + 1, last_page=i + 1, dpi=dpi, fmt="png")
         try:
             img = imgs[0]
-            page_text = pytesseract.image_to_string(img, lang="chi_sim")
+            page_text, _engine = _ocr_image(img)
         finally:
             del imgs
         block = "第%d页：\n%s" % (i + 1, page_text)
@@ -308,7 +292,26 @@ def run_streaming_ingest(
     """
     消费文本段迭代器：切 medium chunk、分批 add_documents、周期性 save_local。
     返回写入的 chunk 条数（含可选 1 条 summary）。
+
+    全程持有 FAISS 写锁：大文件入库可达数分钟，期间同目录的删除/重置/另一入库
+    必须等待，否则周期性 save_local 会互相覆盖索引。
     """
+    from utils.faiss_write_lock import faiss_write_lock
+
+    with faiss_write_lock():
+        return _run_streaming_ingest_unlocked(
+            segment_iter, source_file, file_type, vector_db, file_size_bytes, summary_doc
+        )
+
+
+def _run_streaming_ingest_unlocked(
+    segment_iter: Iterable[str],
+    source_file: str,
+    file_type: str,
+    vector_db,
+    file_size_bytes: int,
+    summary_doc: Optional[Document],
+) -> int:
     index_dir = os.path.join(get_kb_dir(), "faiss_index")
     os.makedirs(index_dir, exist_ok=True)
     factor = doc_length_factor_from_filesize(file_size_bytes)
