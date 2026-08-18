@@ -298,6 +298,43 @@ def update_user_profile(user_id: int, updates: Dict[str, Any]) -> User:
     return _row_to_user(row)
 
 
+def update_user_password(user_id: int, new_password: str) -> None:
+    """用户自助改密（调用方负责校验旧密码）。"""
+    pwd = (new_password or "").strip()
+    if len(pwd) < 8 or len(pwd) > 128:
+        raise ValueError("密码长度须为 8～128 个字符")
+    with get_conn() as conn:
+        conn.execute(
+            "UPDATE users SET password_hash = ? WHERE id = ?",
+            (_hash_password(pwd), user_id),
+        )
+
+
+def get_user_password_hash(user_id: int) -> Optional[str]:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT password_hash FROM users WHERE id = ?", (user_id,)
+        ).fetchone()
+    if row is None:
+        return None
+    return str(row["password_hash"]) if hasattr(row, "keys") else str(row[0])
+
+
+def list_user_feedback_mine(user_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+    """用户端「我的反馈」：含处理状态与管理员回复（闭环展示）。"""
+    limit = max(1, min(int(limit), 200))
+    with get_conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, created_at, title, content, status, admin_reply, replied_at
+            FROM user_feedback WHERE user_id = ?
+            ORDER BY id DESC LIMIT ?
+            """,
+            (user_id, limit),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
 def list_users_admin(search: Optional[str] = None) -> List[Dict[str, Any]]:
     q = (search or "").strip()
     with get_conn() as conn:

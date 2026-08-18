@@ -63,7 +63,16 @@ def auth_register(body: RegisterBody):
 
 @router.post("/register-admin")
 def auth_register_admin(body: RegisterBody):
-    """管理端注册页：新注册用户 role=admin（可与已有管理员并存，仍受「允许公开注册」开关约束）。"""
+    """管理端注册页：新注册用户 role=admin（可与已有管理员并存，仍受「允许公开注册」开关约束）。
+
+    额外防线：环境变量 ADMIN_REGISTER_CODE 设置后，请求须携带匹配的 register_code，
+    避免注册页 URL 泄漏即人人可建管理员（未设置时保持旧行为，部署建议设置）。
+    """
+    import os as _os
+
+    _code = (_os.environ.get("ADMIN_REGISTER_CODE") or "").strip()
+    if _code and (body.register_code or "").strip() != _code:
+        raise HTTPException(status_code=403, detail="管理端注册邀请码不正确")
     try:
         return _register_response(body, admin_portal=True)
     except ValueError as e:
@@ -209,8 +218,26 @@ def auth_patch_me(request: Request, body: MePatchBody):
         updates["nickname"] = nick
     if "avatar" in raw:
         updates["avatar"] = raw["avatar"]
-    if not updates:
+    _pwd_change = "old_password" in raw or "new_password" in raw
+    if not updates and not _pwd_change:
         raise HTTPException(status_code=400, detail="无更新字段")
+    if _pwd_change:
+        old_pwd = raw.get("old_password") or ""
+        new_pwd = raw.get("new_password") or ""
+        if not (old_pwd and new_pwd):
+            raise HTTPException(status_code=400, detail="修改密码须同时提供旧密码与新密码")
+        from utils.auth_store import get_user_password_hash, update_user_password, verify_password
+
+        stored = get_user_password_hash(request.state.user.id)
+        if stored is None or not verify_password(old_pwd, stored):
+            raise HTTPException(status_code=400, detail="旧密码不正确")
+        try:
+            update_user_password(request.state.user.id, new_pwd)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+    if not updates:
+        # 仅改密时（无昵称/头像字段）直接返回当前用户
+        return _user_public(request.state.user)
     try:
         nu = update_user_profile(request.state.user.id, updates)
     except ValueError as e:

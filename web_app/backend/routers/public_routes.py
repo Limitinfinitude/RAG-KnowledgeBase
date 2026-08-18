@@ -6,6 +6,7 @@ from utils.auth_store import (
     create_message_quality_feedback,
     create_user_feedback,
     get_user_from_token,
+    list_user_feedback_mine,
 )
 from utils.web_system_settings import public_settings_dict
 from web_app.backend.schemas import PublicFeedbackBody, PublicMessageQualityBody
@@ -47,6 +48,20 @@ def public_post_feedback(request: Request, body: PublicFeedbackBody):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     return {"ok": True, "id": fid}
+
+
+@router.get("/feedback/mine")
+def public_my_feedback(request: Request):
+    """用户端「我的反馈」列表：含处理状态与管理员回复（闭环）。须登录。"""
+    auth = request.headers.get("authorization") or ""
+    uid = None
+    if auth.startswith("Bearer "):
+        u = get_user_from_token(auth[7:].strip())
+        if u is not None and int(u.id) > 0:
+            uid = int(u.id)
+    if uid is None:
+        raise HTTPException(status_code=401, detail="登录后可查看我的反馈")
+    return {"items": list_user_feedback_mine(uid)}
 
 
 @router.post("/message-quality-feedback")

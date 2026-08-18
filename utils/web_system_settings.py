@@ -13,8 +13,10 @@ _DEFAULT_EXT = ["pdf", "docx", "pptx", "txt", "md", "csv", "html", "xlsx", "xls"
 
 _RAG_DEFAULTS: Dict[str, Any] = {
     "default_retrieval_k": 10,
-    "default_search_mode": "vector",
-    "default_enable_reranker": False,
+    # 2026-08-17 评测结论：hybrid+重排是唯一可靠的负样本防线形态
+    # （纯向量/纯混合的误召回 31-37%，开重排后 0%），故默认开启
+    "default_search_mode": "hybrid",
+    "default_enable_reranker": True,
     "default_response_style": "balanced",
     "default_temperature": 0.0,
 }

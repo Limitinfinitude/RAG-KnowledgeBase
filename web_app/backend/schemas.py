@@ -111,6 +111,8 @@ class ClearAllBody(BaseModel):
 class RegisterBody(BaseModel):
     username: str = Field(..., min_length=3, max_length=32)
     password: str = Field(..., min_length=8, max_length=128)
+    # 管理端注册邀请码：环境变量 ADMIN_REGISTER_CODE 设置后必填
+    register_code: Optional[str] = None
 
 
 class LoginBody(BaseModel):
@@ -123,6 +125,9 @@ class MePatchBody(BaseModel):
 
     nickname: Optional[str] = Field(None, max_length=32)
     avatar: Optional[str] = None
+    # 自助改密：须携带旧密码验证
+    old_password: Optional[str] = Field(None, min_length=1, max_length=128)
+    new_password: Optional[str] = Field(None, min_length=8, max_length=128)
 
 
 class AdminRoleBody(BaseModel):
