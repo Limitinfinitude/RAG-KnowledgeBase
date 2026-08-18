@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
   <title>即时文档问答 · 用户</title>
-  <link rel="stylesheet" href="/static/style.css?v=20260470" />
-  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/static/style.css?v=20260817" />
+  <script src="shared/vendor/marked.min.js" crossorigin="anonymous"></script>
+  <script src="shared/vendor/purify.min.js" crossorigin="anonymous"></script>
 </head>
 <body data-portal="user" data-page="instant" class="gpt-root-chat">
   <div class="gpt-layout">
@@ -43,6 +43,16 @@
           <span class="gpt-sidebar-history-toggle-label">历史记录</span>
           <span class="gpt-sidebar-history-chevron" aria-hidden="true">▼</span>
         </button>
+        <div class="gpt-conv-tools" id="convTools">
+          <input type="search" id="convSearch" class="gpt-conv-search" placeholder="搜索对话（Ctrl+K）" autocomplete="off" />
+          <button type="button" class="gpt-conv-tool-btn" id="btnConvBatchMode" aria-pressed="false" title="批量管理对话">☰✓</button>
+        </div>
+        <div class="gpt-conv-batch-bar" id="convBatchBar" hidden>
+          <span class="gpt-conv-batch-count" id="convBatchCount">点选对话</span>
+          <button type="button" class="gpt-conv-tool-btn" id="btnConvBatchExport" disabled title="导出所选为 Markdown">⬇ MD</button>
+          <button type="button" class="gpt-conv-tool-btn gpt-conv-tool-danger" id="btnConvBatchDelete" disabled title="删除所选对话">🗑 删除</button>
+          <button type="button" class="gpt-conv-tool-btn" id="btnConvBatchExit" title="退出批量模式">✕</button>
+        </div>
         <div class="gpt-conv-scroll-wrap" id="convListWrap">
           <div class="gpt-conv-scroll" id="convList"></div>
         </div>
@@ -80,7 +90,8 @@
             <div class="gpt-conv-dropdown" id="convDropdown" role="menu" hidden>
               <button type="button" class="gpt-dropdown-item" data-conv-action="pin" role="menuitem">置顶</button>
               <button type="button" class="gpt-dropdown-item" data-conv-action="rename" role="menuitem">重命名</button>
-              <button type="button" class="gpt-dropdown-item" data-conv-action="export" role="menuitem">导出</button>
+              <button type="button" class="gpt-dropdown-item" data-conv-action="export" role="menuitem">导出 JSON</button>
+              <button type="button" class="gpt-dropdown-item" data-conv-action="export-md" role="menuitem">导出 Markdown</button>
               <button type="button" class="gpt-dropdown-item gpt-dropdown-danger" data-conv-action="delete" role="menuitem">删除</button>
             </div>
           </div>
@@ -206,6 +217,6 @@
     </form>
   </dialog>
 
-  <script src="/static/app.js?v=20260470"></script>
+  <script src="/static/app.js?v=20260817"></script>
 </body>
 </html>

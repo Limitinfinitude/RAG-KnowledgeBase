@@ -228,6 +228,33 @@
     localStorage.removeItem(AUTH_TOKEN_KEY);
   }
 
+  /**
+   * 解析 JWT payload 的 exp 判断是否已过期。
+   * 无法解析（非标准 JWT）时返回 false，交由后端 401 兜底，避免误踢合法会话。
+   */
+  function isAuthTokenExpired() {
+    const token = getAuthToken();
+    if (!token) return true;
+    const parts = token.split(".");
+    if (parts.length !== 3) return false;
+    try {
+      let b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+      while (b64.length % 4) b64 += "=";
+      const payload = JSON.parse(atob(b64));
+      const exp = Number(payload && payload.exp);
+      if (!exp) return false;
+      return Math.floor(Date.now() / 1000) >= exp;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function redirectToLoginForExpired() {
+    clearAuth();
+    const next = encodeURIComponent(location.pathname + location.search);
+    window.location.href = LOGIN_PAGE + "?next=" + next + "&expired=1";
+  }
+
   /** 知识库「文档」标签：文档列表是否展开（默认收起） */
   let kbDocsExpanded = false;
 
@@ -419,11 +446,9 @@
     }
   }
 
-  async function mergePublicRagPrefsFromServer() {
-    const s = await fetchPublicSettings();
-    if (!s) return;
-    applyWebSearchUiFlagsFromPublicSettings(s);
-    if (!s.rag_defaults) return;
+  /** 将服务端 rag_defaults 合并进本地聊天偏好（仅签名变化时覆盖）；s 为 /api/public/settings 响应 */
+  function mergeRagDefaultsIntoChatPrefs(s) {
+    if (!s || !s.rag_defaults) return;
     const rd = s.rag_defaults;
     const sig = JSON.stringify(rd);
     try {
@@ -449,6 +474,13 @@
     setChatPrefs(patch);
   }
 
+  async function mergePublicRagPrefsFromServer() {
+    const s = await fetchPublicSettings();
+    if (!s) return;
+    applyWebSearchUiFlagsFromPublicSettings(s);
+    mergeRagDefaultsIntoChatPrefs(s);
+  }
+
   async function api(path, options = {}) {
     const token = getAuthToken();
     const headers = {
@@ -456,6 +488,10 @@
       ...(options.headers || {}),
     };
     if (token) headers["Authorization"] = "Bearer " + token;
+    if (token && isAuthTokenExpired()) {
+      redirectToLoginForExpired();
+      throw new Error("登录已过期");
+    }
     const r = await fetch(path, { ...options, headers });
     if (r.status === 401) {
       clearAuth();
@@ -757,6 +793,34 @@
       });
     }
     throw new Error("入库等待超时，请稍后刷新文档列表查看是否已入库");
+  }
+
+  /** kb 页刷新后恢复：拉最近入库任务，仍在排队/运行的继续轮询，避免“刷新后上传失联” */
+  async function resumePendingKbIngestJobs() {
+    let data;
+    try {
+      data = await api("/api/upload/jobs?limit=20");
+    } catch (_) {
+      return;
+    }
+    const jobs = (data && data.jobs) || [];
+    const pending = jobs.filter(function (j) {
+      return j && (j.status === "queued" || j.status === "running");
+    });
+    pending.forEach(function (j) {
+      const name = j.file_name || j.job_id;
+      showToast("检测到未完成入库：" + name + "，继续跟踪…", "info");
+      waitForKbIngestJob(j.job_id).then(
+        function () {
+          showToast("入库完成：" + name, "ok");
+          refreshKbDocs().catch(function () {});
+        },
+        function (e) {
+          showToast("入库失败：" + name + "：" + (e && e.message ? e.message : e), "err");
+          refreshKbDocs().catch(function () {});
+        }
+      );
+    });
   }
 
   function kbSwBatchRecordDone(batchNonce, ok, errMsg) {
@@ -1877,60 +1941,109 @@
     }
   }
 
+  /** 会话搜索关键词（标题 + 消息内容，小写子串匹配） */
+  let _convSearchQuery = "";
+  /** 会话批量管理模式（侧栏勾选后批量删除/导出） */
+  let _convBatchMode = false;
+  const _convBatchSelected = new Set();
+
+  function convMatchesQuery(conv, q) {
+    if (!q) return true;
+    if ((conv.title || "").toLowerCase().includes(q)) return true;
+    const msgs = conv.messages || [];
+    for (let i = 0; i < msgs.length; i++) {
+      const c = msgs[i] && msgs[i].content;
+      if (typeof c === "string" && c.toLowerCase().includes(q)) return true;
+    }
+    return false;
+  }
+
   function renderConvList() {
     const nav = $("convList");
     if (!nav) return;
     nav.innerHTML = "";
+    const q = _convSearchQuery.trim().toLowerCase();
+    let shown = 0;
     store.order.forEach((id) => {
       const conv = store.conversations[id];
       if (!conv) return;
+      if (q && !convMatchesQuery(conv, q)) return;
+      shown += 1;
       const row = document.createElement("div");
       row.className = "gpt-conv-item" + (id === store.currentId ? " active" : "");
       row.dataset.convId = id;
+
+      const toggleSelect = () => {
+        if (_convBatchSelected.has(id)) _convBatchSelected.delete(id);
+        else _convBatchSelected.add(id);
+        renderConvList();
+        updateConvBatchBar();
+      };
+
+      if (_convBatchMode) {
+        const check = document.createElement("button");
+        check.type = "button";
+        check.className = "gpt-conv-check" + (_convBatchSelected.has(id) ? " checked" : "");
+        check.setAttribute("aria-label", "选择对话");
+        check.textContent = _convBatchSelected.has(id) ? "✓" : "";
+        check.addEventListener("click", toggleSelect);
+        row.appendChild(check);
+      }
 
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "label";
       btn.textContent = conv.title;
       btn.title = conv.title;
-      btn.addEventListener("click", () => switchConv(id));
+      if (_convBatchMode) btn.addEventListener("click", toggleSelect);
+      else btn.addEventListener("click", () => switchConv(id));
 
-      const actions = document.createElement("div");
-      actions.className = "gpt-conv-item-actions";
-      const menu = document.createElement("div");
-      menu.className = "gpt-sidebar-conv-menu";
-      const moreBtn = document.createElement("button");
-      moreBtn.type = "button";
-      moreBtn.className = "gpt-btn-more gpt-sidebar-conv-more";
-      moreBtn.setAttribute("aria-label", "对话操作");
-      moreBtn.setAttribute("aria-expanded", "false");
-      moreBtn.textContent = "⋮";
-      const dd = document.createElement("div");
-      dd.className = "gpt-conv-dropdown gpt-sidebar-conv-dropdown";
-      dd.hidden = true;
-      dd.setAttribute("role", "menu");
-      [
-        ["pin", "置顶"],
-        ["rename", "重命名"],
-        ["export", "导出"],
-        ["delete", "删除"],
-      ].forEach(function (pair) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "gpt-dropdown-item" + (pair[0] === "delete" ? " gpt-dropdown-danger" : "");
-        b.setAttribute("data-sidebar-conv-action", pair[0]);
-        b.setAttribute("role", "menuitem");
-        b.textContent = pair[1];
-        dd.appendChild(b);
-      });
-      menu.appendChild(moreBtn);
-      menu.appendChild(dd);
-      actions.appendChild(menu);
-
-      row.appendChild(btn);
-      row.appendChild(actions);
+      if (!_convBatchMode) {
+        const actions = document.createElement("div");
+        actions.className = "gpt-conv-item-actions";
+        const menu = document.createElement("div");
+        menu.className = "gpt-sidebar-conv-menu";
+        const moreBtn = document.createElement("button");
+        moreBtn.type = "button";
+        moreBtn.className = "gpt-btn-more gpt-sidebar-conv-more";
+        moreBtn.setAttribute("aria-label", "对话操作");
+        moreBtn.setAttribute("aria-expanded", "false");
+        moreBtn.textContent = "⋮";
+        const dd = document.createElement("div");
+        dd.className = "gpt-conv-dropdown gpt-sidebar-conv-dropdown";
+        dd.hidden = true;
+        dd.setAttribute("role", "menu");
+        [
+          ["pin", "置顶"],
+          ["rename", "重命名"],
+          ["export", "导出 JSON"],
+          ["export-md", "导出 Markdown"],
+          ["delete", "删除"],
+        ].forEach(function (pair) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "gpt-dropdown-item" + (pair[0] === "delete" ? " gpt-dropdown-danger" : "");
+          b.setAttribute("data-sidebar-conv-action", pair[0]);
+          b.setAttribute("role", "menuitem");
+          b.textContent = pair[1];
+          dd.appendChild(b);
+        });
+        menu.appendChild(moreBtn);
+        menu.appendChild(dd);
+        actions.appendChild(menu);
+        row.appendChild(btn);
+        row.appendChild(actions);
+      } else {
+        row.appendChild(btn);
+      }
       nav.appendChild(row);
     });
+    if (q && shown === 0) {
+      const empty = document.createElement("p");
+      empty.className = "gpt-conv-empty";
+      empty.textContent = "没有匹配的对话";
+      nav.appendChild(empty);
+    }
   }
 
   function switchConv(id) {
@@ -1978,6 +2091,60 @@
     syncInstantDocBar();
   }
 
+  function updateConvBatchBar() {
+    const bar = $("convBatchBar");
+    if (!bar) return;
+    bar.hidden = !_convBatchMode;
+    const n = _convBatchSelected.size;
+    const cnt = $("convBatchCount");
+    if (cnt) cnt.textContent = n ? "已选 " + n + " 个" : "点选对话";
+    const del = $("btnConvBatchDelete");
+    const exp = $("btnConvBatchExport");
+    if (del) del.disabled = !n;
+    if (exp) exp.disabled = !n;
+  }
+
+  function setConvBatchMode(on) {
+    _convBatchMode = !!on && (PAGE === "chat" || PAGE === "instant");
+    if (!_convBatchMode) _convBatchSelected.clear();
+    const toggleBtn = $("btnConvBatchMode");
+    if (toggleBtn) toggleBtn.setAttribute("aria-pressed", _convBatchMode ? "true" : "false");
+    renderConvList();
+    updateConvBatchBar();
+  }
+
+  function deleteSelectedConvs() {
+    const ids = [..._convBatchSelected].filter((id) => store.conversations[id]);
+    if (!ids.length) return;
+    if (store.order.length - ids.length < 1) {
+      alert("至少保留一个对话。");
+      return;
+    }
+    if (!confirm("删除所选 " + ids.length + " 个对话？此操作不可恢复。")) return;
+    const removed = new Set(ids);
+    ids.forEach((id) => delete store.conversations[id]);
+    store.order = store.order.filter((x) => !removed.has(x));
+    if (!store.conversations[store.currentId]) store.currentId = store.order[0];
+    _convBatchSelected.clear();
+    saveStore();
+    void flushPushWebUiState();
+    setConvBatchMode(false);
+    renderThread();
+    updateEmptyState();
+    updateTopbar();
+    syncInstantDocBar();
+    showToast("已删除 " + ids.length + " 个对话", "ok");
+  }
+
+  function exportSelectedConvsMarkdown() {
+    const ids = [..._convBatchSelected].filter((id) => store.conversations[id]);
+    if (!ids.length) return;
+    const parts = ids.map((id) => conversationToMarkdown(store.conversations[id]));
+    const name = "conversations-" + new Date().toISOString().slice(0, 10) + ".md";
+    downloadTextFile(name, parts.join("\n\n---\n\n"), "text/markdown;charset=utf-8");
+    showToast("已导出 " + ids.length + " 个对话（Markdown）", "ok");
+  }
+
   function exportConversationById(id) {
     const c = id && store.conversations[id] ? store.conversations[id] : null;
     if (!c) return;
@@ -2001,6 +2168,75 @@
     showToast("已导出 JSON", "ok");
   }
 
+  function downloadTextFile(name, text, mime) {
+    const url = URL.createObjectURL(new Blob([text], { type: mime || "application/octet-stream" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  /** 带 Bearer 的文件下载：导出接口只认 Authorization 头，plain <a> 会 401 */
+  async function downloadWithToken(url, fallbackName) {
+    const tok = getAuthToken();
+    const headers = {};
+    if (tok) headers["Authorization"] = "Bearer " + tok;
+    const r = await fetch(url, { headers });
+    if (!r.ok) throw new Error(r.statusText || "下载失败");
+    const cd = r.headers.get("content-disposition") || "";
+    const m = /filename="?([^";]+)"?/.exec(cd);
+    const name = (m && m[1]) || fallbackName;
+    const objectUrl = URL.createObjectURL(await r.blob());
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
+  }
+
+  /** 会话转 Markdown（角色分节 + meta 脚注），用于单导出与批量导出 */
+  function conversationToMarkdown(c) {
+    if (!c) return "";
+    const lines = [];
+    lines.push("# " + (c.title || "未命名对话"));
+    lines.push("");
+    lines.push(
+      "> 导出于 " +
+        new Date().toLocaleString() +
+        " · 共 " +
+        (c.messages || []).length +
+        " 条消息"
+    );
+    lines.push("");
+    (c.messages || []).forEach(function (m, i) {
+      const role =
+        m.role === "user" ? "👤 用户" : m.role === "assistant" ? "🤖 助手" : "· " + (m.role || "系统");
+      lines.push("## " + role + " · #" + (i + 1));
+      lines.push("");
+      lines.push(String(m.content || "").trim() || "（空）");
+      if (m.meta) {
+        lines.push("");
+        lines.push("<sub>" + m.meta + "</sub>");
+      }
+      lines.push("");
+    });
+    return lines.join("\n");
+  }
+
+  function exportConversationMarkdownById(id) {
+    const c = id && store.conversations[id] ? store.conversations[id] : null;
+    if (!c) return;
+    const safe = String(c.title || "conversation").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 80);
+    downloadTextFile(safe + ".md", conversationToMarkdown(c), "text/markdown;charset=utf-8");
+    showToast("已导出 Markdown", "ok");
+  }
+
   function exportCurrentConv() {
     exportConversationById(store.currentId);
   }
@@ -2010,6 +2246,7 @@
     if (action === "pin") pinConv(id);
     else if (action === "rename") openRename(id);
     else if (action === "export") exportConversationById(id);
+    else if (action === "export-md") exportConversationMarkdownById(id);
     else if (action === "delete") deleteConv(id);
   }
 
@@ -2060,6 +2297,19 @@
         if (cid && action) runConversationAction(cid, action);
       }
     });
+    // 会话搜索框 + 批量管理工具栏（元素存在才接线；与上面的菜单委托同处一次性初始化）
+    const searchBox = $("convSearch");
+    if (searchBox && searchBox.dataset.wired !== "1") {
+      searchBox.dataset.wired = "1";
+      searchBox.addEventListener("input", function () {
+        _convSearchQuery = searchBox.value || "";
+        renderConvList();
+      });
+    }
+    $("btnConvBatchMode")?.addEventListener("click", () => setConvBatchMode(!_convBatchMode));
+    $("btnConvBatchExit")?.addEventListener("click", () => setConvBatchMode(false));
+    $("btnConvBatchDelete")?.addEventListener("click", deleteSelectedConvs);
+    $("btnConvBatchExport")?.addEventListener("click", exportSelectedConvsMarkdown);
   }
 
   function closeConvDropdown() {
@@ -3046,9 +3296,8 @@
     });
   }
 
-  async function refreshPublicUploadUi() {
-    const s = await fetchPublicSettings();
-    if (s) applyWebSearchUiFlagsFromPublicSettings(s);
+  /** 用公共设置刷新上传控件（accept/提示文案）；元素不存在时直接跳过，不发请求 */
+  function applyUploadUiFromPublicSettings(s) {
     const label = $("uploadFilesLabel");
     const inp = $("uploadFiles");
     if (!s || !label || !inp) return;
@@ -3061,6 +3310,12 @@
       "，最大 " +
       (s.max_upload_mb || 50) +
       " MB）";
+  }
+
+  async function refreshPublicUploadUi() {
+    const s = await fetchPublicSettings();
+    if (s) applyWebSearchUiFlagsFromPublicSettings(s);
+    applyUploadUiFromPublicSettings(s);
   }
 
   async function loadAdminUsers() {
@@ -3811,6 +4066,77 @@
     } catch (e) {
       el.textContent = e.message || String(e);
     }
+  }
+
+  /** 管理端好差评流水（GET /api/admin/message-quality-feedback；rating 筛选 + 简单分页） */
+  const ADM_QUALITY_PAGE_SIZE = 50;
+  let _admQualityOffset = 0;
+
+  async function loadAdminQualityFeedback() {
+    const body = $("adminQualityBody");
+    if (!body) return;
+    const rating = $("admQualityRating")?.value || "";
+    const q =
+      "?limit=" +
+      ADM_QUALITY_PAGE_SIZE +
+      "&offset=" +
+      _admQualityOffset +
+      (rating ? "&rating=" + encodeURIComponent(rating) : "");
+    let d;
+    try {
+      d = await api("/api/admin/message-quality-feedback" + q);
+    } catch (e) {
+      body.innerHTML =
+        '<p class="gpt-muted" style="padding:1rem">加载失败：' +
+        escapeHtml(e.message || String(e)) +
+        "</p>";
+      return;
+    }
+    const items = d.items || [];
+    const info = $("admQualityPageInfo");
+    if (info) {
+      info.textContent =
+        "第 " + (_admQualityOffset + 1) + "–" + (_admQualityOffset + items.length) + " 条";
+    }
+    const prev = $("btnAdmQualityPrev");
+    const next = $("btnAdmQualityNext");
+    if (prev) prev.disabled = _admQualityOffset <= 0;
+    if (next) next.disabled = items.length < ADM_QUALITY_PAGE_SIZE;
+    if (!items.length) {
+      body.innerHTML = '<p class="gpt-muted" style="padding:1rem">暂无记录</p>';
+      return;
+    }
+    const rows = items
+      .map(function (it) {
+        const good = String(it.rating || "") === "good";
+        const mode = String(it.page_mode || "") === "instant" ? "即时文档" : "知识库";
+        return (
+          "<tr><td>" +
+          escapeHtml(String(it.created_at || "").slice(5, 19)) +
+          '</td><td class="gpt-qfb-rating">' +
+          (good ? "👍 好" : "👎 差") +
+          "</td><td>@" +
+          escapeHtml(String(it.username || it.user_id || "—")) +
+          "</td><td>" +
+          escapeHtml(mode) +
+          "</td><td>" +
+          escapeHtml(String(it.message_index != null ? it.message_index : "—")) +
+          '</td><td class="gpt-audit-path" title="' +
+          escapeHtml(String(it.user_message_excerpt || "")) +
+          '">' +
+          escapeHtml(String(it.user_message_excerpt || "").slice(0, 80)) +
+          '</td><td class="gpt-audit-path" title="' +
+          escapeHtml(String(it.assistant_excerpt_preview || "")) +
+          '">' +
+          escapeHtml(String(it.assistant_excerpt_preview || "").slice(0, 120)) +
+          "</td></tr>"
+        );
+      })
+      .join("");
+    body.innerHTML =
+      '<table class="gpt-audit-table"><thead><tr><th>时间</th><th>评分</th><th>用户</th><th>来源</th><th>消息#</th><th>用户消息</th><th>助手回答</th></tr></thead><tbody>' +
+      rows +
+      "</tbody></table>";
   }
 
   async function loadAdminFeedback() {
@@ -5195,6 +5521,60 @@
     }
   });
 
+  // 聊天页「高级检索」折叠面板：开合状态记入 localStorage
+  $("btnRagAdv")?.addEventListener("click", () => {
+    const panel = $("chatRagAdv");
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+    const btn = $("btnRagAdv");
+    if (btn) btn.setAttribute("aria-expanded", panel.hidden ? "false" : "true");
+    try {
+      localStorage.setItem("rag_adv_panel_open", panel.hidden ? "0" : "1");
+    } catch (_) {}
+  });
+
+  $("btnProfilePassword")?.addEventListener("click", async () => {
+    const msg = $("profilePwdMsg");
+    const oldPwd = $("profileOldPassword")?.value || "";
+    const newPwd = $("profileNewPassword")?.value || "";
+    const newPwd2 = $("profileNewPassword2")?.value || "";
+    const fail = (t) => {
+      if (msg) {
+        msg.hidden = false;
+        msg.textContent = t;
+      }
+    };
+    if (!oldPwd || !newPwd) {
+      fail("请填写当前密码与新密码");
+      return;
+    }
+    if (newPwd.length < 6) {
+      fail("新密码至少 6 位");
+      return;
+    }
+    if (newPwd !== newPwd2) {
+      fail("两次输入的新密码不一致");
+      return;
+    }
+    try {
+      await api("/api/auth/me", {
+        method: "PATCH",
+        body: JSON.stringify({ old_password: oldPwd, new_password: newPwd }),
+      });
+      ["profileOldPassword", "profileNewPassword", "profileNewPassword2"].forEach((id) => {
+        const el = $(id);
+        if (el) el.value = "";
+      });
+      if (msg) {
+        msg.hidden = false;
+        msg.textContent = "密码已修改";
+      }
+      showToast("密码已修改", "ok");
+    } catch (e) {
+      fail(e.message || String(e));
+    }
+  });
+
   $("btnProfileDeleteAccount")?.addEventListener("click", async () => {
     const u = currentUser;
     if (!u || !u.username) return;
@@ -5566,9 +5946,61 @@
         msg.textContent = "已提交";
       }
       showToast("已提交，感谢反馈", "ok");
+      loadMyFeedback().catch(() => {});
     } catch (e) {
       showToast(e.message || String(e), "err");
     }
+  });
+
+  /** 设置页「我的反馈」：展示处理状态与管理员回复（GET /api/feedback/mine） */
+  async function loadMyFeedback() {
+    const box = $("myFeedbackList");
+    if (!box) return;
+    let data;
+    try {
+      data = await api("/api/public/feedback/mine?limit=50");
+    } catch (e) {
+      box.innerHTML = '<p class="gpt-muted">加载失败：' + escapeHtml(e.message || String(e)) + "</p>";
+      return;
+    }
+    const items = (data && data.items) || [];
+    if (!items.length) {
+      box.innerHTML = '<p class="gpt-muted">还没有提交过反馈。</p>';
+      return;
+    }
+    const statusText = { pending: "待处理", processing: "处理中", resolved: "已回复", closed: "已关闭" };
+    box.innerHTML = items
+      .map(function (it) {
+        const st = statusText[it.status] || it.status || "待处理";
+        const reply =
+          it.admin_reply
+            ? '<div class="gpt-myfb-reply"><span class="gpt-myfb-reply-label">管理员回复：</span>' +
+              escapeHtml(String(it.admin_reply)) +
+              "</div>"
+            : "";
+        const title = it.title ? "<strong>" + escapeHtml(String(it.title)) + "</strong> · " : "";
+        return (
+          '<div class="gpt-myfb-item">' +
+          '<div class="gpt-myfb-head">' +
+          title +
+          '<span class="gpt-status-chip">' +
+          escapeHtml(st) +
+          "</span>" +
+          '<span class="gpt-muted gpt-myfb-time">' +
+          escapeHtml(String(it.created_at || "")) +
+          "</span>" +
+          "</div>" +
+          '<div class="gpt-myfb-content">' +
+          escapeHtml(String(it.content || "")) +
+          "</div>" +
+          reply +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+  $("btnMyFeedbackRefresh")?.addEventListener("click", () => {
+    loadMyFeedback().catch((e) => showToast(e.message || String(e), "err"));
   });
 
   $("btnAdminRefreshAllLogs")?.addEventListener("click", () => {
@@ -5590,6 +6022,36 @@
 
   $("admFeedbackStatus")?.addEventListener("change", () => {
     loadAdminFeedback().catch((e) => console.error(e));
+  });
+
+  $("admQualityRating")?.addEventListener("change", () => {
+    _admQualityOffset = 0;
+    loadAdminQualityFeedback().catch((e) => console.error(e));
+  });
+  $("btnAdmQualityRefresh")?.addEventListener("click", () => {
+    loadAdminQualityFeedback()
+      .then(() => showToast("已刷新", "ok"))
+      .catch((e) => showToast(e.message || String(e), "err"));
+  });
+  $("btnAdmQualityPrev")?.addEventListener("click", () => {
+    _admQualityOffset = Math.max(0, _admQualityOffset - ADM_QUALITY_PAGE_SIZE);
+    loadAdminQualityFeedback().catch((e) => console.error(e));
+  });
+  $("btnAdmQualityNext")?.addEventListener("click", () => {
+    _admQualityOffset += ADM_QUALITY_PAGE_SIZE;
+    loadAdminQualityFeedback().catch((e) => console.error(e));
+  });
+  $("btnAdmQualityExportCsv")?.addEventListener("click", () => {
+    downloadWithToken(
+      "/api/admin/message-quality-feedback/export?kind=csv",
+      "message_quality_feedback.csv"
+    ).catch((e) => showToast(e.message || String(e), "err"));
+  });
+  $("btnAdmQualityExportJson")?.addEventListener("click", () => {
+    downloadWithToken(
+      "/api/admin/message-quality-feedback/export?kind=json",
+      "message_quality_feedback.json"
+    ).catch((e) => showToast(e.message || String(e), "err"));
   });
 
   $("adminFeedbackBody")?.addEventListener("click", async function (ev) {
@@ -5705,8 +6167,11 @@
   });
 
   async function boot() {
-    if (!getAuthToken()) {
-      window.location.href = LOGIN_PAGE + "?next=" + encodeURIComponent(location.pathname || "/");
+    if (!getAuthToken() || isAuthTokenExpired()) {
+      if (getAuthToken()) redirectToLoginForExpired();
+      else
+        window.location.href =
+          LOGIN_PAGE + "?next=" + encodeURIComponent(location.pathname || "/");
       return;
     }
     wireKbUploadSwMessageOnce();
@@ -5749,6 +6214,14 @@
     const rkv = $("retrievalKVal");
     if (rk && rkv) rkv.textContent = rk.value;
     updateTempHint();
+    if (localStorage.getItem("rag_adv_panel_open") === "1") {
+      const advPanel = $("chatRagAdv");
+      if (advPanel) {
+        advPanel.hidden = false;
+        const advBtn = $("btnRagAdv");
+        if (advBtn) advBtn.setAttribute("aria-expanded", "true");
+      }
+    }
     const params = new URLSearchParams(location.search);
     if (kbRoot) activateTabInRoot(kbRoot, params.get("tab") || "kb-docs");
     if (stRoot && stRoot.querySelector(".gpt-tabs")) {
@@ -5775,7 +6248,15 @@
       applyUserHeader();
       store = loadStoreForCurrentUser();
       await pullWebUiStateAndApply();
-      await mergePublicRagPrefsFromServer();
+      // 公共设置整页只拉一次：同时驱动联网开关显隐、rag 默认合并与上传控件文案；
+      // 管理端页面不消费这些用户级 UI，直接跳过（原先每个 admin 页也发 2 次该请求）
+      const publicSettings =
+        PORTAL === "admin" ? null : await fetchPublicSettings().catch(() => null);
+      if (publicSettings) {
+        applyWebSearchUiFlagsFromPublicSettings(publicSettings);
+        mergeRagDefaultsIntoChatPrefs(publicSettings);
+      }
+      if (PORTAL !== "admin") applyUploadUiFromPublicSettings(publicSettings);
       if (PAGE === "chat" || PAGE === "instant") {
         repairOrphanAssistantMessagesInStore();
         renderConvList();
@@ -5786,22 +6267,33 @@
         initThreadActionBar();
       }
       applyModelTabPermissions();
-      await refreshPublicUploadUi();
-      await fillKbSelects();
+      if ($("kb") || $("kbDocFilter") || $("uploadTargetKb")) await fillKbSelects();
       if ($("personasList") && $("btnPersonaAdd")) {
         wirePersonasEditor();
         fillActivePersonaSelectOptions();
         renderPersonasList();
       }
       applyChatPrefsToForm();
-      await loadPresets();
-      applyChatPrefsToForm();
+      // loadPresets 内部会按需 loadCfgDetail；仅聊天页（保证默认预设写入偏好）
+      // 与含预设下拉的设置页需要，其余页面跳过以省 2 次请求
+      if ($("presetSelect") || PAGE === "chat" || PAGE === "instant") {
+        await loadPresets();
+        applyChatPrefsToForm();
+      } else if ($("cfgBaseUrl")) {
+        await loadCfgDetail();
+      }
       if ($("searchMode")) await refreshBm25Hint();
       await pingStatus();
-      if ($("cfgBaseUrl")) await loadCfgDetail();
       if ($("sfEmbedProvider")) await loadSettingsModelConfig().catch((e) => console.error(e));
       if (PAGE === "kb") {
         await Promise.all([refreshKbDocs().catch(() => {}), refreshKbCatList().catch(() => {})]);
+        void resumePendingKbIngestJobs().catch(() => {});
+      }
+      if (PAGE === "settings") {
+        loadMyFeedback().catch((e) => console.error(e));
+      }
+      if (PAGE === "admin-quality") {
+        await loadAdminQualityFeedback().catch((e) => console.error(e));
       }
       if (PAGE === "admin-monitor") {
         await Promise.all([
@@ -5871,6 +6363,37 @@
       }
     }
   }
+
+  // 长驻页面定期巡检 JWT：流式对话接口不走 api() 的 401 兜底，过期后主动回登录页
+  window.setInterval(function () {
+    if (!getAuthToken()) return;
+    if (isAuthTokenExpired()) redirectToLoginForExpired();
+  }, 60000);
+
+  // 会话快捷键：Ctrl/⌘+K 聚焦会话搜索；Ctrl/⌘+N 与 Alt+N 新建对话
+  // （Ctrl+N 被部分浏览器保留为新窗口，拦截失败时 Alt+N 一定可用）
+  document.addEventListener("keydown", function (e) {
+    if (PAGE !== "chat" && PAGE !== "instant") return;
+    const k = (e.key || "").toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && k === "k") {
+      e.preventDefault();
+      const sb = $("convSearch");
+      if (sb) {
+        sb.focus();
+        sb.select();
+      }
+      return;
+    }
+    const tag = (e.target && e.target.tagName) || "";
+    const typing =
+      tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable);
+    const wantNew =
+      ((e.ctrlKey || e.metaKey) && !e.altKey && k === "n") || (e.altKey && !e.ctrlKey && k === "n");
+    if (wantNew && !typing) {
+      e.preventDefault();
+      newConv();
+    }
+  });
 
   window.addEventListener("pagehide", function () {
     stopAllSpeech();

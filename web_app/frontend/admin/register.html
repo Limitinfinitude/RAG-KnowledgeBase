@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>管理员注册</title>
-  <link rel="stylesheet" href="/static/auth-admin.css?v=20260456" />
+  <link rel="stylesheet" href="/static/auth-admin.css?v=20260817" />
 </head>
 <body class="auth-admin-body">
   <div class="auth-admin-bg" aria-hidden="true"></div>
@@ -27,6 +27,9 @@
           <input id="password" type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="128" />
           <label for="password2">确认密码</label>
           <input id="password2" type="password" autocomplete="new-password" required minlength="8" />
+          <label for="registerCode">邀请码（未启用可留空）</label>
+          <input id="registerCode" name="register_code" autocomplete="off" maxlength="64"
+            title="服务器设置 ADMIN_REGISTER_CODE 环境变量后须填写，否则注册被拒绝" />
           <button type="submit" class="btn" id="btn">注册</button>
         </form>
         <div class="err" id="err"></div>
@@ -78,6 +81,7 @@
             body: JSON.stringify({
               username: document.getElementById("username").value.trim(),
               password: p1,
+              register_code: document.getElementById("registerCode").value.trim(),
             }),
           });
           const data = await r.json().catch(() => ({}));

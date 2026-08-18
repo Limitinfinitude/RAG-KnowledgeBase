@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
   <title>LLM 调用(MySQL) · 管理端</title>
-  <link rel="stylesheet" href="/static/style.css?v=20260471" />
-  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/static/style.css?v=20260817" />
+  <script src="shared/vendor/marked.min.js" crossorigin="anonymous"></script>
+  <script src="shared/vendor/purify.min.js" crossorigin="anonymous"></script>
 </head>
 <body data-portal="admin" data-page="admin-llm-mysql-logs" class="gpt-subpage" data-admin-nav="llm-mysql-logs">
   <div class="gpt-layout">
@@ -75,8 +75,8 @@
   <dialog class="gpt-dialog" id="dlgProfile"><div class="gpt-dlg-head"><h2>账户</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button></div><div class="gpt-dlg-body"><p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p><label>昵称</label><input type="text" id="profileNickname" class="gpt-input" maxlength="32" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button></div><p class="gpt-log" id="profileMsg" hidden></p></div></dialog>
   <dialog class="gpt-dialog" id="dlgHelp"><div class="gpt-dlg-head"><h2>帮助</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button></div><div class="gpt-dlg-body gpt-help-body"><p>筛选 <code>call_type</code> 可只看重写或问答。会话维度依赖调用方传入 <code>session_id</code>，当前 Web 链默认不写会话外键字段。</p></div></dialog>
   <dialog class="gpt-dialog" id="dlgRename"><form method="dialog" class="gpt-rename-form" id="formRename"><h3>重命名对话</h3><input type="text" id="renameInput" class="gpt-input" required maxlength="64" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-text" id="renameCancel">取消</button><button type="submit" class="gpt-btn-primary" id="renameOk">保存</button></div></form></dialog>
-    <script src="/static/admin-nav.js?v=20260402"></script>
+    <script src="/static/admin-nav.js?v=20260817"></script>
   <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
-  <script src="/static/app.js?v=20260474"></script>
+  <script src="/static/app.js?v=20260817"></script>
 </body>
 </html>

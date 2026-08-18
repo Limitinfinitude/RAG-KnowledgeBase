@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
-  <title>操作日志 · 管理端</title>
+  <title>好差评流水 · 管理端</title>
   <link rel="stylesheet" href="/static/style.css?v=20260817" />
   <script src="shared/vendor/marked.min.js" crossorigin="anonymous"></script>
   <script src="shared/vendor/purify.min.js" crossorigin="anonymous"></script>
 </head>
-<body data-portal="admin" data-page="admin-logs" class="gpt-subpage" data-admin-nav="logs">
+<body data-portal="admin" data-page="admin-quality" class="gpt-subpage" data-admin-nav="quality">
   <div class="gpt-layout">
     <aside class="gpt-sidebar gpt-sidebar-admin" id="gptSidebar">
       <div class="gpt-sidebar-head gpt-sidebar-head-bar">
@@ -26,29 +26,30 @@
     </aside>
     <div class="gpt-backdrop" id="gptBackdrop" hidden aria-hidden="true"></div>
     <div class="gpt-main gpt-main-subpage">
-      <header class="gpt-topbar"><button type="button" class="gpt-menu-mobile" id="btnSidebarToggle" aria-label="打开菜单">☰</button><div class="gpt-topbar-title"><span id="topbarTitle">操作日志</span><span class="gpt-topbar-sub" id="topbarSub"></span></div><div class="gpt-topbar-actions"><a href="/admin/hub.html" class="gpt-btn-text" style="text-decoration:none;">返回调控中心</a></div></header>
+      <header class="gpt-topbar"><button type="button" class="gpt-menu-mobile" id="btnSidebarToggle" aria-label="打开菜单">☰</button><div class="gpt-topbar-title"><span id="topbarTitle">好差评流水</span><span class="gpt-topbar-sub" id="topbarSub"></span></div><div class="gpt-topbar-actions"><a href="/admin/hub.html" class="gpt-btn-text" style="text-decoration:none;">返回调控中心</a></div></header>
       <div class="gpt-subpage-inner"><div class="gpt-subpage-card"><div class="gpt-dlg-body">
         <div class="gpt-admin-toolbar">
-          <button type="button" class="gpt-btn-sm" id="btnAdminRefreshAllLogs">全部刷新</button>
+          <label>评分筛选</label>
+          <select id="admQualityRating" class="gpt-input" style="max-width:10rem;display:inline-block">
+            <option value="">全部</option>
+            <option value="good">👍 好评</option>
+            <option value="bad">👎 差评</option>
+          </select>
+          <button type="button" class="gpt-btn-sm" id="btnAdmQualityRefresh">刷新</button>
+          <span class="gpt-muted" id="admQualityPageInfo"></span>
+          <button type="button" class="gpt-btn-sm" id="btnAdmQualityPrev">上一页</button>
+          <button type="button" class="gpt-btn-sm" id="btnAdmQualityNext">下一页</button>
+          <button type="button" class="gpt-btn-sm" id="btnAdmQualityExportCsv">导出 CSV</button>
+          <button type="button" class="gpt-btn-sm" id="btnAdmQualityExportJson">导出 JSON</button>
         </div>
-        <p class="gpt-muted" style="margin-top:0">本页四类数据<strong>职责不同、表结构独立</strong>：<strong>平台操作</strong>（<code>platform_audit</code>，管理/合规动作）；<strong>登录审计</strong>（<code>login_audit</code>，登录成功/失败流水，含 IP/UA）；<strong>登录失败计数</strong>（<code>login_failure</code>，仅供防暴力破解统计，与登录审计互补不重复）；<strong>接口请求</strong>（<code>api_audit</code>，HTTP 路径级）。</p>
-        <h3 class="gpt-settings-block-title">平台操作</h3>
-        <p class="gpt-muted" style="margin-top:0">用户注销、管理员删用户、知识库禁用/清理、敏感词命中等。</p>
-        <div id="adminPlatformAuditBody" class="gpt-admin-audit-wrap">加载中—</div>
-        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">登录审计</h3>
-        <div id="adminLoginAuditBody" class="gpt-admin-audit-wrap">加载中—</div>
-        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">登录失败计数（防爆破）</h3>
-        <p class="gpt-muted" style="margin-top:0">阈值在「功能开关」中配置；达到上限时登录接口返回 429。</p>
-        <div id="adminLoginFailureBody" class="gpt-admin-audit-wrap">加载中—</div>
-        <h3 class="gpt-settings-block-title gpt-settings-block-title-spaced">接口请求</h3>
-        <div id="adminApiAuditBody" class="gpt-admin-audit-wrap">加载中—</div>
-        <p class="gpt-muted" style="margin-top:1rem">问答检索、错误与 Token 等<strong>应用侧日志</strong>请在 <a href="/admin/monitor.html">监控台</a> 查看，避免与本页审计记录重复。</p>
+        <p class="gpt-muted" style="margin-top:0">数据表 <code>message_quality_feedback</code>：用户对助手回答的点赞/点踩，附用户消息与回答摘录，用于定位低质量回答。</p>
+        <div id="adminQualityBody" class="gpt-admin-audit-wrap">加载中—</div>
       </div></div></div>
     </div>
   </div>
   <div id="toastHost" class="gpt-toast-host" aria-live="polite"></div>
   <dialog class="gpt-dialog" id="dlgProfile"><div class="gpt-dlg-head"><h2>账户</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgProfile">×</button></div><div class="gpt-dlg-body"><p class="gpt-muted">登录账号：<strong id="profileUsername">—</strong></p><label>昵称</label><input type="text" id="profileNickname" class="gpt-input" maxlength="32" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-primary" id="btnProfileSave">保存</button></div><p class="gpt-log" id="profileMsg" hidden></p></div></dialog>
-  <dialog class="gpt-dialog" id="dlgHelp"><div class="gpt-dlg-head"><h2>帮助</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button></div><div class="gpt-dlg-body gpt-help-body"><p>本页为<strong>关系库审计</strong>，与「用户反馈」表无关。全局配置存于 MySQL <code>app_settings</code>。业务汇总见「统计与运营」，应用运行日志见「监控台」。</p></div></dialog>
+  <dialog class="gpt-dialog" id="dlgHelp"><div class="gpt-dlg-head"><h2>帮助</h2><button type="button" class="gpt-dlg-close" data-close-dlg="dlgHelp">×</button></div><div class="gpt-dlg-body gpt-help-body"><p>差评集中出现的问题（某类文档、某种问法）可结合「LLM 调用日志」定位根因：检索缺失、上下文截断或模型幻觉。</p></div></dialog>
   <dialog class="gpt-dialog" id="dlgRename"><form method="dialog" class="gpt-rename-form" id="formRename"><h3>重命名对话</h3><input type="text" id="renameInput" class="gpt-input" required maxlength="64" /><div class="gpt-row gpt-row-end"><button type="button" class="gpt-btn-text" id="renameCancel">取消</button><button type="submit" class="gpt-btn-primary" id="renameOk">保存</button></div></form></dialog>
     <script src="/static/admin-nav.js?v=20260817"></script>
   <script>mountAdminNav(document.body.getAttribute("data-admin-nav") || "");</script>
