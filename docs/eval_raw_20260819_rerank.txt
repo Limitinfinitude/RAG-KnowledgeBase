@@ -1,0 +1,1721 @@
+
+=== 检索质量评测：用户 99，k=5，集合=v2，样本 824 条（正 746 / 负 78）===
+
+--- 检索模式：rerank ---
+2026-08-19 01:28:07,392 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:07,883 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+2026-08-19 01:28:07,884 - jieba - DEBUG - Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+2026-08-19 01:28:08,330 - jieba - DEBUG - Loading model cost 0.447 seconds.
+2026-08-19 01:28:08,330 - jieba - DEBUG - Prefix dict has been built successfully.
+2026-08-19 01:28:08,438 - utils.reranker - INFO - [Reranker] 使用云端重排序模型 BAAI/bge-reranker-v2-m3（provider=siliconflow）
+2026-08-19 01:28:09,053 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:28:09,190 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:10,264 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:28:10,405 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:11,369 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:28:11,515 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:12,739 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:28:12,895 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:14,133 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:28:14,349 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:15,373 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:28:15,525 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:16,484 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:28:16,644 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:17,537 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:28:17,779 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:18,734 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:28:18,909 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:19,855 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:28:20,033 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:21,053 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:28:21,258 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:22,245 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:28:22,416 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:23,392 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:28:23,778 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:24,736 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:28:24,875 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:25,972 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:28:26,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:27,215 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:28:27,446 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:28,410 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:28:28,667 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:30,140 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.09s | Type: cloud_or_local
+2026-08-19 01:28:30,326 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:31,455 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:28:31,631 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:32,603 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:28:32,791 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:33,704 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:28:34,031 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:35,793 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.39s | Type: cloud_or_local
+2026-08-19 01:28:36,005 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:37,055 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:28:37,276 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:38,356 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:28:38,567 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:39,515 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:28:39,737 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:40,779 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:28:41,014 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:42,026 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:28:42,281 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:43,677 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:28:43,820 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:44,740 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:28:45,056 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:45,913 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:28:46,162 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:47,137 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:28:47,339 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:48,295 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:28:48,532 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:49,485 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:28:49,641 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:51,268 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:28:51,426 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:52,443 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:28:52,648 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:53,580 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.50s | Type: cloud_or_local
+2026-08-19 01:28:53,716 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:54,649 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:28:55,009 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:57,033 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:28:57,234 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:58,258 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:28:58,437 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:28:59,516 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:28:59,738 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:01,750 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.39s | Type: cloud_or_local
+2026-08-19 01:29:01,976 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:02,998 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:29:03,201 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:04,532 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:29:04,758 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:05,776 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:29:06,018 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:07,105 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:29:07,497 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:08,579 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:29:08,772 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:10,278 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.12s | Type: cloud_or_local
+2026-08-19 01:29:10,426 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:11,487 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:29:11,728 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:12,696 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:29:12,860 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:13,852 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:29:14,053 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:14,928 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:29:15,110 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:16,197 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:29:16,426 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:18,343 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.49s | Type: cloud_or_local
+2026-08-19 01:29:18,645 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:19,665 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:29:19,881 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:20,924 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:29:21,157 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:22,487 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:29:22,662 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:23,641 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:29:23,803 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:24,858 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:29:25,052 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:26,039 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:29:26,218 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:27,317 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:29:27,529 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:28,498 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:29:28,838 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:29,964 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:29:30,214 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:31,528 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:29:31,663 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:32,825 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:29:33,009 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:34,128 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:29:34,323 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:35,729 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:29:35,905 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:36,998 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:29:37,212 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:38,215 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:29:38,362 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:39,628 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:29:39,851 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:41,218 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:29:41,412 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:42,452 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:29:42,635 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:43,625 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:29:43,824 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:44,830 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:29:44,977 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:45,893 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:29:46,125 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:47,217 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:29:47,428 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:48,442 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:29:48,644 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:49,659 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:29:49,873 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:50,810 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:29:50,986 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:52,756 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.91s | Type: cloud_or_local
+2026-08-19 01:29:52,955 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:53,948 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:29:54,174 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:55,215 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:29:55,377 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:56,387 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:29:56,590 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:58,756 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.75s | Type: cloud_or_local
+2026-08-19 01:29:58,888 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:29:59,980 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:30:00,178 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:01,177 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:30:01,528 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:02,551 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:02,744 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:03,711 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:03,958 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:05,004 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:30:05,204 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:06,184 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:06,404 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:08,261 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.44s | Type: cloud_or_local
+2026-08-19 01:30:08,473 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:09,676 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.81s | Type: cloud_or_local
+2026-08-19 01:30:09,895 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:11,038 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:30:11,281 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:12,437 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:30:12,653 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:13,561 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:30:13,807 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:14,742 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:30:14,979 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:16,358 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:30:16,515 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:17,468 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:30:17,638 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:18,581 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:30:18,802 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:19,824 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:30:19,985 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:20,988 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:30:21,199 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:22,364 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:30:22,581 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:23,616 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:30:23,793 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:24,722 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:30:24,959 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:25,948 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:30:26,202 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:27,553 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:30:27,738 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:28,707 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:30:28,930 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:29,912 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:30,092 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:31,118 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:30:31,318 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:32,279 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:30:32,639 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:33,575 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:30:33,812 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:34,744 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:30:34,983 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:36,012 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:30:36,202 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:37,144 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:30:37,378 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:38,349 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.48s | Type: cloud_or_local
+2026-08-19 01:30:38,526 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:39,602 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:30:39,829 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:40,828 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:40,990 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:42,440 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.85s | Type: cloud_or_local
+2026-08-19 01:30:42,643 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:43,654 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:30:43,793 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:44,852 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:30:45,085 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:46,141 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:30:46,319 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:47,302 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:30:47,531 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:48,474 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:30:48,663 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:49,634 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:30:49,831 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:50,872 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:30:51,116 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:52,319 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:30:52,526 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:53,480 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:30:53,730 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:54,949 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.86s | Type: cloud_or_local
+2026-08-19 01:30:55,092 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:56,102 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:30:56,254 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:57,062 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.43s | Type: cloud_or_local
+2026-08-19 01:30:57,276 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:58,401 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.77s | Type: cloud_or_local
+2026-08-19 01:30:58,550 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:30:59,936 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:31:00,181 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:01,229 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:31:01,474 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:02,508 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:31:02,862 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:03,822 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:31:03,961 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:04,845 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:31:05,033 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:05,977 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:31:06,188 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:07,372 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:31:07,594 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:12,024 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:31:12,237 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:13,441 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:31:13,639 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:14,687 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:31:14,912 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:16,355 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.77s | Type: cloud_or_local
+2026-08-19 01:31:16,554 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:17,880 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:31:18,100 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:19,060 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:31:19,307 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:20,431 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:31:20,574 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:21,713 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:31:21,853 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:22,988 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:31:23,206 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:24,360 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:31:24,586 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:28,497 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:31:28,646 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:29,946 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:31:30,112 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:31,221 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:31:31,450 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:32,594 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:31:32,825 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:33,697 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.44s | Type: cloud_or_local
+2026-08-19 01:31:33,889 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:34,899 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:31:35,085 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:36,212 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:31:36,442 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:37,785 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:31:37,946 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:39,697 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:31:39,845 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:40,893 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:31:41,228 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:42,444 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:31:42,640 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:43,678 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:31:43,827 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:44,824 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:31:44,972 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:45,943 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:31:46,174 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:47,466 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:31:47,670 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:48,666 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:31:48,914 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:49,984 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:31:50,133 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:51,403 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:31:51,550 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:52,593 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:31:52,794 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:54,534 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:31:54,764 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:55,916 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:31:56,064 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:57,543 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.10s | Type: cloud_or_local
+2026-08-19 01:31:57,729 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:31:58,845 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:31:59,065 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:00,046 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:32:00,304 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:01,822 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:32:02,033 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:08,042 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:32:08,253 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:09,273 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:32:09,517 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:11,087 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.10s | Type: cloud_or_local
+2026-08-19 01:32:11,236 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:12,298 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:32:12,516 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:13,618 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:32:13,840 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:14,898 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:32:15,126 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:16,199 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:32:16,366 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:17,509 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:32:17,747 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:18,845 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:32:19,180 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:20,735 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.12s | Type: cloud_or_local
+2026-08-19 01:32:20,956 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:22,015 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:32:22,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:23,618 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.84s | Type: cloud_or_local
+2026-08-19 01:32:23,783 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:24,766 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:32:24,980 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:26,284 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.83s | Type: cloud_or_local
+2026-08-19 01:32:26,475 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:27,511 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:32:27,657 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:28,740 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:32:28,990 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:30,105 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:32:30,317 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:31,398 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:32:31,641 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:32,946 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:32:33,180 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:34,031 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.50s | Type: cloud_or_local
+2026-08-19 01:32:34,175 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:35,152 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:32:35,293 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:36,199 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:32:36,390 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:37,362 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:32:37,586 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:39,470 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.50s | Type: cloud_or_local
+2026-08-19 01:32:39,666 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:40,790 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:32:40,936 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:41,902 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:32:42,114 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:43,257 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:32:43,505 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:44,554 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:32:44,735 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:48,638 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 2.20s | Type: cloud_or_local
+2026-08-19 01:32:48,861 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:49,842 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:32:50,012 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:51,020 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:32:51,243 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:52,178 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:32:52,341 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:53,582 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.91s | Type: cloud_or_local
+2026-08-19 01:32:53,848 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:54,760 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:32:54,904 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:55,877 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:32:56,032 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:57,057 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:32:57,201 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:58,180 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:32:58,332 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:32:59,286 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:32:59,437 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:00,431 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:33:00,586 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:01,547 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:33:01,792 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:02,988 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:33:03,207 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:05,503 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.36s | Type: cloud_or_local
+2026-08-19 01:33:05,729 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:06,765 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:33:06,937 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:07,888 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:33:08,136 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:09,123 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:33:09,323 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:10,478 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:33:10,690 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:11,696 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:33:11,880 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:12,790 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:33:13,009 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:14,069 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:33:14,292 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:15,258 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:33:15,513 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:16,548 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:33:16,754 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:17,793 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:33:18,018 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:19,044 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:19,238 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:20,259 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:20,493 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:21,464 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:33:21,614 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:23,308 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:33:23,483 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:24,402 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:33:24,781 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:25,812 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:33:26,022 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:27,075 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:33:27,285 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:28,532 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.78s | Type: cloud_or_local
+2026-08-19 01:33:28,756 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:29,754 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:33:29,984 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:31,938 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.95s | Type: cloud_or_local
+2026-08-19 01:33:32,192 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:33,161 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:33:33,352 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:34,421 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:33:34,602 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:35,617 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:33:35,852 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:36,774 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:33:36,946 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:39,108 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.73s | Type: cloud_or_local
+2026-08-19 01:33:39,363 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:40,346 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:40,602 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:41,598 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:41,742 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:42,767 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:33:42,971 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:43,870 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:33:44,080 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:44,959 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:33:45,142 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:46,339 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:33:46,537 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:47,484 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:47,658 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:48,618 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:33:48,842 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:50,213 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.00s | Type: cloud_or_local
+2026-08-19 01:33:50,357 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:51,413 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:33:51,582 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:52,497 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:33:52,726 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:53,651 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:33:53,884 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:54,902 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:33:55,109 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:56,036 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:33:56,405 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:57,424 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:33:57,624 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:58,592 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:33:58,794 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:33:59,768 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:33:59,923 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:00,884 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:34:01,037 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:02,026 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:34:02,173 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:04,670 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:34:04,826 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:06,155 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.92s | Type: cloud_or_local
+2026-08-19 01:34:06,304 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:07,458 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:34:07,614 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:08,582 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:34:08,733 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:09,678 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:34:09,837 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:11,230 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.99s | Type: cloud_or_local
+2026-08-19 01:34:11,386 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:12,428 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:34:12,582 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:13,593 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:34:13,742 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:14,707 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:34:14,863 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:15,939 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:34:16,092 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:17,138 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:34:17,290 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:18,236 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:34:18,388 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:19,397 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:34:19,551 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:20,524 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:34:20,679 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:21,680 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:34:21,832 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:22,819 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:34:22,970 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:24,053 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:34:24,211 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:25,247 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:34:25,399 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:26,395 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:34:26,655 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:28,103 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.78s | Type: cloud_or_local
+2026-08-19 01:34:28,258 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:29,275 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:34:29,425 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:30,442 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:34:30,593 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:31,591 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:34:31,750 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:32,827 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:34:32,980 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:34,052 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:34:34,205 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:35,217 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:34:35,372 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:36,543 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:34:36,697 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:38,526 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:34:38,674 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:39,592 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:34:39,742 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:40,700 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:34:40,850 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:41,834 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:34:41,987 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:43,041 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:34:43,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:44,079 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:34:44,236 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:45,876 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:34:46,030 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:47,228 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:34:47,382 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:48,405 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:34:48,563 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:48,891 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:34:49,489 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:34:49,644 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:50,599 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:34:50,753 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:52,381 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.82s | Type: cloud_or_local
+2026-08-19 01:34:52,530 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:53,601 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:34:53,751 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:54,792 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:34:54,946 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:56,100 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:34:56,256 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:57,461 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:34:57,729 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:34:59,205 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.04s | Type: cloud_or_local
+2026-08-19 01:34:59,452 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:00,562 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:35:00,798 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:01,996 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:35:02,141 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:03,585 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:35:03,733 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:04,835 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:35:04,978 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:06,058 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:35:06,201 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:07,330 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:35:07,581 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:08,752 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:35:08,991 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:09,873 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:35:10,023 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:11,072 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:35:11,306 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:12,260 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:35:12,411 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:13,350 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:35:13,547 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:14,538 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:35:14,776 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:16,451 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:35:16,681 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:17,789 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:35:17,932 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:18,984 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:35:19,185 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:20,231 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:35:20,403 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:21,405 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:35:21,558 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:22,545 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:35:22,691 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:23,642 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:35:23,873 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:24,921 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:35:25,107 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:26,192 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:35:26,404 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:27,505 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:35:27,748 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:28,764 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:35:29,128 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:30,742 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:35:30,947 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:32,215 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:35:32,425 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:33,555 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:35:33,776 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:34,731 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:35:34,956 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:36,159 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.79s | Type: cloud_or_local
+2026-08-19 01:35:36,374 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:37,656 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:35:37,890 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:39,068 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:35:39,312 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:40,903 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.00s | Type: cloud_or_local
+2026-08-19 01:35:41,107 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:42,120 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:35:42,264 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:43,339 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:35:43,600 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:44,640 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:35:44,891 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:46,086 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:35:46,306 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:47,311 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:35:47,550 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:48,539 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:35:48,717 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:49,579 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:35:49,746 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:51,601 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.32s | Type: cloud_or_local
+2026-08-19 01:35:51,750 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:52,772 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:35:53,021 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:54,149 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:35:54,320 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:55,280 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:35:55,468 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:56,632 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:35:56,796 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:58,105 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:35:58,306 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:35:59,395 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:35:59,589 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:01,319 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:36:01,510 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:02,626 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:36:02,963 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:04,136 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:36:04,296 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:05,405 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:36:05,553 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:06,640 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:36:06,871 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:07,870 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:36:08,032 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:09,082 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:36:09,244 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:10,463 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:36:10,674 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:12,371 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:36:12,517 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:13,754 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:36:13,898 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:14,993 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:36:15,140 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:16,222 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:36:16,450 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:17,689 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:36:17,913 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:19,082 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:36:19,226 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:20,325 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:36:20,537 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:21,561 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:36:21,755 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:22,782 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:36:22,927 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:24,388 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:36:24,536 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:25,636 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:36:25,850 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:27,071 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:36:27,304 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:28,616 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.82s | Type: cloud_or_local
+2026-08-19 01:36:28,781 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:29,972 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:36:30,220 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:31,252 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:36:31,397 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:32,633 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.81s | Type: cloud_or_local
+2026-08-19 01:36:32,786 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:33,905 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:36:34,085 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:35,144 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:36:35,449 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:36,770 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.90s | Type: cloud_or_local
+2026-08-19 01:36:37,017 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:38,776 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.24s | Type: cloud_or_local
+2026-08-19 01:36:38,926 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:40,124 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:36:40,335 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:41,439 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:36:41,581 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:42,824 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:36:43,050 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:44,198 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:36:44,347 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:45,264 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:36:45,452 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:46,783 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:36:46,927 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:47,884 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:36:48,030 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:48,968 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:36:49,127 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:50,201 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:36:50,412 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:52,435 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.63s | Type: cloud_or_local
+2026-08-19 01:36:52,581 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:53,588 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:36:53,733 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:54,757 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:36:54,944 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:55,881 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:36:56,115 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:57,318 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:36:57,487 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:58,516 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:36:58,737 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:36:59,638 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:36:59,833 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:00,888 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:37:01,115 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:02,201 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:37:02,430 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:03,472 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:37:03,619 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:04,542 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:37:04,767 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:05,757 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:37:05,904 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:06,923 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:37:07,172 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:08,146 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:37:08,290 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:09,256 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:37:09,407 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:10,489 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:37:10,729 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:11,750 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:37:11,896 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:12,962 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:37:13,108 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:14,109 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:37:14,301 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:15,250 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:37:15,392 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:16,453 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:37:16,678 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:17,706 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:37:17,848 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:18,908 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:37:19,099 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:20,141 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:37:20,283 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:21,427 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:37:21,570 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:22,618 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:37:22,780 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:23,963 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:37:24,107 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:25,187 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:37:25,332 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:26,564 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:37:26,711 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:27,929 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:37:28,072 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:29,122 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:37:29,385 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:30,539 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:37:30,759 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:31,890 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:37:32,104 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:33,087 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:37:33,228 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:34,300 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:37:34,448 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:35,544 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:37:35,699 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:36,783 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:37:37,143 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:38,233 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:37:38,431 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:39,432 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:37:39,655 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:40,848 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:37:41,071 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:42,265 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:37:42,422 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:43,494 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:37:43,636 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:44,725 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:37:44,984 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:46,126 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:37:46,331 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:47,573 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:37:47,763 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:49,267 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:37:49,501 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:50,674 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:37:50,899 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:51,996 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:37:52,228 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:53,348 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:37:53,524 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:54,597 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:37:54,849 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:56,143 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:37:56,293 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:57,317 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:37:57,462 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:58,706 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:37:58,855 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:37:59,877 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:00,052 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:01,045 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:38:01,263 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:02,826 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.09s | Type: cloud_or_local
+2026-08-19 01:38:02,989 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:04,095 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:38:04,255 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:05,636 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.96s | Type: cloud_or_local
+2026-08-19 01:38:05,807 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:06,888 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:38:07,113 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:08,163 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:38:08,405 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:09,534 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:38:09,889 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:10,906 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:38:11,089 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:12,078 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:38:12,226 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:13,197 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:38:13,391 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:14,299 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:38:14,505 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:15,518 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:38:15,708 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:16,608 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:38:16,758 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:17,734 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:17,881 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:18,921 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:38:19,090 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:20,064 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:38:20,212 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:21,272 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:38:21,426 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:22,387 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:38:22,582 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:23,640 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:23,794 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:24,749 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:38:24,980 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:26,174 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:38:26,322 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:27,446 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:38:27,654 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:28,787 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:28,933 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:29,908 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:30,138 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:31,207 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:38:31,436 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:32,267 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.48s | Type: cloud_or_local
+2026-08-19 01:38:32,412 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:33,346 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:38:33,578 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:34,514 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:38:34,663 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:36,388 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.32s | Type: cloud_or_local
+2026-08-19 01:38:36,559 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:37,729 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:38:37,875 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:38,883 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:38:39,135 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:40,082 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:38:40,225 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:41,262 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:38:41,411 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:42,449 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:38:42,591 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:43,592 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:38:43,736 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:44,760 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:44,911 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:45,983 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:38:46,219 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:47,354 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:38:47,497 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:48,758 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:38:48,905 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:49,972 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:38:50,119 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:51,294 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:38:51,493 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:52,535 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:38:52,681 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:53,648 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:38:53,829 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:54,780 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:38:54,928 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:56,011 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:38:56,225 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:57,354 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:38:57,521 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:38:59,051 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.99s | Type: cloud_or_local
+2026-08-19 01:38:59,196 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:00,279 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:39:00,424 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:01,507 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:39:01,663 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:02,756 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:39:02,904 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:03,927 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:39:04,073 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:05,096 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:39:05,256 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:06,373 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:39:06,562 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:07,613 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:39:07,764 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:08,786 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:39:09,170 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:10,429 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.85s | Type: cloud_or_local
+2026-08-19 01:39:10,613 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:11,715 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:39:11,881 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:12,967 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:39:13,190 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:14,145 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:39:14,353 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:15,371 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:39:15,518 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:16,528 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:39:16,766 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:17,740 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:39:17,943 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:19,081 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:39:19,226 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:21,197 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:39:21,429 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:22,510 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:39:22,746 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:23,826 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:39:23,971 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:25,035 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:39:25,179 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:26,287 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:39:26,437 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:27,407 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:39:27,629 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:28,703 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:39:28,937 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:30,142 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:39:30,363 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:31,509 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:39:31,722 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:32,786 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:39:32,937 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:34,052 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:39:34,200 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:35,126 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:39:35,275 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:36,379 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:39:36,593 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:37,752 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:39:37,904 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:38,951 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:39:39,218 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:40,189 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:39:40,445 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:41,602 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:39:41,748 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:42,683 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:39:42,893 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:43,979 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:39:44,185 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:45,328 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:39:45,536 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:46,621 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:39:46,849 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:47,807 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:39:47,960 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:48,884 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:39:49,036 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:50,143 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:39:50,302 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:51,454 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:39:51,602 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:52,719 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:39:52,868 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:53,825 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:39:53,974 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:54,989 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:39:55,138 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:56,131 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:39:56,356 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:57,487 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:39:57,638 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:39:58,722 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:39:58,937 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:00,133 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:40:00,281 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:01,320 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:40:01,469 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:02,598 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:02,831 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:03,856 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:40:04,053 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:05,113 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:40:05,263 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:06,294 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:40:06,443 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:07,470 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:07,690 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:08,691 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:40:08,924 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:09,923 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:40:10,339 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:11,478 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:11,686 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:12,788 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:40:13,041 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:14,176 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:40:14,435 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:15,479 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:15,656 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:16,893 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.79s | Type: cloud_or_local
+2026-08-19 01:40:17,046 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:18,209 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:40:18,443 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:19,557 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:19,770 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:21,025 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:40:21,242 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:22,247 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:40:22,395 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:23,453 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:40:23,702 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:24,722 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:24,960 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:25,993 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:26,183 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:27,230 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:40:27,438 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:28,461 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:40:28,612 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:29,648 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:29,829 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:31,071 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:40:31,343 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:32,387 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:40:32,617 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:33,609 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:40:33,832 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:34,922 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:35,165 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:36,219 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:40:36,443 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:37,559 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:40:37,773 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:38,809 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:40:39,038 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:40,069 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:40:40,217 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:41,274 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:40:41,526 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:42,832 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:40:42,979 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:43,898 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:40:44,047 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:45,035 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:40:45,298 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:46,375 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:40:46,522 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:47,569 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:40:47,729 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:48,754 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:40:48,903 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:49,902 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:40:50,049 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:51,719 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.16s | Type: cloud_or_local
+2026-08-19 01:40:51,948 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:53,000 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:53,150 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:54,204 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:40:54,355 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:55,320 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:40:55,468 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:56,511 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:40:56,659 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:57,641 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:40:57,812 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:40:58,912 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:40:59,150 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:00,059 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:41:00,207 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:01,750 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.96s | Type: cloud_or_local
+2026-08-19 01:41:01,973 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:03,366 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.92s | Type: cloud_or_local
+2026-08-19 01:41:03,563 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:04,604 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:41:04,828 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:05,727 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:41:05,877 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:07,070 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:41:07,219 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:08,434 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.82s | Type: cloud_or_local
+2026-08-19 01:41:08,642 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:09,672 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:41:09,827 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:10,797 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:41:10,999 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:12,116 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:41:12,468 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:13,508 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:41:13,663 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:14,653 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:41:14,897 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:15,903 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:41:16,139 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:17,108 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:41:17,255 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:18,196 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:41:18,346 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:19,283 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:41:19,507 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:20,493 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:41:20,642 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:21,746 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:41:21,894 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:22,955 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:41:23,190 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:24,095 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:41:24,247 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:25,214 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:41:25,376 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:26,393 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:41:26,616 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:27,872 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.85s | Type: cloud_or_local
+2026-08-19 01:41:28,021 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:28,964 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:41:29,164 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:30,127 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:41:30,369 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:31,523 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:41:31,756 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:32,841 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:41:33,057 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:34,124 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:41:34,312 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:35,273 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:41:35,514 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:36,512 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:41:36,662 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:37,561 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:41:37,711 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:38,754 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:41:38,954 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:40,017 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:41:40,203 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:41,269 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:41:41,543 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:41,898 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:41:42,479 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:41:42,627 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:43,555 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:41:43,708 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:44,772 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:41:44,925 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:45,984 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:41:46,138 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:47,073 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:41:47,222 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:48,126 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:41:48,356 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:49,324 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:41:49,472 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:50,626 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:41:50,860 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:51,801 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:41:52,005 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:53,244 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:41:53,475 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:54,453 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:41:54,638 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:55,472 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.45s | Type: cloud_or_local
+2026-08-19 01:41:55,662 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:56,684 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:41:56,897 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:57,858 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:41:58,059 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:41:59,314 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.80s | Type: cloud_or_local
+2026-08-19 01:41:59,505 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:00,539 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:42:00,727 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:01,724 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:42:01,871 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:02,852 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:42:03,003 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:04,040 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:42:04,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:05,183 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:42:05,365 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:06,442 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:42:06,591 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:07,664 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:42:07,860 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:08,851 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:42:09,004 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:10,093 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:42:10,428 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:11,441 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:42:11,635 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:12,615 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:42:12,854 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:13,933 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:42:14,083 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:15,046 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:42:15,235 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:16,360 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:42:16,581 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:16,928 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:42:17,851 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:42:18,085 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:19,139 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:42:19,342 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:20,453 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:42:20,687 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:21,657 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:42:21,890 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:22,845 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:42:22,994 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:24,038 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:42:24,269 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:25,741 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:42:25,954 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:26,917 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:42:27,120 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:28,141 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:42:28,317 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:29,294 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:42:29,508 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:30,631 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:42:30,883 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:31,925 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:42:32,074 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:33,102 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:42:33,261 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:34,286 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:42:34,439 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:35,511 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:42:35,658 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:36,754 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:42:36,935 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:38,038 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.74s | Type: cloud_or_local
+2026-08-19 01:42:38,191 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:39,277 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:42:39,434 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:40,477 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:42:40,834 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:41,918 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:42:42,130 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:43,195 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:42:43,326 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:44,289 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:42:44,412 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:45,454 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:42:45,572 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:46,718 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:42:46,878 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:47,987 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:42:48,095 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:49,101 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:42:49,223 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:50,355 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:42:50,549 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:50,887 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:42:51,638 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.72s | Type: cloud_or_local
+2026-08-19 01:42:51,776 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:52,697 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:42:52,898 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:53,807 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:42:53,915 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:54,248 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:42:54,982 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:42:55,113 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:55,453 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:42:56,387 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:42:56,514 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:57,532 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:42:57,687 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:58,690 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:42:58,874 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:42:59,920 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:43:00,059 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:01,761 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:43:01,870 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:02,891 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:43:03,024 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:04,018 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:43:04,208 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:05,170 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:43:05,362 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:06,317 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:06,454 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:07,403 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:43:07,597 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:08,611 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:43:08,825 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:09,731 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:10,086 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:10,996 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:43:11,127 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:12,041 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:43:12,144 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:13,059 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.50s | Type: cloud_or_local
+2026-08-19 01:43:13,233 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:14,266 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:43:14,414 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:15,411 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:43:15,528 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:16,799 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.76s | Type: cloud_or_local
+2026-08-19 01:43:16,992 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:18,038 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:43:18,222 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:19,370 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:43:19,519 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:19,839 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:43:20,538 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:43:20,652 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:21,824 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.73s | Type: cloud_or_local
+2026-08-19 01:43:21,939 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:22,813 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:43:22,999 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:23,993 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:43:24,100 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:25,044 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:43:25,151 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:27,030 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:43:27,171 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:28,218 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:43:28,395 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:29,666 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:43:29,815 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:30,811 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:43:30,946 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:31,326 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:43:32,053 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:43:32,186 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:33,317 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:43:33,453 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:34,497 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:43:34,618 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:35,689 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:43:35,814 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:36,924 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:43:37,127 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:37,481 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:43:38,213 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:43:38,405 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:39,548 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.68s | Type: cloud_or_local
+2026-08-19 01:43:39,806 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:40,781 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:43:40,898 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:41,735 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.51s | Type: cloud_or_local
+2026-08-19 01:43:41,900 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:42,956 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:43:43,067 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:44,143 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.75s | Type: cloud_or_local
+2026-08-19 01:43:44,282 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:45,274 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:43:45,448 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:46,364 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:46,481 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:47,448 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:43:47,571 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:48,624 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:48,811 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:49,683 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:43:49,864 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:50,787 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:50,923 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:51,885 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:43:52,018 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:54,360 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:43:54,549 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:55,519 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:43:55,625 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:56,528 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:43:56,634 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:57,555 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:43:57,668 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:58,761 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:43:58,949 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:43:59,899 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:00,018 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:00,939 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:44:01,044 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:01,899 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:44:02,038 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:02,938 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:03,136 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:04,142 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:44:04,316 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:04,620 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:05,246 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:05,447 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:06,484 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:44:06,626 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:07,558 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:07,779 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:08,733 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:44:08,911 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:09,211 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:09,927 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:44:10,051 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:10,962 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:44:11,080 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:11,913 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.49s | Type: cloud_or_local
+2026-08-19 01:44:12,024 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:12,325 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:13,010 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:44:13,129 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:14,077 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:14,200 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:15,734 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 1.08s | Type: cloud_or_local
+2026-08-19 01:44:15,870 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:17,009 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:44:17,164 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:18,239 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:44:18,395 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:19,402 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:44:19,580 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:20,582 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:44:20,691 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:21,768 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:44:21,918 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:22,933 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:44:23,043 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:24,053 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:44:24,206 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:25,297 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:44:25,495 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:26,641 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:44:26,820 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:27,938 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:44:28,136 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:28,593 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:29,266 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:44:29,444 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:29,753 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:30,792 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:44:30,968 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:31,984 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:44:32,144 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:32,509 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:33,187 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:44:33,308 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:34,488 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:44:34,662 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:35,662 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:44:35,774 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:36,847 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:44:37,154 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:38,248 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:44:38,395 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:38,815 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:39,960 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.77s | Type: cloud_or_local
+2026-08-19 01:44:40,149 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:41,028 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:44:41,206 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:42,143 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.54s | Type: cloud_or_local
+2026-08-19 01:44:42,318 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:43,271 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:44:43,495 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:44,470 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:44:44,598 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:45,636 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:44:45,848 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:46,356 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:47,004 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:44:47,173 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:47,519 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:48,458 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:44:48,613 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:48,943 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:49,911 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:44:50,052 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:50,376 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:51,007 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.60s | Type: cloud_or_local
+2026-08-19 01:44:51,183 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:51,519 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:52,291 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.44s | Type: cloud_or_local
+2026-08-19 01:44:52,492 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:53,463 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:44:53,657 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:54,019 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:44:54,743 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:44:54,972 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:55,255 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:56,135 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:44:56,319 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:56,755 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:57,694 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:44:57,831 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:58,147 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:44:59,007 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:44:59,177 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:44:59,490 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:00,316 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:45:00,436 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:00,733 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:01,605 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:45:01,789 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:02,138 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:03,125 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:45:03,236 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:03,529 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:04,471 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:04,583 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:05,492 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:05,599 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:05,968 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:45:06,611 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.61s | Type: cloud_or_local
+2026-08-19 01:45:06,721 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:07,756 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:07,963 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:08,264 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:09,141 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:45:09,410 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:10,368 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:45:10,493 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:11,423 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:45:11,541 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:12,418 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:45:12,532 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:13,461 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:45:13,566 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:14,464 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:45:14,654 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:15,805 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.82s | Type: cloud_or_local
+2026-08-19 01:45:15,941 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:16,838 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:17,055 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:17,990 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:45:18,164 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:18,478 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:19,382 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.58s | Type: cloud_or_local
+2026-08-19 01:45:19,491 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:19,820 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:20,707 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:20,889 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:21,915 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.65s | Type: cloud_or_local
+2026-08-19 01:45:22,023 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:23,009 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:23,155 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:23,464 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:24,333 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:45:24,529 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:25,528 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:45:25,636 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:26,678 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.59s | Type: cloud_or_local
+2026-08-19 01:45:26,862 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:27,190 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:28,078 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:45:28,260 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:29,159 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:45:29,331 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:29,654 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50），但 BM25 有命中，继续融合
+2026-08-19 01:45:30,315 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:45:30,425 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:31,430 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.64s | Type: cloud_or_local
+2026-08-19 01:45:31,577 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:32,570 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.67s | Type: cloud_or_local
+2026-08-19 01:45:32,674 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:33,678 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.63s | Type: cloud_or_local
+2026-08-19 01:45:33,808 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:34,718 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+2026-08-19 01:45:34,958 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:36,198 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.77s | Type: cloud_or_local
+2026-08-19 01:45:36,391 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:37,261 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:45:37,368 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:38,402 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.66s | Type: cloud_or_local
+2026-08-19 01:45:38,589 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:39,567 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.52s | Type: cloud_or_local
+2026-08-19 01:45:39,673 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:40,617 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:40,727 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:41,614 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:41,811 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:42,856 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.69s | Type: cloud_or_local
+2026-08-19 01:45:43,050 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:44,018 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:44,137 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:45,034 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:45:45,368 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:47,888 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.53s | Type: cloud_or_local
+2026-08-19 01:45:48,066 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:49,000 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:45:49,156 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:50,156 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:50,262 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:50,619 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:51,568 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:51,683 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:52,678 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.62s | Type: cloud_or_local
+2026-08-19 01:45:52,863 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:53,880 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:45:54,075 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:55,259 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.57s | Type: cloud_or_local
+2026-08-19 01:45:55,441 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:55,891 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:56,748 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.56s | Type: cloud_or_local
+2026-08-19 01:45:56,914 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:58,001 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.70s | Type: cloud_or_local
+2026-08-19 01:45:58,113 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:58,428 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:45:59,460 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.71s | Type: cloud_or_local
+2026-08-19 01:45:59,577 - utils.hybrid_search - INFO - [BM25] 索引已加载: 4194 个文档
+2026-08-19 01:45:59,901 - utils.hybrid_search - INFO - [Hybrid] 向量相似度过低（<0.50）且 BM25 无命中，视为无相关内容
+2026-08-19 01:46:00,774 - utils.logger - INFO - Retrieval: 20 -> 20 docs | Time: 0.55s | Type: cloud_or_local
+  >>> Recall@5=0.9859 | Recall@3=0.9859 | nDCG@5=0.9846 | MRR=0.9846
+  >>> FalseRecall@5=11.54%（9/78 误召回） | Balanced=0.9325
+
+  —— 分来源 Recall@5 ——
+     cmrc2018               n=277  R=0.9964
+     dureader_retrieval     n=240  R=0.9917
+     selfbuilt_20260817     n=85   R=0.9824
+     selfbuilt_20260819     n=84   R=0.9286
+     wikipedia_llm          n=60   R=1.0000
+
+=== Top-1 分数分布（阈值标定参考：正样本下界 vs 负样本上界的间隔）===
+  [rerank] 正样本 top1: min=0.302 p25=0.981 median=0.996 max=1.000
+  [rerank] 负样本误召回 top1: min=0.318 max=0.955（9 条误召回样本）
+
+=== 评测完成 ===
+
+D:\anaconda3\envs\rag_demo\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+Loading model cost 0.447 seconds.
+Prefix dict has been built successfully.
+
+

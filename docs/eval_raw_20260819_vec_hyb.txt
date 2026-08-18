@@ -1,0 +1,49 @@
+D:\anaconda3\envs\rag_demo\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\Infinite\AppData\Local\Temp\jieba.cache
+Loading model cost 0.451 seconds.
+Prefix dict has been built successfully.
+
+
+=== 检索质量评测：用户 99，k=5，集合=v2，样本 824 条（正 746 / 负 78）===
+
+--- 检索模式：vector ---
+  >>> Recall@5=0.9786 | Recall@3=0.9786 | nDCG@5=0.9737 | MRR=0.9721
+  >>> FalseRecall@5=64.10%（50/78 误召回） | Balanced=0.5253
+
+  —— 分来源 Recall@5 ——
+     cmrc2018               n=277  R=0.9964
+     dureader_retrieval     n=240  R=1.0000
+     selfbuilt_20260817     n=85   R=0.9647
+     selfbuilt_20260819     n=84   R=0.8571
+     wikipedia_llm          n=60   R=1.0000
+
+--- 检索模式：hybrid ---
+  >>> Recall@5=0.9933 | Recall@3=0.9920 | nDCG@5=0.9801 | MRR=0.9755
+  >>> FalseRecall@5=71.79%（56/78 误召回） | Balanced=0.4393
+
+  —— 分来源 Recall@5 ——
+     cmrc2018               n=554  R=0.9982
+     dureader_retrieval     n=480  R=1.0000
+     selfbuilt_20260817     n=170  R=0.9706
+     selfbuilt_20260819     n=168  R=0.9107
+     wikipedia_llm          n=120  R=1.0000
+
+=== Top-1 分数分布（阈值标定参考：正样本下界 vs 负样本上界的间隔）===
+  [vector] 正样本 top1: min=0.501 p25=0.589 median=0.632 max=0.945
+  [vector] 负样本误召回 top1: min=0.500 max=0.617（50 条误召回样本）
+  [hybrid] 正样本 top1: min=0.447 p25=0.776 median=0.947 max=1.000
+  [hybrid] 负样本误召回 top1: min=0.453 max=1.000（56 条误召回样本）
+
+=== 模式对比 ===
+  RECALL        向量=0.9786  混合=0.9933  Δ=+0.0147
+  RECALL3       向量=0.9786  混合=0.9920  Δ=+0.0134
+  NDCG          向量=0.9737  混合=0.9801  Δ=+0.0064
+  MRR           向量=0.9721  混合=0.9755  Δ=+0.0035
+  FALSE_RECALL  向量=0.6410  混合=0.7179  Δ=+0.0769
+  BALANCED      向量=0.5253  混合=0.4393  Δ=-0.0859
+
+=== 评测完成 ===
+
+

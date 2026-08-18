@@ -13,11 +13,13 @@
 from __future__ import annotations
 
 import argparse
+import io
+import json
 import math
 import os
 import sys
 import time
-from typing import List, Dict, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _PROJECT_ROOT not in sys.path:
@@ -184,9 +186,44 @@ def _mrr(retrieved: List[str], relevant: List[str]) -> float:
     return 0.0
 
 
+def _load_eval_set(which: str, source: Optional[str], limit: Optional[int]):
+    """加载评测集：v2 = EVAL_SET_V2.json（824 条，2026-08-19）；legacy = 旧 104 条常量。"""
+    if which == "legacy":
+        items = []
+        for q, r in EVAL_SET:
+            items.append({"query": q, "relevant_files": list(r), "kind": "positive" if r else "negative",
+                          "source": "legacy", "answer_gt": None, "passage_gt": None})
+        return items
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "EVAL_SET_V2.json")
+    with io.open(p, encoding="utf-8") as f:
+        items = json.load(f)
+    if source:
+        items = [it for it in items if it.get("source") == source]
+    if limit:
+        items = items[:limit]
+    return items
+
+
 def _run_search(vector_db, query: str, k: int, search_mode: str) -> Tuple[List[str], Optional[float]]:
     """返回 (命中文件列表, top-1 分数)。负样本误召回判定用「是否有结果」，
     分数用于正/负样本的分数分布对比（标定 ABSOLUTE_MIN_SCORE 的依据）。"""
+    if search_mode == "prod":
+        # 生产全管线口径：查询分类 → hybrid → 重排 → 父块扩展 → 截断（与 /api/chat 完全同路径）
+        from services.retrieval import retrieve_for_rag
+        from services.ui_sink import RetrievalUISink
+        from utils.reranker import get_cached_reranker
+
+        ret = retrieve_for_rag(
+            vector_db=vector_db, query=query, selected_kb="全部知识库", k=k,
+            search_mode="hybrid", enable_reranker=True,
+            reranker=get_cached_reranker(), sink=RetrievalUISink.noop(),
+        )
+        files = list(dict.fromkeys(
+            str(it.get("file") or "") for it in ret.evidence_sources if it.get("file")
+        ))
+        top1 = ret.scored_docs[0][1] if ret.scored_docs else None
+        return files, top1
+
     if search_mode == "rerank":
         # 生产管线形态：hybrid 宽召回 → CrossEncoder 概率重排（负样本的主防线）
         from utils.hybrid_search import load_bm25_index, rebuild_bm25_index, hybrid_search
@@ -271,29 +308,37 @@ def _fmt(v: Optional[float]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="检索质量离线评测（Recall/nDCG/MRR + 负样本误召回惩罚）")
-    parser.add_argument("--user", type=int, default=98, help="知识库用户 id（默认 98 书本章节评测集）")
-    parser.add_argument("--k", type=int, default=5, help="k 值（默认 5）")
-    parser.add_argument("--mode", choices=["vector", "hybrid", "rerank", "both", "all"], default="both")
+    parser.add_argument("--user", type=int, default=99, help="知识库用户 id（默认 99 评测库）")
+    parser.add_argument("--k", type=int, default=5, help="k 值（默认 5，同时输出 Recall@3）")
+    parser.add_argument("--set", dest="eval_set", choices=["v2", "legacy"], default="v2",
+                        help="评测集：v2 = EVAL_SET_V2.json（默认），legacy = 旧 104 条")
+    parser.add_argument("--source", default=None, help="仅评测 v2 中该来源（如 cmrc2018 / dureader_retrieval）")
+    parser.add_argument("--limit", type=int, default=None, help="截取前 N 条（调试用）")
+    parser.add_argument("--mode", choices=["vector", "hybrid", "rerank", "prod", "both", "all"], default="both")
     parser.add_argument("--verbose-fail", action="store_true", help="逐条打印未命中的正样本与误召回的负样本")
     args = parser.parse_args()
 
-    pos_set = [(q, r) for q, r in EVAL_SET if r]
-    neg_set = [(q, r) for q, r in EVAL_SET if not r]
+    items = _load_eval_set(args.eval_set, args.source, args.limit)
+    pos_set = [(it["query"], it["relevant_files"]) for it in items if it["kind"] == "positive"]
+    neg_set = [(it["query"], it["relevant_files"]) for it in items if it["kind"] == "negative"]
+    src_of = {it["query"]: it.get("source", "?") for it in items}
     print(
-        f"\n=== 检索质量评测：用户 {args.user}，k={args.k}，"
-        f"样本 {len(EVAL_SET)} 条（正 {len(pos_set)} / 负 {len(neg_set)}）===\n"
+        f"\n=== 检索质量评测：用户 {args.user}，k={args.k}，集合={args.eval_set}"
+        f"{'/' + args.source if args.source else ''}，"
+        f"样本 {len(items)} 条（正 {len(pos_set)} / 负 {len(neg_set)}）===\n"
     )
 
     vector_db = _load_vector_db(args.user)
 
-    _MODE_PRESETS = {"both": ["vector", "hybrid"], "all": ["vector", "hybrid", "rerank"]}
+    _MODE_PRESETS = {"both": ["vector", "hybrid"], "all": ["vector", "hybrid", "rerank", "prod"]}
     modes = _MODE_PRESETS.get(args.mode, [args.mode])
     summary: Dict[str, Dict[str, float]] = {}
     score_dist: Dict[str, Dict[str, List[Optional[float]]]] = {}
 
     for mode in modes:
         print(f"--- 检索模式：{mode} ---")
-        recalls, ndcgs, mrrs = [], [], []
+        by_source: Dict[str, Dict[str, List[float]]] = {}
+        recalls, recalls3, ndcgs, mrrs = [], [], [], []
         pos_top1: List[float] = []
         neg_top1: List[float] = []
         false_recall_hits = 0
@@ -301,11 +346,14 @@ def main() -> None:
         for query, relevant in pos_set:
             files, top1 = _run_search(vector_db, query, args.k, mode)
             r = _recall_at_k(files, relevant, args.k)
+            r3 = _recall_at_k(files, relevant, 3)
             n = _ndcg_at_k(files, relevant, args.k)
             m = _mrr(files, relevant)
             recalls.append(r)
+            recalls3.append(r3)
             ndcgs.append(n)
             mrrs.append(m)
+            by_source.setdefault(src_of.get(query, "?"), {}).setdefault("recall", []).append(r)
             if top1 is not None:
                 pos_top1.append(top1)
             if args.verbose_fail and r < 1.0:
@@ -322,6 +370,7 @@ def main() -> None:
                     print(f"  ⚠️【负样本·误召回】{query}  top1={files[0]} ({_fmt(top1)})")
 
         avg_r = sum(recalls) / len(recalls) if recalls else 0.0
+        avg_r3 = sum(recalls3) / len(recalls3) if recalls3 else 0.0
         avg_n = sum(ndcgs) / len(ndcgs) if ndcgs else 0.0
         avg_m = sum(mrrs) / len(mrrs) if mrrs else 0.0
         false_recall = false_recall_hits / len(neg_set) if neg_set else 0.0
@@ -329,16 +378,22 @@ def main() -> None:
         balanced = 2 * avg_r * (1 - false_recall) / denom if denom > 0 else 0.0
 
         summary[mode] = {
-            "recall": avg_r, "ndcg": avg_n, "mrr": avg_m,
+            "recall": avg_r, "recall3": avg_r3, "ndcg": avg_n, "mrr": avg_m,
             "false_recall": false_recall, "balanced": balanced,
         }
         score_dist[mode] = {"pos": pos_top1, "neg": neg_top1}
 
         print(
-            f"  >>> Recall@{args.k}={avg_r:.4f} | nDCG@{args.k}={avg_n:.4f} | MRR={avg_m:.4f}\n"
+            f"  >>> Recall@{args.k}={avg_r:.4f} | Recall@3={avg_r3:.4f} | nDCG@{args.k}={avg_n:.4f} | MRR={avg_m:.4f}\n"
             f"  >>> FalseRecall@{args.k}={false_recall:.2%}（{false_recall_hits}/{len(neg_set)} 误召回）"
             f" | Balanced={balanced:.4f}\n"
         )
+        if args.eval_set == "v2" and not args.source:
+            print("  —— 分来源 Recall@" + str(args.k) + " ——")
+            for s in sorted(by_source):
+                rs = by_source[s]["recall"]
+                print(f"     {s:<22s} n={len(rs):<4d} R={sum(rs)/len(rs):.4f}")
+            print()
 
     print("=== Top-1 分数分布（阈值标定参考：正样本下界 vs 负样本上界的间隔）===")
     for mode in modes:
@@ -352,9 +407,9 @@ def main() -> None:
         else:
             print(f"  [{mode}] 负样本误召回: 无（全部正确拦截）")
 
-    if len(modes) == 2:
+    if len(modes) == 2 and "vector" in summary and "hybrid" in summary:
         print("\n=== 模式对比 ===")
-        for metric in ("recall", "ndcg", "mrr", "false_recall", "balanced"):
+        for metric in ("recall", "recall3", "ndcg", "mrr", "false_recall", "balanced"):
             v = summary["vector"][metric]
             h = summary["hybrid"][metric]
             print(f"  {metric.upper():13s} 向量={v:.4f}  混合={h:.4f}  Δ={'+' if h>=v else ''}{h-v:.4f}")
