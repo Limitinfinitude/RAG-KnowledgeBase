@@ -29,3 +29,4 @@ data/
 .vscode/
 # 评测原始数据（HF 下载的 524MB 维基 dump + parquet，可由脚本重新下载）
 eval_raw_data/
+.zcode/
